@@ -14,14 +14,22 @@ class Renderer {
 	private var height = 512
 	
 	private var pixels : [Pixel] = []
+	private var zbuffer : [Scalar] = []
+	
+	init(width _width : Int,height _height : Int){
+		width = _width
+		height = _height
+		pixels = [Pixel](count: width*height, repeatedValue: Pixel(0))
+		zbuffer = [Scalar](count: width*height, repeatedValue: -Scalar.infinity)
+	}
 	
 	func render() -> [Pixel]{
 		//let tex = Texture(path: "/Users/simon/Desktop/test.png")
 		let mesh = Model(path: "/Users/simon/Desktop/head.obj")
 		mesh.center()
 		mesh.normalize()
+		mesh.expand()
 		
-		pixels = [Pixel](count: width*height, repeatedValue: Pixel(0))
 		
 		let startTime = CFAbsoluteTimeGetCurrent();
 		
@@ -38,66 +46,64 @@ class Renderer {
 		let halfWidth = Scalar(width)*0.5
 		let halfHeight = Scalar(height)*0.5
 		for f in mesh.faces {
-			let v0 = mesh.vertices[f.0.v]
-			let v1 = mesh.vertices[f.1.v]
-			let v2 = mesh.vertices[f.2.v]
-			let v0_s = (Int((v0.0+1.0)*halfWidth),Int((v0.1+1.0)*halfHeight))
-			let v1_s = (Int((v1.0+1.0)*halfWidth),Int((v1.1+1.0)*halfHeight))
-			let v2_s = (Int((v2.0+1.0)*halfWidth),Int((v2.1+1.0)*halfHeight))
-			let v0_w = v0
-			let v1_w = v1
-			let v2_w = v2
+			
+			let v0_s = (floor((f.v[0].0+1.0)*halfWidth),floor((f.v[0].1+1.0)*halfHeight),0.0)
+			let v1_s = (floor((f.v[1].0+1.0)*halfWidth),floor((f.v[1].1+1.0)*halfHeight),0.0)
+			let v2_s = (floor((f.v[2].0+1.0)*halfWidth),floor((f.v[2].1+1.0)*halfHeight),0.0)
+			let v0_w = f.v[0]
+			let v1_w = f.v[1]
+			let v2_w = f.v[2]
 			var n = cross(v2_w - v0_w, v1_w - v0_w)
 			normalize(&n)
 			let cosFactor = dot(n,l)
 			if cosFactor > 0.0 {
-				triangle(v0_s,v1_s,v2_s,(UInt8(cosFactor*255),UInt8(cosFactor*255),UInt8(cosFactor*255)))
+				triangle([v0_s,v1_s,v2_s], f.t,(UInt8(cosFactor*255),UInt8(cosFactor*255),UInt8(cosFactor*255)))
 			}
 		}
 	}
 	
-	func barycentre(p : Point2i,_ v0 : Point2i,_ v1 : Point2i,_ v2 : Point2i) -> Point3f{
+	
+	
+	func barycentre(p : Point3f,_ v0 : Point3f,_ v1 : Point3f,_ v2 : Point3f) -> Point3f{
 		let ab = v1 - v0
 		let ac = v2 - v0
 		let pa = v0 - p
-		let uv1 = cross((Scalar(ab.0),Scalar(ac.0),Scalar(pa.0)), (Scalar(ab.1),Scalar(ac.1),Scalar(pa.1)))
+		let uv1 = cross((ac.0,ab.0,pa.0),(ac.1,ab.1,pa.1))
 		if abs(uv1.2) < 1.0 {
 			return (-1,-1,-1)
 		}
 		return (1.0-(uv1.0+uv1.1)/uv1.2,uv1.1/uv1.2,uv1.0/uv1.2)
 	}
 	
-	func boundingBox(v0 : Point2i,_ v1 : Point2i,_ v2 : Point2i) -> (Point2i, Point2i){
-		var mini = (width-1,height-1)
-		var maxi = (0,0)
-		
+	func boundingBox(vs : [Point3f]) -> (Point2f, Point2f){
+		var mini  = (Scalar.infinity,Scalar.infinity)
+		var maxi = (-Scalar.infinity,-Scalar.infinity)
+		let lim = (Scalar(width-1),Scalar(height-1))
 		//Why write a loop when you can unwind by hand
-		mini.0 = max(min(mini.0,v0.0),0)
-		mini.1 = max(min(mini.1,v0.1),0)
-		maxi.0 = min(max(maxi.0,v0.0),width-1)
-		maxi.1 = min(max(maxi.1,v0.1),height-1)
-		mini.0 = max(min(mini.0,v1.0),0)
-		mini.1 = max(min(mini.1,v1.1),0)
-		maxi.0 = min(max(maxi.0,v1.0),width-1)
-		maxi.1 = min(max(maxi.1,v1.1),height-1)
-		mini.0 = max(min(mini.0,v2.0),0)
-		mini.1 = max(min(mini.1,v2.1),0)
-		maxi.0 = min(max(maxi.0,v2.0),width-1)
-		maxi.1 = min(max(maxi.1,v2.1),height-1)
+		for v in vs {
+		mini.0 = max(min(mini.0,v.0),0)
+		mini.1 = max(min(mini.1,v.1),0)
+		maxi.0 = min(max(maxi.0,v.0),lim.0)
+		maxi.1 = min(max(maxi.1,v.1),lim.1)
+		}
 		
 		return (mini,maxi)
 	}
 	
 	
 	
-	func triangle(v0 : Point2i,_ v1 : Point2i,_ v2 : Point2i,_ color : Color){
+	func triangle(v : [Point3f],_ uv : [Point2f],_ color : Color){
 		
-		let (mini, maxi) = boundingBox(v0,v1,v2)
-		for x in mini.0...maxi.0 {
-			for y in mini.1...maxi.1 {
-				let bary = barycentre((x,y),v0,v1,v2)
+		let (mini, maxi) = boundingBox(v)
+		for x in Int(mini.0)...Int(maxi.0) {
+			for y in Int(mini.1)...Int(maxi.1) {
+				let bary = barycentre(Point3f(Scalar(x),Scalar(y),0.0),v[0],v[1],v[2])
 				if (bary.0 < 0.0 || bary.1 < 0.0 || bary.2 < 0.0){ continue }
-				set(x, y, color)
+				let z = v[0].2 * bary.0 + v[1].2 * bary.1 + v[2].2 * bary.2
+				if (zbuffer[y*width + x] < z){
+					zbuffer[y*width + x] = z
+					set(x, y, color)
+				}
 			}
 		}
 		

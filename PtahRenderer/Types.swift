@@ -16,7 +16,7 @@ typealias Vertex = Point3f
 typealias Normal = Point3f
 typealias UV = Point2f
 typealias Color = (UInt8,UInt8,UInt8)
-typealias Face = (FaceIndices,FaceIndices,FaceIndices)
+
 
 func cross(lhs : Point3f,_ rhs : Point3f) -> Point3f {
 	return (lhs.1*rhs.2 - lhs.2*rhs.1,lhs.2*rhs.0 - lhs.0*rhs.2,lhs.0*rhs.1 - lhs.1*rhs.0)
@@ -111,6 +111,12 @@ enum TextureMode {
 }
 
 
+
+struct Face {
+	var v : [Vertex]
+	var t : [UV]
+	var n : [Normal]
+}
 
 struct FaceIndices : Hashable, Equatable {
 	var v : Int

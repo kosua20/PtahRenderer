@@ -14,6 +14,7 @@ class Model {
 	var vertices : [Vertex] = []
 	var normals : [Normal] = []
 	var uvs : [UV] = []
+	var indices : [(FaceIndices,FaceIndices,FaceIndices)] = []
 	var faces : [Face] = []
 	
 	init(path : String){
@@ -46,7 +47,7 @@ class Model {
 				let fi2 = FaceIndices(v: intComps2[0]-1, t: intComps2[1]-1, n: intComps2[2]-1)
 				let intComps3 = splittedComponents[3].map({ $0 == "" ? 0 : Int($0)!})
 				let fi3 = FaceIndices(v: intComps3[0]-1, t: intComps3[1]-1, n: intComps3[2]-1)
-				faces.append((fi1,fi2,fi3))
+				indices.append((fi1,fi2,fi3))
 				
 			}
 			
@@ -79,10 +80,17 @@ class Model {
 		//We have the highest distance from the origin, we want it to be smaller than 1
 		var truemax = max(maxx,maxy,maxz)
 		truemax = truemax == 0 ? 1.0 : truemax/scale
-	
-		
 		vertices = vertices.map({($0.0/truemax,$0.1/truemax,$0.2/truemax)})
+	}
 	
+	func expand(){
+		for (ind1, ind2, ind3) in indices {
+			let f = Face(	v: [vertices[ind1.v],vertices[ind2.v],vertices[ind3.v]],
+							t: [uvs[ind1.t],uvs[ind2.t],uvs[ind3.t]],
+							n: [normals[ind1.n],normals[ind2.n],normals[ind3.n]]
+						)
+			faces.append(f)
+		}
 	}
 }
 

@@ -15,7 +15,7 @@ class ViewController: NSViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		renderer = Renderer()
+		renderer = Renderer(width: 512,height: 512)
 		let startTime = CFAbsoluteTimeGetCurrent();
 		imageView.image = renderer.renderImage()
 		print("[Total]: " + String(format: "%.4fs", CFAbsoluteTimeGetCurrent() - startTime))

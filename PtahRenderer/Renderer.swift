@@ -17,27 +17,90 @@ class Renderer {
 	
 	func render() -> [Pixel]{
 		//let tex = Texture(path: "/Users/simon/Desktop/test.png")
-		/*let mesh = Model(path: "/Users/simon/Desktop/balloon.obj")
+		let mesh = Model(path: "/Users/simon/Desktop/head.obj")
 		mesh.center()
-		mesh.normalize()*/
-		
+		mesh.normalize()
 		
 		pixels = [Pixel](count: width*height, repeatedValue: Pixel(0))
 		
-		var startTime = CFAbsoluteTimeGetCurrent();
+		let startTime = CFAbsoluteTimeGetCurrent();
 		
-		triangle((10,70), (50,160), (70,80), (255,0,0))
-		triangle((180,50), (150,1), (70,180), (255,255,255))
-		triangle((180,150), (120,160), (130,180), (0,255,0))
+		drawMesh(mesh)
 		
 		print("[Internal]: " + String(format: "%.4fs", CFAbsoluteTimeGetCurrent() - startTime))
 		return pixels
 	}
 	
+	private var l = (0.0,0.0,-1.0)
+	
+	
+	func drawMesh(mesh : Model){
+		let halfWidth = Scalar(width)*0.5
+		let halfHeight = Scalar(height)*0.5
+		for f in mesh.faces {
+			let v0 = mesh.vertices[f.0.v]
+			let v1 = mesh.vertices[f.1.v]
+			let v2 = mesh.vertices[f.2.v]
+			let v0_s = (Int((v0.0+1.0)*halfWidth),Int((v0.1+1.0)*halfHeight))
+			let v1_s = (Int((v1.0+1.0)*halfWidth),Int((v1.1+1.0)*halfHeight))
+			let v2_s = (Int((v2.0+1.0)*halfWidth),Int((v2.1+1.0)*halfHeight))
+			let v0_w = v0
+			let v1_w = v1
+			let v2_w = v2
+			var n = cross(v2_w - v0_w, v1_w - v0_w)
+			normalize(&n)
+			let cosFactor = dot(n,l)
+			if cosFactor > 0.0 {
+				triangle(v0_s,v1_s,v2_s,(UInt8(cosFactor*255),UInt8(cosFactor*255),UInt8(cosFactor*255)))
+			}
+		}
+	}
+	
+	func barycentre(p : Point2i,_ v0 : Point2i,_ v1 : Point2i,_ v2 : Point2i) -> Point3f{
+		let ab = v1 - v0
+		let ac = v2 - v0
+		let pa = v0 - p
+		let uv1 = cross((Scalar(ab.0),Scalar(ac.0),Scalar(pa.0)), (Scalar(ab.1),Scalar(ac.1),Scalar(pa.1)))
+		if abs(uv1.2) < 1.0 {
+			return (-1,-1,-1)
+		}
+		return (1.0-(uv1.0+uv1.1)/uv1.2,uv1.1/uv1.2,uv1.0/uv1.2)
+	}
+	
+	func boundingBox(v0 : Point2i,_ v1 : Point2i,_ v2 : Point2i) -> (Point2i, Point2i){
+		var mini = (width-1,height-1)
+		var maxi = (0,0)
+		
+		//Why write a loop when you can unwind by hand
+		mini.0 = max(min(mini.0,v0.0),0)
+		mini.1 = max(min(mini.1,v0.1),0)
+		maxi.0 = min(max(maxi.0,v0.0),width-1)
+		maxi.1 = min(max(maxi.1,v0.1),height-1)
+		mini.0 = max(min(mini.0,v1.0),0)
+		mini.1 = max(min(mini.1,v1.1),0)
+		maxi.0 = min(max(maxi.0,v1.0),width-1)
+		maxi.1 = min(max(maxi.1,v1.1),height-1)
+		mini.0 = max(min(mini.0,v2.0),0)
+		mini.1 = max(min(mini.1,v2.1),0)
+		maxi.0 = min(max(maxi.0,v2.0),width-1)
+		maxi.1 = min(max(maxi.1,v2.1),height-1)
+		
+		return (mini,maxi)
+	}
+	
+	
+	
 	func triangle(v0 : Point2i,_ v1 : Point2i,_ v2 : Point2i,_ color : Color){
-		line(v0,v1,color)
-		line(v1,v2,color)
-		line(v2,v0,color)
+		
+		let (mini, maxi) = boundingBox(v0,v1,v2)
+		for x in mini.0...maxi.0 {
+			for y in mini.1...maxi.1 {
+				let bary = barycentre((x,y),v0,v1,v2)
+				if (bary.0 < 0.0 || bary.1 < 0.0 || bary.2 < 0.0){ continue }
+				set(x, y, color)
+			}
+		}
+		
 	}
 	
 	func line(a_ : Point2i,_ b_ : Point2i,_ color : Color){
@@ -113,19 +176,7 @@ class Renderer {
 	
 	
 	/*--Temp zone-------------*/
-	func drawMesh(mesh : Model){
-		let halfWidth = Scalar(width)*0.5
-		let halfHeight = Scalar(height)*0.5
-		for f in mesh.faces {
-			let v0 = mesh.vertices[f.0.v]
-			let v1 = mesh.vertices[f.1.v]
-			let v2 = mesh.vertices[f.2.v]
-			let v0_ = (Int((v0.0+1.0)*halfWidth),Int((v0.1+1.0)*halfHeight))
-			let v1_ = (Int((v1.0+1.0)*halfWidth),Int((v1.1+1.0)*halfHeight))
-			let v2_ = (Int((v2.0+1.0)*halfWidth),Int((v2.1+1.0)*halfHeight))
-			triangle(v0_,v1_,v2_,(128,255,172))
-		}
-	}
+	
 	
 	
 	/*--Utilities----------------------------------------------*/

@@ -26,7 +26,6 @@ class Texture {
 			let data = imageData as NSData
 			if components == 4 {
 				pixels = Array(UnsafeBufferPointer(start: UnsafePointer<Pixel>(data.bytes), count: data.length/4))
-				print(pixels[0])
 			} else {
 				let temp_pixels = Array(UnsafeBufferPointer(start: UnsafePointer<UInt8>(data.bytes), count: data.length))
 				
@@ -76,6 +75,13 @@ class Texture {
 		return self[a,b]
 	}
 	
+	
+	func flipVertically(){
+		let half = height >> 1
+		for y in 0..<half {
+			swap(&(pixels[y*width..<(y+1)*width]),&(pixels[width*(height-y-1)..<width*(height-y)]))
+		}
+	}
 	/*subscript(uv : Point2) -> Pixel {
 		return self[uv.0 as Scalar, uv.1 as Scalar]
 	}*/

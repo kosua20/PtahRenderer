@@ -66,15 +66,15 @@
 		F49C6CE41C6FC6F200C5F852 /* PtahRenderer */ = {
 			isa = PBXGroup;
 			children = (
-				F49C6CFA1C6FD0A400C5F852 /* Types.swift */,
-				F4998B7F1C7111FD00FEFFD4 /* GeometricTypes.swift */,
-				F4998B811C7113EF00FEFFD4 /* GeometricOperations.swift */,
+				F49C6CE51C6FC6F200C5F852 /* AppDelegate.swift */,
+				F49C6CE71C6FC6F200C5F852 /* ViewController.swift */,
 				F49C6CF41C6FC76000C5F852 /* Renderer.swift */,
 				F4998B831C71188D00FEFFD4 /* Framebuffer.swift */,
 				F49C6CF61C6FD01E00C5F852 /* Texture.swift */,
 				F49C6CF81C6FD02800C5F852 /* Model.swift */,
-				F49C6CE51C6FC6F200C5F852 /* AppDelegate.swift */,
-				F49C6CE71C6FC6F200C5F852 /* ViewController.swift */,
+				F49C6CFA1C6FD0A400C5F852 /* Types.swift */,
+				F4998B7F1C7111FD00FEFFD4 /* GeometricTypes.swift */,
+				F4998B811C7113EF00FEFFD4 /* GeometricOperations.swift */,
 				F49C6CE91C6FC6F200C5F852 /* Assets.xcassets */,
 				F49C6CEB1C6FC6F200C5F852 /* Main.storyboard */,
 				F49C6CEE1C6FC6F200C5F852 /* Info.plist */,

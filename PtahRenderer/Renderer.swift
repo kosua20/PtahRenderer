@@ -21,6 +21,7 @@ class Renderer {
 		buffer = Framebuffer(width: width, height: height)
 	}
 	
+	private var time = 0.0
 	func render(){
 		let tex = Texture(path: "/Users/simon/Desktop/balloon.png")
 		tex.flipVertically()
@@ -33,22 +34,27 @@ class Renderer {
 		let startTime = CFAbsoluteTimeGetCurrent();
 		
 		drawMesh(mesh,texture: tex)
-		
+		let theta = time/10.0
+		cam_pos = normalized((cos(theta),0.0,sin(theta)))
 		print("[Internal]: " + String(format: "%.4fs", CFAbsoluteTimeGetCurrent() - startTime))
-	
+		time+=1.0
 	}
 	
 	private var l = normalized((1.0,0.0,-1.0))
 	private var cam_pos = normalized((0.0,0.0,-1.0))
-	
 	
 	func drawMesh(mesh : Model, texture : Texture? = nil){
 		let halfWidth = Scalar(width)*0.5
 		let halfHeight = Scalar(height)*0.5
 		for f in mesh.faces {
 			
+			/*let v_s =  f.v.map({ (Int(($0.0+1.0)*halfWidth),Int(($0.1+1.0)*halfHeight))})
+			triangleWire(v_s,(255,255,255))*/
+			
 			let v_s =  f.v.map({ (floor(($0.0+1.0)*halfWidth),floor(($0.1+1.0)*halfHeight),$0.2)})
 			let v_w = f.v
+			
+			//Face normal for backface culling
 			var n = cross(v_w[2] - v_w[0],v_w[1] - v_w[0])
 			normalize(&n)
 			let cosFactor = dot(n,cam_pos)
@@ -75,6 +81,13 @@ class Renderer {
 			}
 		}
 	}
+	
+	func triangleWire(v : [Point2i],_ color : Color){
+			line(v[0], v[1], color)
+			line(v[1], v[2], color)
+			line(v[2], v[0], color)
+	}
+
 	
 	func line(a_ : Point2i,_ b_ : Point2i,_ color : Color){
 		var steep = false
@@ -113,6 +126,14 @@ class Renderer {
 		}
 	}
 	
+	func clear(color : Bool = true, depth: Bool = true){
+		if(color){
+			buffer.clearColor((0,0,0))
+		}
+		if(depth){
+			buffer.clearDepth()
+		}
+	}
 	
 	func renderImage() -> NSImage {
 		

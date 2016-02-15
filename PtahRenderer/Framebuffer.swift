@@ -39,6 +39,18 @@ class Framebuffer {
 		}
 	}
 	
+	func clearColor(col : Color){
+		for i in 0..<width*height {
+			pixels[i].rgb = col
+		}
+	}
+	
+	func clearDepth(){
+		for i in 0..<width*height {
+			zbuffer[i] = -Scalar.infinity
+		}
+	}
+	
 	/*--Utilities----------------------------------------------*/
 	/*Courtesy of Simon Gladman, http://flexmonkey.blogspot.fr */
 	/*---------------------------------------------------------*/
@@ -58,7 +70,6 @@ class Framebuffer {
 	}
 	
 	internal func dumpZbuffer(){
-		
-		print(zbuffer.filter({$0 > -10.0}).sort().last)
+		print("Not yet implemented.")
 	}
 }

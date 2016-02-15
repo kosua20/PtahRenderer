@@ -22,9 +22,9 @@ class Renderer {
 	}
 	
 	func render(){
-		let tex = Texture(path: "/Users/simon/Desktop/head.png")
+		let tex = Texture(path: "/Users/simon/Desktop/balloon.png")
 		tex.flipVertically()
-		let mesh = Model(path: "/Users/simon/Desktop/head.obj")
+		let mesh = Model(path: "/Users/simon/Desktop/balloon.obj")
 		mesh.center()
 		mesh.normalize()
 		mesh.expand()
@@ -38,7 +38,8 @@ class Renderer {
 	
 	}
 	
-	private var l = (0.0,0.0,-1.0)
+	private var l = normalized((1.0,0.0,-1.0))
+	private var cam_pos = normalized((0.0,0.0,-1.0))
 	
 	
 	func drawMesh(mesh : Model, texture : Texture? = nil){
@@ -46,12 +47,12 @@ class Renderer {
 		let halfHeight = Scalar(height)*0.5
 		for f in mesh.faces {
 			
-			let v_s =  f.v.map({ (floor(($0.0+1.0)*halfWidth),floor(($0.1+1.0)*halfHeight),0.0)})
+			let v_s =  f.v.map({ (floor(($0.0+1.0)*halfWidth),floor(($0.1+1.0)*halfHeight),$0.2)})
 			let v_w = f.v
-			var n = cross(v_w[2] - v_w[0], v_w[1] - v_w[0])
+			var n = cross(v_w[2] - v_w[0],v_w[1] - v_w[0])
 			normalize(&n)
-			let cosFactor = dot(n,l)
-			if cosFactor > 0.0 {
+			let cosFactor = dot(n,cam_pos)
+			if cosFactor >= 0.0 {
 				triangle(v_s,f.n, f.t,texture!)
 			}
 		}
@@ -63,7 +64,7 @@ class Renderer {
 			for y in Int(mini.1)...Int(maxi.1) {
 				let bary = barycentre(Point3f(Scalar(x),Scalar(y),0.0),v[0],v[1],v[2])
 				if (bary.0 < 0.0 || bary.1 < 0.0 || bary.2 < 0.0){ continue }
-				let z = v[0].2 * bary.0 + v[1].2 * bary.1 + v[2].2 * bary.2
+				let z =  v[0].2 * bary.0 + v[1].2 * bary.1 + v[2].2 * bary.2
 				if (buffer.zbuffer[y*width + x] < z){
 					buffer.zbuffer[y*width + x] = z
 					let tex = barycentricInterpolation(bary, t1: uv[0], t2: uv[1], t3: uv[2])
@@ -123,7 +124,7 @@ class Renderer {
 		buffer.swapPixelBuffer()
 		let image = buffer.imageFromRGBA32Bitmap()
 		print("[Backing]: " + String(format: "%.4fs", CFAbsoluteTimeGetCurrent() - startTime))
-		
+		buffer.dumpZbuffer()
 		return image
 	}
 	

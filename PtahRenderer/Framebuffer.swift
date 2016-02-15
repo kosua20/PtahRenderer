@@ -55,6 +55,10 @@ class Framebuffer {
 		
 		let cgim = CGImageCreate(width, height, bitsPerComponent, bitsPerPixel, width * Int(sizeof(Pixel)), rgbColorSpace, bitmapInfo, providerRef, nil, true, .RenderingIntentDefault)
 		return NSImage(CGImage: cgim!, size: NSSize(width: width, height: height))
+	}
+	
+	internal func dumpZbuffer(){
 		
+		print(zbuffer.filter({$0 > -10.0}).sort().last)
 	}
 }

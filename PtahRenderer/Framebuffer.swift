@@ -61,7 +61,7 @@ class Framebuffer {
 	internal func imageFromRGBA32Bitmap() -> NSImage {
 		let bitsPerComponent:Int = 8
 		let bitsPerPixel:Int = 32
-		assert(pixels.count == Int(width * height))
+		assert(pixels.count == width * height)
 		var data = pixels // Copy to mutable []
 		let providerRef = CGDataProviderCreateWithCFData(NSData(bytes: &data, length: data.count * sizeof(Pixel)))
 		

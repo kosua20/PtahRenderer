@@ -48,19 +48,19 @@ class Renderer {
 		let halfHeight = Scalar(height)*0.5
 		for f in mesh.faces {
 			
-			/*let v_s =  f.v.map({ (Int(($0.0+1.0)*halfWidth),Int(($0.1+1.0)*halfHeight))})
+			/*let v_s =  f.v.map({ (($0.0+1.0)*halfWidth,($0.1+1.0)*halfHeight)})
 			triangleWire(v_s,(255,255,255))*/
 			
 			let v_s =  f.v.map({ (floor(($0.0+1.0)*halfWidth),floor(($0.1+1.0)*halfHeight),$0.2)})
 			let v_w = f.v
 			
 			//Face normal for backface culling
-			var n = cross(v_w[2] - v_w[0],v_w[1] - v_w[0])
+			/*var n = cross(v_w[2] - v_w[0],v_w[1] - v_w[0])
 			normalize(&n)
 			let cosFactor = dot(n,cam_pos)
-			if cosFactor >= 0.0 {
+			if cosFactor >= 0.0 {*/
 				triangle(v_s,f.n, f.t,texture!)
-			}
+			//}
 		}
 	}
 	
@@ -68,7 +68,7 @@ class Renderer {
 		let (mini, maxi) = boundingBox(v,width,height)
 		for x in Int(mini.0)...Int(maxi.0) {
 			for y in Int(mini.1)...Int(maxi.1) {
-				let bary = barycentre(Point3f(Scalar(x),Scalar(y),0.0),v[0],v[1],v[2])
+				let bary = barycentre(Point3(Scalar(x),Scalar(y),0.0),v[0],v[1],v[2])
 				if (bary.0 < 0.0 || bary.1 < 0.0 || bary.2 < 0.0){ continue }
 				let z =  v[0].2 * bary.0 + v[1].2 * bary.1 + v[2].2 * bary.2
 				if (buffer.zbuffer[y*width + x] < z){
@@ -82,14 +82,14 @@ class Renderer {
 		}
 	}
 	
-	func triangleWire(v : [Point2i],_ color : Color){
+	func triangleWire(v : [Point2],_ color : Color){
 			line(v[0], v[1], color)
 			line(v[1], v[2], color)
 			line(v[2], v[0], color)
 	}
 
 	
-	func line(a_ : Point2i,_ b_ : Point2i,_ color : Color){
+	func line(a_ : Point2,_ b_ : Point2,_ color : Color){
 		var steep = false
 		var a = a_
 		var b = b_
@@ -107,16 +107,16 @@ class Renderer {
 		}
 		
 		//Precompute
-		let diffx = Scalar(b.0 - a.0)
-		let diffy = Scalar(b.1 - a.1)
+		let diffx = b.0 - a.0
+		let diffy = b.1 - a.1
 		let shift = b.1 > a.1 ? 1 : -1
 		
 		//Error
 		let differror = abs(diffy/diffx)
 		var error = 0.0
 		
-		var y = a.1
-		for x in a.0...b.0 {
+		var y = Int(a.1)
+		for x in Int(a.0)...Int(b.0) {
 			steep ? buffer.set(y,x,color) : buffer.set(x,y,color)
 			error += differror
 			if(error > 0.5){

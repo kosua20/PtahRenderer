@@ -23,7 +23,7 @@ class ViewController: NSViewController {
 		print("[Total]: " + String(format: "%.4fs", CFAbsoluteTimeGetCurrent() - startTime))
 		// Do any additional setup after loading the view.*/
 		//Launch the timer
-		timer = NSTimer(timeInterval: 1.0 / 60.0, target: self, selector: "timerFired:", userInfo: nil, repeats: true)
+		timer = NSTimer(timeInterval: 1.0 / 60.0, target: self, selector: "timerFired:", userInfo: nil, repeats: false)
 		NSRunLoop.currentRunLoop().addTimer(timer, forMode: NSDefaultRunLoopMode)
 	}
 	

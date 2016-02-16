@@ -22,7 +22,7 @@
 
 /* Begin PBXFileReference section */
 		F4998B7F1C7111FD00FEFFD4 /* GeometricTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeometricTypes.swift; sourceTree = "<group>"; };
-		F4998B811C7113EF00FEFFD4 /* GeometricOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeometricOperations.swift; sourceTree = "<group>"; };
+		F4998B811C7113EF00FEFFD4 /* GeometricOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = GeometricOperations.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F4998B831C71188D00FEFFD4 /* Framebuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Framebuffer.swift; sourceTree = "<group>"; };
 		F49C6CE21C6FC6F200C5F852 /* PtahRenderer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PtahRenderer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F49C6CE51C6FC6F200C5F852 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };

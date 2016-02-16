@@ -8,107 +8,84 @@
 
 import Foundation
 
-typealias Point3f = (Scalar, Scalar, Scalar)
-typealias Point2f = (Scalar, Scalar)
-typealias Point2i = (Int, Int)
-typealias Vertex = Point3f
-typealias Normal = Point3f
-typealias UV = Point2f
+typealias Point3 = (Scalar, Scalar, Scalar)
+typealias Point2 = (Scalar, Scalar)
+typealias Vertex = Point3
+typealias Normal = Point3
+typealias UV = Point2
 
 
 
-/*--Point2i--------*/
+/*--Point3--------*/
 
-func +(lhs : Point2i, rhs : Point2i) -> Point2i {
-	return (lhs.0 + rhs.0,lhs.1+rhs.1)
-}
-
-func +=(inout lhs : Point2i, rhs : Point2i) {
-	lhs.0 += rhs.0
-	lhs.1 += rhs.1
-}
-
-func -(lhs : Point2i, rhs : Point2i) -> Point2i {
-	return (lhs.0 - rhs.0,lhs.1-rhs.1)
-}
-
-func -=(inout lhs : Point2i, rhs : Point2i) {
-	lhs.0 -= rhs.0
-	lhs.1 -= rhs.1
-}
-
-
-
-/*--Point3f--------*/
-
-func +(lhs : Point3f, rhs : Point3f) -> Point3f {
+func +(lhs : Point3, rhs : Point3) -> Point3 {
 	return (lhs.0 + rhs.0,lhs.1+rhs.1,lhs.2+rhs.2)
 }
 
-func +=(inout lhs : Point3f, rhs : Point3f) {
+func +=(inout lhs : Point3, rhs : Point3) {
 	lhs.0 += rhs.0
 	lhs.1 += rhs.1
 	lhs.2 += rhs.2
 }
 
-func -(lhs : Point3f, rhs : Point3f) -> Point3f {
+func -(lhs : Point3, rhs : Point3) -> Point3 {
 	return (lhs.0 - rhs.0,lhs.1-rhs.1,lhs.2-rhs.2)
 }
 
-func -=(inout lhs : Point3f, rhs : Point3f) {
+func -=(inout lhs : Point3, rhs : Point3) {
 	lhs.0 -= rhs.0
 	lhs.1 -= rhs.1
 	lhs.2 -= rhs.2
 }
 
-func *(lhs : Scalar, rhs : Point3f) -> Point3f {
+func *(lhs : Scalar, rhs : Point3) -> Point3 {
 	return (lhs*rhs.0,lhs*rhs.1,lhs*rhs.2)
 }
 
-func *(rhs : Point3f, lhs : Scalar) -> Point3f {
+func *(rhs : Point3, lhs : Scalar) -> Point3 {
 	return (lhs*rhs.0,lhs*rhs.1,lhs*rhs.2)
 }
 
-func *=(inout lhs : Point3f, rhs : Scalar){
+func *=(inout lhs : Point3, rhs : Scalar){
 	lhs.0 = lhs.0*rhs
 	lhs.1 = lhs.1*rhs
 	lhs.2 = lhs.2*rhs
 }
 
-func /(rhs : Point3f, lhs : Scalar) -> Point3f {
+func /(rhs : Point3, lhs : Scalar) -> Point3 {
 	return (rhs.0/lhs,rhs.1/lhs,rhs.2/lhs)
 }
 
-func /=(inout lhs : Point3f, rhs : Scalar){
+func /=(inout lhs : Point3, rhs : Scalar){
 	lhs.0 = lhs.0/rhs
 	lhs.1 = lhs.1/rhs
 	lhs.2 = lhs.2/rhs
 }
 
 
-func cross(lhs : Point3f,_ rhs : Point3f) -> Point3f {
+func cross(lhs : Point3,_ rhs : Point3) -> Point3 {
 	return (lhs.1*rhs.2 - lhs.2*rhs.1,lhs.2*rhs.0 - lhs.0*rhs.2,lhs.0*rhs.1 - lhs.1*rhs.0)
 }
 
-func dot(lhs : Point3f, _ rhs : Point3f) -> Scalar {
+func dot(lhs : Point3, _ rhs : Point3) -> Scalar {
 	return lhs.0*rhs.0+lhs.1*rhs.1+lhs.2*rhs.2
 }
 
-func norm(lhs : Point3f) -> Scalar {
+func norm(lhs : Point3) -> Scalar {
 	return sqrt(dot(lhs,lhs))
 }
 
-func norm2(lhs : Point3f) -> Scalar {
+func norm2(lhs : Point3) -> Scalar {
 	return dot(lhs,lhs)
 }
 
-func normalize(inout n : Point3f){
+func normalize(inout n : Point3){
 	let norm = sqrt(dot(n,n))
 	if(norm==0.0){ return }
 	n /= norm
 }
 
-func normalized(n : Point3f) -> Point3f {
+func normalized(n : Point3) -> Point3 {
 	let norm = sqrt(dot(n,n))
 	if(norm==0.0){ return n}
 	return n/norm

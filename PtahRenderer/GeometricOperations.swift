@@ -48,5 +48,5 @@ func boundingBox(vs : [Point3],_ width : Int,_ height : Int) -> (Point2, Point2)
 		maxi.0 = min(max(maxi.0,v.0),lim.0)
 		maxi.1 = min(max(maxi.1,v.1),lim.1)
 	}
-	return (mini,maxi)
+	return ((min(mini.0,maxi.0),min(mini.1,maxi.01)),(max(mini.0,maxi.0),max(mini.1,maxi.01)))
 }

@@ -56,8 +56,7 @@ class Texture {
 		}
 	}
 	
-	//Nearest neigbours
-	
+	//Nearest neighbours
 	subscript(a : Int, b : Int) -> Pixel {
 		//assert(a < width && a >= 0 && b < height && b >= 0, "Index error in texture")
 		if mode == .Clamp {

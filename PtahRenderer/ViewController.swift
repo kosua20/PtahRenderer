@@ -40,6 +40,7 @@ class ViewController: NSViewController {
 		count += 1
 		print("⏲ \(fps) fps - Avg \(avg/count) fps")
 		print("-----------------------")
+		self.view.window?.title = "Ptah - ⏲ \(fps) fps"
 	}
 
 	override var representedObject: AnyObject? {

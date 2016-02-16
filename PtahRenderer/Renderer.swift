@@ -20,9 +20,9 @@ class Renderer {
 		height = _height
 		buffer = Framebuffer(width: width, height: height)
 		
-		tex = Texture(path: "/Users/simon/Desktop/balloon.png")
+		tex = Texture(path: "/Users/simon/Desktop/head_n.png")
 		tex.flipVertically()
-		mesh = Model(path: "/Users/simon/Desktop/balloon.obj")
+		mesh = Model(path: "/Users/simon/Desktop/head.obj")
 		mesh.center()
 		mesh.normalize()
 		mesh.expand()
@@ -38,31 +38,31 @@ class Renderer {
 		
 		drawMesh(mesh,texture: tex)
 		let theta = time/10.0
-		cam_pos = normalized((cos(theta),0.0,sin(theta)))
+		cam_pos = normalized((cos(theta),sin(theta),sin(theta)))
 				time+=1.0
 	}
 	
 	private var l = normalized((1.0,0.0,-1.0))
-	private var cam_pos = normalized((10.0,0.0,10.0))
+	private var cam_pos = normalized((10.0,1.0,10.0))
 	
 	
 	
 	
-	func drawMesh(mesh : Model, texture : Texture? = nil){
+	func drawMesh(mesh : Model, texture : Texture){
 		let view = Matrix4.lookAtMatrix(cam_pos, target: (0.0,0.0,0.0), up: (0.0,1.0,0.0))
-		//var proj = Matrix4.perspectiveMatrix(fov:75.0, aspect: Scalar(width)/Scalar(height), near: 0.01, far: 100.0)*view
+		var proj = Matrix4.perspectiveMatrix(fov:90.0, aspect: Scalar(width)/Scalar(height), near: 0.01, far: 100.0)*view
 		let halfWidth = Scalar(width)*0.5
 		let halfHeight = Scalar(height)*0.5
 		for f in mesh.faces {
 			
 		
-			let vp = f.v.map({view*($0.0,$0.1,$0.2,1.0)})
+			let vp = f.v.map({proj*($0.0,$0.1,$0.2,1.0)})
 			/*if vp.filter({abs($0.0) > 1.0 || abs($0.1) > 1.0}).count > 0 {
 				continue
 			}*/
-			let v_s = vp.map({ (floor(($0.0+1.0)*halfWidth),floor(($0.1+1.0)*halfHeight))})
-			triangleWire(v_s,(255,255,255))
-			//triangle(v_s,f.n, f.t,texture!)
+			let v_s = vp.map({ (floor(($0.0+1.0)*halfWidth),floor(($0.1+1.0)*halfHeight),$0.2)})
+			//triangleWire(v_s,(255,255,255))
+			triangle(v_s,f.n, f.t,texture)
 			
 			//Face normal for backface culling
 			

@@ -18,6 +18,7 @@
 		F49C6CF71C6FD01E00C5F852 /* Texture.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C6CF61C6FD01E00C5F852 /* Texture.swift */; };
 		F49C6CF91C6FD02800C5F852 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C6CF81C6FD02800C5F852 /* Model.swift */; };
 		F49C6CFB1C6FD0A400C5F852 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C6CFA1C6FD0A400C5F852 /* Types.swift */; };
+		F4C1EF831C73DF6000551FAA /* Shaders.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C1EF821C73DF6000551FAA /* Shaders.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		F49C6CF61C6FD01E00C5F852 /* Texture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Texture.swift; sourceTree = "<group>"; };
 		F49C6CF81C6FD02800C5F852 /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		F49C6CFA1C6FD0A400C5F852 /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
+		F4C1EF821C73DF6000551FAA /* Shaders.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Shaders.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +71,7 @@
 				F49C6CE51C6FC6F200C5F852 /* AppDelegate.swift */,
 				F49C6CE71C6FC6F200C5F852 /* ViewController.swift */,
 				F49C6CF41C6FC76000C5F852 /* Renderer.swift */,
+				F4C1EF821C73DF6000551FAA /* Shaders.swift */,
 				F4998B831C71188D00FEFFD4 /* Framebuffer.swift */,
 				F49C6CF61C6FD01E00C5F852 /* Texture.swift */,
 				F49C6CF81C6FD02800C5F852 /* Model.swift */,
@@ -158,6 +161,7 @@
 				F49C6CFB1C6FD0A400C5F852 /* Types.swift in Sources */,
 				F4998B841C71188D00FEFFD4 /* Framebuffer.swift in Sources */,
 				F4998B801C7111FD00FEFFD4 /* GeometricTypes.swift in Sources */,
+				F4C1EF831C73DF6000551FAA /* Shaders.swift in Sources */,
 				F49C6CF51C6FC76000C5F852 /* Renderer.swift in Sources */,
 				F49C6CE61C6FC6F200C5F852 /* AppDelegate.swift in Sources */,
 				F4998B821C7113EF00FEFFD4 /* GeometricOperations.swift in Sources */,

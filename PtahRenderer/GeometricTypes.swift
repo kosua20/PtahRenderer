@@ -92,8 +92,148 @@ func normalized(n : Point3) -> Point3 {
 }
 
 
+/*--Matrix4------------*/
+/*
+* Copyright (C) 2015 Josh A. Beam
+* All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions
+* are met:
+*   1. Redistributions of source code must retain the above copyright
+*      notice, this list of conditions and the following disclaimer.
+*   2. Redistributions in binary form must reproduce the above copyright
+*      notice, this list of conditions and the following disclaimer in the
+*      documentation and/or other materials provided with the distribution.
+*
+* THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+* IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+* OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+* IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+* SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+* PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+* OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+* WHETHER IN CONTACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+* OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+* ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 
 
+struct Matrix4 {
+	var matrix: [Scalar] = [
+		1.0, 0.0, 0.0, 0.0,
+		0.0, 1.0, 0.0, 0.0,
+		0.0, 0.0, 1.0, 0.0,
+		0.0, 0.0, 0.0, 1.0
+	]
+	
+	static func translationMatrix(t : Point3) -> Matrix4 {
+		var matrix = Matrix4()
+		matrix.matrix[12] = t.0
+		matrix.matrix[13] = t.1
+		matrix.matrix[14] = t.2
+		return matrix
+	}
+	
+	static func scaleMatrix(x: Scalar) -> Matrix4 {
+		return Matrix4.scaleMatrix((x,x,x))
+	}
+	
+	static func scaleMatrix(s : Point3) -> Matrix4 {
+		var matrix = Matrix4()
+		matrix.matrix[0] = s.0
+		matrix.matrix[5] = s.1
+		matrix.matrix[10] = s.2
+		return matrix
+	}
+	
+	static func rotationMatrix(angle: Scalar, axis: Point3) -> Matrix4 {
+		var matrix = Matrix4()
+		let c = cos(angle)
+		let ci = 1.0 - c
+		let s = sin(angle)
+		let xy = axis.0 * axis.1 * ci
+		let xz = axis.0 * axis.2 * ci
+		let yz = axis.1 * axis.2 * ci
+		let xs = axis.0 * s
+		let ys = axis.1 * s
+		let zs = axis.2 * s
+		matrix.matrix[0] = axis.0 * axis.0 * ci + c
+		matrix.matrix[1] = xy + zs
+		matrix.matrix[2] = xz - ys
+		matrix.matrix[4] = xy - xz
+		matrix.matrix[5] = axis.1 * axis.1 * ci + c
+		matrix.matrix[6] = yz + xs
+		matrix.matrix[8] = xz + ys
+		matrix.matrix[9] = yz - xs
+		matrix.matrix[10] = axis.2 * axis.2 * ci + c
+		return matrix
+	}
 
+	
+	static func lookAtMatrix(eye : Point3, target : Point3, up : Point3) -> Matrix4 {
+		var matrix = Matrix4()
+		let zaxis = normalized(target - eye)
+		var yaxis = normalized(up)
+		let xaxis = normalized(cross(zaxis, yaxis))
+		yaxis = cross(xaxis, zaxis)
+		matrix.matrix[0] = xaxis.0
+		matrix.matrix[1] = xaxis.1
+		matrix.matrix[2] = xaxis.2
+		matrix.matrix[4] = yaxis.0
+		matrix.matrix[5] = yaxis.1
+		matrix.matrix[6] = yaxis.2
+		matrix.matrix[8] = -zaxis.0
+		matrix.matrix[9] = -zaxis.1
+		matrix.matrix[10] = -zaxis.2
+		matrix.matrix[12] = -dot(xaxis,eye)
+		matrix.matrix[13] = -dot(yaxis,eye)
+		matrix.matrix[14] = dot(zaxis,eye)
+		return matrix
+	}
+	
+	static func perspectiveMatrix(fov fov: Scalar, aspect: Scalar, near: Scalar, far: Scalar) -> Matrix4 {
+		var matrix = Matrix4()
+		let f = 1.0 / tan(fov / 2.0)
+		matrix.matrix[0] = f / aspect
+		matrix.matrix[5] = f
+		matrix.matrix[10] = (far + near) / (near - far)
+		matrix.matrix[11] = -1.0
+		matrix.matrix[14] = (2.0 * far * near) / (near - far)
+		matrix.matrix[15] = 0.0
+		return matrix
+	}
+}
 
+func * (left: Matrix4, right: Matrix4) -> Matrix4 {
+	let m1 = left.matrix
+	let m2 = right.matrix
+	var m = [Scalar](count: 16, repeatedValue: 0.0)
+	m[ 0] = m1[ 0]*m2[ 0] + m1[ 1]*m2[ 4] + m1[ 2]*m2[ 8] + m1[ 3]*m2[12]
+	m[ 1] = m1[ 0]*m2[ 1] + m1[ 1]*m2[ 5] + m1[ 2]*m2[ 9] + m1[ 3]*m2[13]
+	m[ 2] = m1[ 0]*m2[ 2] + m1[ 1]*m2[ 6] + m1[ 2]*m2[10] + m1[ 3]*m2[14]
+	m[ 3] = m1[ 0]*m2[ 3] + m1[ 1]*m2[ 7] + m1[ 2]*m2[11] + m1[ 3]*m2[15]
+	m[ 4] = m1[ 4]*m2[ 0] + m1[ 5]*m2[ 4] + m1[ 6]*m2[ 8] + m1[ 7]*m2[12]
+	m[ 5] = m1[ 4]*m2[ 1] + m1[ 5]*m2[ 5] + m1[ 6]*m2[ 9] + m1[ 7]*m2[13]
+	m[ 6] = m1[ 4]*m2[ 2] + m1[ 5]*m2[ 6] + m1[ 6]*m2[10] + m1[ 7]*m2[14]
+	m[ 7] = m1[ 4]*m2[ 3] + m1[ 5]*m2[ 7] + m1[ 6]*m2[11] + m1[ 7]*m2[15]
+	m[ 8] = m1[ 8]*m2[ 0] + m1[ 9]*m2[ 4] + m1[10]*m2[ 8] + m1[11]*m2[12]
+	m[ 9] = m1[ 8]*m2[ 1] + m1[ 9]*m2[ 5] + m1[10]*m2[ 9] + m1[11]*m2[13]
+	m[10] = m1[ 8]*m2[ 2] + m1[ 9]*m2[ 6] + m1[10]*m2[10] + m1[11]*m2[14]
+	m[11] = m1[ 8]*m2[ 3] + m1[ 9]*m2[ 7] + m1[10]*m2[11] + m1[11]*m2[15]
+	m[12] = m1[12]*m2[ 0] + m1[13]*m2[ 4] + m1[14]*m2[ 8] + m1[15]*m2[12]
+	m[13] = m1[12]*m2[ 1] + m1[13]*m2[ 5] + m1[14]*m2[ 9] + m1[15]*m2[13]
+	m[14] = m1[12]*m2[ 2] + m1[13]*m2[ 6] + m1[14]*m2[10] + m1[15]*m2[14]
+	m[15] = m1[12]*m2[ 3] + m1[13]*m2[ 7] + m1[14]*m2[11] + m1[15]*m2[15]
+	return Matrix4(matrix: m)
+}
 
+func * (left: Matrix4, rhs: (Scalar,Scalar,Scalar,Scalar)) -> (Scalar,Scalar,Scalar,Scalar) {
+	let m1 = left.matrix
+	var m = (0.0,0.0,0.0,0.0)
+	m.0 = m1[ 0]*rhs.0 + m1[ 1]*rhs.1 + m1[ 2]*rhs.2 + m1[ 3]*rhs.3
+	m.1 = m1[ 4]*rhs.0 + m1[ 5]*rhs.1 + m1[ 6]*rhs.2 + m1[ 7]*rhs.3
+	m.2 = m1[ 8]*rhs.0 + m1[ 9]*rhs.1 + m1[10]*rhs.2 + m1[11]*rhs.3
+	m.3 = m1[12]*rhs.0 + m1[13]*rhs.1 + m1[14]*rhs.2 + m1[15]*rhs.3
+	return m
+}

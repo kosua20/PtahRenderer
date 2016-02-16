@@ -32,7 +32,7 @@ class Framebuffer {
 		}
 	}
 	
-	func swapPixelBuffer(){
+	func flipVertically(){
 		let half = height >> 1
 		for y in 0..<half {
 			swap(&(pixels[y*width..<(y+1)*width]),&(pixels[width*(height-y-1)..<width*(height-y)]))

@@ -19,47 +19,60 @@ class Renderer {
 		width = _width
 		height = _height
 		buffer = Framebuffer(width: width, height: height)
-	}
-	
-	private var time = 0.0
-	func render(){
-		let tex = Texture(path: "/Users/simon/Desktop/balloon.png")
+		
+		tex = Texture(path: "/Users/simon/Desktop/balloon.png")
 		tex.flipVertically()
-		let mesh = Model(path: "/Users/simon/Desktop/balloon.obj")
+		mesh = Model(path: "/Users/simon/Desktop/balloon.obj")
 		mesh.center()
 		mesh.normalize()
 		mesh.expand()
+	}
+	private var tex : Texture
+	private var mesh : Model
+	private var time = 0.0
+	func render(){
 		
 		
-		let startTime = CFAbsoluteTimeGetCurrent();
+		
+		
 		
 		drawMesh(mesh,texture: tex)
 		let theta = time/10.0
 		cam_pos = normalized((cos(theta),0.0,sin(theta)))
-		print("[Internal]: " + String(format: "%.4fs", CFAbsoluteTimeGetCurrent() - startTime))
-		time+=1.0
+				time+=1.0
 	}
 	
 	private var l = normalized((1.0,0.0,-1.0))
-	private var cam_pos = normalized((0.0,0.0,-1.0))
+	private var cam_pos = normalized((10.0,0.0,10.0))
+	
+	
+	
 	
 	func drawMesh(mesh : Model, texture : Texture? = nil){
+		let view = Matrix4.lookAtMatrix(cam_pos, target: (0.0,0.0,0.0), up: (0.0,1.0,0.0))
+		//var proj = Matrix4.perspectiveMatrix(fov:75.0, aspect: Scalar(width)/Scalar(height), near: 0.01, far: 100.0)*view
 		let halfWidth = Scalar(width)*0.5
 		let halfHeight = Scalar(height)*0.5
 		for f in mesh.faces {
 			
-			/*let v_s =  f.v.map({ (($0.0+1.0)*halfWidth,($0.1+1.0)*halfHeight)})
-			triangleWire(v_s,(255,255,255))*/
-			
-			let v_s =  f.v.map({ (floor(($0.0+1.0)*halfWidth),floor(($0.1+1.0)*halfHeight),$0.2)})
-			let v_w = f.v
+		
+			let vp = f.v.map({view*($0.0,$0.1,$0.2,1.0)})
+			/*if vp.filter({abs($0.0) > 1.0 || abs($0.1) > 1.0}).count > 0 {
+				continue
+			}*/
+			let v_s = vp.map({ (floor(($0.0+1.0)*halfWidth),floor(($0.1+1.0)*halfHeight))})
+			triangleWire(v_s,(255,255,255))
+			//triangle(v_s,f.n, f.t,texture!)
 			
 			//Face normal for backface culling
-			/*var n = cross(v_w[2] - v_w[0],v_w[1] - v_w[0])
+			
+			/*
+			let v_w = f.v
+			var n = cross(v_w[2] - v_w[0],v_w[1] - v_w[0])
 			normalize(&n)
 			let cosFactor = dot(n,cam_pos)
 			if cosFactor >= 0.0 {*/
-				triangle(v_s,f.n, f.t,texture!)
+			//	triangle(v_s,f.n, f.t,texture!)
 			//}
 		}
 	}
@@ -139,13 +152,13 @@ class Renderer {
 		
 		var startTime = CFAbsoluteTimeGetCurrent();
 		render()
-		print("[Rendering]: " + String(format: "%.4fs", CFAbsoluteTimeGetCurrent() - startTime))
+		print("[Render]: \t" + String(format: "%.4fs", CFAbsoluteTimeGetCurrent() - startTime))
+
 		
 		startTime = CFAbsoluteTimeGetCurrent();
-		buffer.swapPixelBuffer()
+		buffer.flipVertically()
 		let image = buffer.imageFromRGBA32Bitmap()
-		print("[Backing]: " + String(format: "%.4fs", CFAbsoluteTimeGetCurrent() - startTime))
-		buffer.dumpZbuffer()
+		print("[Backing]: \t" + String(format: "%.4fs", CFAbsoluteTimeGetCurrent() - startTime))
 		return image
 	}
 	

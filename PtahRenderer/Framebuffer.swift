@@ -32,6 +32,19 @@ class Framebuffer {
 		}
 	}
 	
+	func getDepth(x : Int, _ y : Int) -> Scalar {
+		if(x < width && y < height && x >= 0 && y >= 0){
+			return zbuffer[y * width + x]
+		}
+		return Scalar.infinity
+	}
+	
+	func setDepth(x : Int,_ y : Int,_ depth : Scalar){
+		//if(x < width && y < height && x >= 0 && y >= 0){
+			zbuffer[y * width + x] = depth
+		//}
+	}
+	
 	func flipVertically(){
 		let half = height >> 1
 		for y in 0..<half {

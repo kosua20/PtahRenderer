@@ -20,9 +20,9 @@ class Renderer {
 		height = _height
 		buffer = Framebuffer(width: width, height: height)
 		
-		tex = Texture(path: "/Users/simon/Desktop/head_n.png")
+		tex = Texture(path: "/Users/simon/Desktop/balloon.png")
 		tex.flipVertically()
-		mesh = Model(path: "/Users/simon/Desktop/head.obj")
+		mesh = Model(path: "/Users/simon/Desktop/balloon.obj")
 		mesh.center()
 		mesh.normalize()
 		mesh.expand()
@@ -38,42 +38,43 @@ class Renderer {
 		
 		drawMesh(mesh,texture: tex)
 		let theta = time/10.0
-		cam_pos = normalized((cos(theta),sin(theta),sin(theta)))
-				time+=1.0
+		cam_pos = normalized((cos(theta),/*0.0*sin(theta)*/ 1.0,sin(theta)))
+		time+=1.0
 	}
 	
 	private var l = normalized((1.0,0.0,-1.0))
-	private var cam_pos = normalized((10.0,1.0,10.0))
+	private var cam_pos = normalized((1.0,-1.0,0.0))
 	
 	
 	
 	
 	func drawMesh(mesh : Model, texture : Texture){
-		let view = Matrix4.lookAtMatrix(cam_pos, target: (0.0,0.0,0.0), up: (0.0,1.0,0.0))
-		var proj = Matrix4.perspectiveMatrix(fov:90.0, aspect: Scalar(width)/Scalar(height), near: 0.01, far: 100.0)*view
+		let view = Matrix4.lookAtMatrix(-1.0*cam_pos, target: (0.0,0.0,0.0), up: (0.0,1.0,0.0))
+		let proj = Matrix4.perspectiveMatrix(fov:120.0, aspect: Scalar(width)/Scalar(height), near: 0.01, far: 1.0)
 		let halfWidth = Scalar(width)*0.5
 		let halfHeight = Scalar(height)*0.5
+		
+		//--Model space
 		for f in mesh.faces {
 			
-		
-			let vp = f.v.map({proj*($0.0,$0.1,$0.2,1.0)})
-			/*if vp.filter({abs($0.0) > 1.0 || abs($0.1) > 1.0}).count > 0 {
-				continue
-			}*/
-			let v_s = vp.map({ (floor(($0.0+1.0)*halfWidth),floor(($0.1+1.0)*halfHeight),$0.2)})
-			//triangleWire(v_s,(255,255,255))
-			triangle(v_s,f.n, f.t,texture)
+			//--View space
+			let v_view = f.v.map({view*($0.0,$0.1,$0.2,1.0)})
 			
-			//Face normal for backface culling
-			
-			/*
-			let v_w = f.v
-			var n = cross(v_w[2] - v_w[0],v_w[1] - v_w[0])
-			normalize(&n)
-			let cosFactor = dot(n,cam_pos)
-			if cosFactor >= 0.0 {*/
-			//	triangle(v_s,f.n, f.t,texture!)
-			//}
+			//--Backface culling
+			//We compute it manually to avoid using a cross product and extract the 3rd component
+			let orientation = (v_view[2].0 - v_view[0].0) * (v_view[1].1 - v_view[0].1) - (v_view[2].1 - v_view[0].1) * (v_view[1].0 - v_view[0].0)
+			if orientation > 0.0 {
+				
+				//--NDC space
+				let v_p = v_view.map({proj*$0})
+				
+				//--Screen space
+				let v_s = v_p.map({ (floor(($0.0+1.0)*halfWidth),floor((-1.0*$0.1+1.0)*halfHeight),$0.2)})
+				
+				//--Fragment
+				//triangleWire(v_s.map({($0.0,$0.1)}),(255,255,255))
+				triangle(v_s,f.n, f.t,texture)
+			}
 		}
 	}
 	
@@ -84,12 +85,12 @@ class Renderer {
 				let bary = barycentre(Point3(Scalar(x),Scalar(y),0.0),v[0],v[1],v[2])
 				if (bary.0 < 0.0 || bary.1 < 0.0 || bary.2 < 0.0){ continue }
 				let z =  v[0].2 * bary.0 + v[1].2 * bary.1 + v[2].2 * bary.2
-				if (buffer.zbuffer[y*width + x] < z){
-					buffer.zbuffer[y*width + x] = z
+				if (buffer.getDepth(x,y) < z){
+					buffer.setDepth(x, y, z)
 					let tex = barycentricInterpolation(bary, t1: uv[0], t2: uv[1], t3: uv[2])
 					let nor = normalized(barycentricInterpolation(bary, t1: n[0], t2: n[1], t3: n[2]))
 					let cosfactor = max(0.0,dot(-1.0*nor,l))
-					buffer.set(x, y, cosfactor*texture[tex.0,tex.1].rgb)
+					buffer.set(x, y, texture[tex.0,tex.1].rgb)
 				}
 			}
 		}
@@ -156,7 +157,7 @@ class Renderer {
 
 		
 		startTime = CFAbsoluteTimeGetCurrent();
-		buffer.flipVertically()
+		//buffer.flipVertically()
 		let image = buffer.imageFromRGBA32Bitmap()
 		print("[Backing]: \t" + String(format: "%.4fs", CFAbsoluteTimeGetCurrent() - startTime))
 		return image

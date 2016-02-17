@@ -194,7 +194,8 @@ struct Matrix4 {
 	
 	static func perspectiveMatrix(fov fov: Scalar, aspect: Scalar, near: Scalar, far: Scalar) -> Matrix4 {
 		var matrix = Matrix4()
-		let f = 1.0 / tan(fov / 2.0)
+		let radfov = M_PI * fov / 180.0
+		let f = 1.0 / tan(radfov / 2.0)
 		matrix.matrix[0] = f / aspect
 		matrix.matrix[5] = f
 		matrix.matrix[10] = (far + near) / (near - far)

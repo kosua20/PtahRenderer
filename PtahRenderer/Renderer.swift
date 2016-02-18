@@ -20,9 +20,9 @@ class Renderer {
 		height = _height
 		buffer = Framebuffer(width: width, height: height)
 		
-		tex = Texture(path: "/Developer/Xcode/PtahRenderer/models/head_n.png")
+		tex = Texture(path: "/Developer/Xcode/PtahRenderer/models/balloon.png")
 		tex.flipVertically()
-		mesh = Model(path: "/Developer/Xcode/PtahRenderer/models/head.obj")
+		mesh = Model(path: "/Developer/Xcode/PtahRenderer/models/balloon.obj")
 		mesh.center()
 		mesh.normalize()
 		
@@ -35,7 +35,7 @@ class Renderer {
 	func render(){
 		drawMesh(mesh,texture: tex)
 		let theta = time/10.0
-		cam_pos = 10.0*normalized((cos(theta),/*0.0*sin(theta)*/ 0.5,sin(theta)))
+		cam_pos = (5.0*abs(sin(time*0.02))+1.0)*normalized((cos(theta),/*0.0*sin(theta)*/ 0.5,sin(theta)))
 		time+=1.0
 	}
 	
@@ -47,7 +47,7 @@ class Renderer {
 	
 	func drawMesh(mesh : Model, texture : Texture){
 		let view = Matrix4.lookAtMatrix(cam_pos, target: (0.0,0.0,0.0), up: (0.0,1.0,0.0))
-		let proj = Matrix4()//.perspectiveMatrix(fov:90.0, aspect: Scalar(width)/Scalar(height), near: 0.01, far: 1.0)
+		let proj = Matrix4.perspectiveMatrix(fov:70.0, aspect: Scalar(width)/Scalar(height), near: 0.01, far: 1.0)
 		let halfWidth = Scalar(width)*0.5
 		let halfHeight = Scalar(height)*0.5
 		
@@ -56,15 +56,16 @@ class Renderer {
 			
 			//--View space
 			let v_view = f.v.map({view*($0.0,$0.1,$0.2,1.0)})
-			
+		
 			//--Backface culling
 			//We compute it manually to avoid using a cross product and extract the 3rd component
 			let orientation = (v_view[1].0 - v_view[0].0) * (v_view[2].1 - v_view[0].1) - (v_view[1].1 - v_view[0].1) * (v_view[2].0 - v_view[0].0)
 			if orientation > 0.0 {
 				
-				//--NDC space
+				//--Clip space
 				let v_p1 = v_view.map({proj*$0})
-				let v_p = v_p1.map({($0.0,$0.1,$0.2)})
+				//--NDC space
+				let v_p = v_p1.map({($0.0/$0.3,$0.1/$0.3,-$0.2/$0.3)})
 				
 				if(abs(v_p[0].0) > 1.0 || abs(v_p[0].1) > 1.0 || abs(v_p[0].2) > 1.0 || abs(v_p[1].0) > 1.0 || abs(v_p[1].1) > 1.0 || abs(v_p[1].2) > 1.0 || abs(v_p[2].0) > 1.0 || abs(v_p[2].1) > 1.0 || abs(v_p[2].2) > 1.0){
 					//continue

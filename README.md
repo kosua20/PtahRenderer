@@ -17,9 +17,9 @@ Work in progress, using (among other things) :
 * Z-buffer
 * View and world matrices
 * Back faces culling
+* Projection matrix
 
 ###To do
-* Projection matrix
 * Primitives clipping
 * Shaders (vertex, fragment)
 * Multi pass (for AO (SSAO or pre-computation), shadow maps, deferred shading)

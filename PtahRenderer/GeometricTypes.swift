@@ -121,17 +121,21 @@ func normalized(n : Point3) -> Point3 {
 
 struct Matrix4 {
 	var matrix: [Scalar] = [
+		//0	  1	   2	3
 		1.0, 0.0, 0.0, 0.0,
+		//4	  5	   6	7
 		0.0, 1.0, 0.0, 0.0,
+		//8	  9	   10	11
 		0.0, 0.0, 1.0, 0.0,
+		//12  13   14	15
 		0.0, 0.0, 0.0, 1.0
 	]
 	
 	static func translationMatrix(t : Point3) -> Matrix4 {
 		var matrix = Matrix4()
-		matrix.matrix[12] = t.0
-		matrix.matrix[13] = t.1
-		matrix.matrix[14] = t.2
+		matrix.matrix[3] = t.0
+		matrix.matrix[7] = t.1
+		matrix.matrix[11] = t.2
 		return matrix
 	}
 	
@@ -149,46 +153,53 @@ struct Matrix4 {
 	
 	static func rotationMatrix(angle: Scalar, axis: Point3) -> Matrix4 {
 		var matrix = Matrix4()
+		let u = normalized(axis)
 		let c = cos(angle)
-		let ci = 1.0 - c
+		let mc = 1.0 - c
 		let s = sin(angle)
-		let xy = axis.0 * axis.1 * ci
-		let xz = axis.0 * axis.2 * ci
-		let yz = axis.1 * axis.2 * ci
-		let xs = axis.0 * s
-		let ys = axis.1 * s
-		let zs = axis.2 * s
-		matrix.matrix[0] = axis.0 * axis.0 * ci + c
-		matrix.matrix[1] = xy + zs
-		matrix.matrix[2] = xz - ys
-		matrix.matrix[4] = xy - xz
-		matrix.matrix[5] = axis.1 * axis.1 * ci + c
-		matrix.matrix[6] = yz + xs
-		matrix.matrix[8] = xz + ys
-		matrix.matrix[9] = yz - xs
-		matrix.matrix[10] = axis.2 * axis.2 * ci + c
+		
+		let xy = u.0 * u.1 * mc
+		let xz = u.0 * u.2 * mc
+		let yz = u.1 * u.2 * mc
+		let xs = u.0 * s
+		let ys = u.1 * s
+		let zs = u.2 * s
+		matrix.matrix[0] = u.0 * u.0 * mc + c
+		matrix.matrix[1] = xy - zs
+		matrix.matrix[2] = xz + ys
+		
+		matrix.matrix[4] = xy + zs
+		matrix.matrix[5] = u.1 * u.1 * mc + c
+		matrix.matrix[6] = yz - xs
+		
+		matrix.matrix[8] = xz - ys
+		matrix.matrix[9] = yz + xs
+		matrix.matrix[10] = u.2 * u.2 * mc + c
 		return matrix
 	}
 
 	
 	static func lookAtMatrix(eye : Point3, target : Point3, up : Point3) -> Matrix4 {
 		var matrix = Matrix4()
-		let zaxis = normalized(target - eye)
-		var yaxis = normalized(up)
-		let xaxis = normalized(cross(zaxis, yaxis))
-		yaxis = cross(xaxis, zaxis)
-		matrix.matrix[0] = xaxis.0
-		matrix.matrix[1] = xaxis.1
-		matrix.matrix[2] = xaxis.2
-		matrix.matrix[4] = yaxis.0
-		matrix.matrix[5] = yaxis.1
-		matrix.matrix[6] = yaxis.2
-		matrix.matrix[8] = -zaxis.0
-		matrix.matrix[9] = -zaxis.1
-		matrix.matrix[10] = -zaxis.2
-		matrix.matrix[12] = -dot(xaxis,eye)
-		matrix.matrix[13] = -dot(yaxis,eye)
-		matrix.matrix[14] = dot(zaxis,eye)
+		let n = normalized(target - eye)
+		var v = normalized(up)
+		let u = normalized(cross(n,v))
+		v = normalized(cross(u,n))
+		matrix.matrix[0] = u.0
+		matrix.matrix[1] = u.1
+		matrix.matrix[2] = u.2
+		
+		matrix.matrix[4] = v.0
+		matrix.matrix[5] = v.1
+		matrix.matrix[6] = v.2
+		
+		matrix.matrix[8] = -n.0
+		matrix.matrix[9] = -n.1
+		matrix.matrix[10] = -n.2
+		
+		matrix.matrix[3] = -dot(u,eye)
+		matrix.matrix[7] = -dot(v,eye)
+		matrix.matrix[11] = dot(n,eye)
 		return matrix
 	}
 	
@@ -199,8 +210,8 @@ struct Matrix4 {
 		matrix.matrix[0] = f / aspect
 		matrix.matrix[5] = f
 		matrix.matrix[10] = (far + near) / (near - far)
-		matrix.matrix[11] = -1.0
-		matrix.matrix[14] = (2.0 * far * near) / (near - far)
+		matrix.matrix[14] = -1.0
+		matrix.matrix[11] = (2.0 * far * near) / (near - far)
 		matrix.matrix[15] = 0.0
 		return matrix
 	}

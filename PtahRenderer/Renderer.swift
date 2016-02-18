@@ -20,9 +20,9 @@ class Renderer {
 		height = _height
 		buffer = Framebuffer(width: width, height: height)
 		
-		tex = Texture(path: "/Users/simon/Desktop/balloon.png")
+		tex = Texture(path: "/Users/simon/Desktop/head_n.png")
 		tex.flipVertically()
-		mesh = Model(path: "/Users/simon/Desktop/balloon.obj")
+		mesh = Model(path: "/Users/simon/Desktop/head.obj")
 		mesh.center()
 		mesh.normalize()
 		mesh.expand()
@@ -30,27 +30,23 @@ class Renderer {
 	private var tex : Texture
 	private var mesh : Model
 	private var time = 0.0
+	
 	func render(){
-		
-		
-		
-		
-		
 		drawMesh(mesh,texture: tex)
 		let theta = time/10.0
-		cam_pos = normalized((cos(theta),/*0.0*sin(theta)*/ 1.0,sin(theta)))
+		cam_pos = normalized((cos(theta),/*0.0*sin(theta)*/ -1.0,sin(theta)))
 		time+=1.0
 	}
 	
 	private var l = normalized((1.0,0.0,-1.0))
-	private var cam_pos = normalized((1.0,-1.0,0.0))
+	private var cam_pos = normalized((1.0,1.0,0.0))
 	
 	
 	
 	
 	func drawMesh(mesh : Model, texture : Texture){
-		let view = Matrix4.lookAtMatrix(-1.0*cam_pos, target: (0.0,0.0,0.0), up: (0.0,1.0,0.0))
-		let proj = Matrix4.perspectiveMatrix(fov:120.0, aspect: Scalar(width)/Scalar(height), near: 0.01, far: 1.0)
+		let view = Matrix4.lookAtMatrix(cam_pos, target: (0.0,0.0,0.0), up: (0.0,1.0,0.0))
+		let proj = Matrix4()//.perspectiveMatrix(fov:90.0, aspect: Scalar(width)/Scalar(height), near: 0.01, far: 1.0)
 		let halfWidth = Scalar(width)*0.5
 		let halfHeight = Scalar(height)*0.5
 		
@@ -62,14 +58,18 @@ class Renderer {
 			
 			//--Backface culling
 			//We compute it manually to avoid using a cross product and extract the 3rd component
-			let orientation = (v_view[2].0 - v_view[0].0) * (v_view[1].1 - v_view[0].1) - (v_view[2].1 - v_view[0].1) * (v_view[1].0 - v_view[0].0)
+			let orientation = (v_view[1].0 - v_view[0].0) * (v_view[2].1 - v_view[0].1) - (v_view[1].1 - v_view[0].1) * (v_view[2].0 - v_view[0].0)
 			if orientation > 0.0 {
 				
 				//--NDC space
-				let v_p = v_view.map({proj*$0})
+				let v_p1 = v_view.map({proj*$0})
+				let v_p = v_p1.map({($0.0,$0.1,$0.2)})
 				
+				if(abs(v_p[0].0) > 1.0 || abs(v_p[0].1) > 1.0 || abs(v_p[0].2) > 1.0 || abs(v_p[1].0) > 1.0 || abs(v_p[1].1) > 1.0 || abs(v_p[1].2) > 1.0 || abs(v_p[2].0) > 1.0 || abs(v_p[2].1) > 1.0 || abs(v_p[2].2) > 1.0){
+					//continue
+				}
 				//--Screen space
-				let v_s = v_p.map({ (floor(($0.0+1.0)*halfWidth),floor((-1.0*$0.1+1.0)*halfHeight),$0.2)})
+				let v_s = v_p.map({ (floor(($0.0 + 1.0)*halfWidth),floor((-1.0*$0.1 + 1.0)*halfHeight),$0.2)})
 				
 				//--Fragment
 				//triangleWire(v_s.map({($0.0,$0.1)}),(255,255,255))
@@ -88,8 +88,8 @@ class Renderer {
 				if (buffer.getDepth(x,y) < z){
 					buffer.setDepth(x, y, z)
 					let tex = barycentricInterpolation(bary, t1: uv[0], t2: uv[1], t3: uv[2])
-					let nor = normalized(barycentricInterpolation(bary, t1: n[0], t2: n[1], t3: n[2]))
-					let cosfactor = max(0.0,dot(-1.0*nor,l))
+					//let nor = normalized(barycentricInterpolation(bary, t1: n[0], t2: n[1], t3: n[2]))
+					//let cosfactor = max(0.0,dot(-1.0*nor,l))
 					buffer.set(x, y, texture[tex.0,tex.1].rgb)
 				}
 			}

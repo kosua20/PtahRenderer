@@ -20,11 +20,12 @@ class Renderer {
 		height = _height
 		buffer = Framebuffer(width: width, height: height)
 		
-		tex = Texture(path: "/Users/simon/Desktop/head_n.png")
+		tex = Texture(path: "/Developer/Xcode/PtahRenderer/models/head_n.png")
 		tex.flipVertically()
-		mesh = Model(path: "/Users/simon/Desktop/head.obj")
+		mesh = Model(path: "/Developer/Xcode/PtahRenderer/models/head.obj")
 		mesh.center()
 		mesh.normalize()
+		
 		mesh.expand()
 	}
 	private var tex : Texture
@@ -34,7 +35,7 @@ class Renderer {
 	func render(){
 		drawMesh(mesh,texture: tex)
 		let theta = time/10.0
-		cam_pos = normalized((cos(theta),/*0.0*sin(theta)*/ -1.0,sin(theta)))
+		cam_pos = 10.0*normalized((cos(theta),/*0.0*sin(theta)*/ 0.5,sin(theta)))
 		time+=1.0
 	}
 	

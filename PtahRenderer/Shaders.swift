@@ -10,17 +10,17 @@ import Foundation
 
 protocol Shader {
 	var uniforms : [Texture] { get set }
-	func vertexShader(v : Point3) -> Point3
-	func fragmentShader(p : Point2) -> Color
+	static func vertexShader(v : Point3) -> Point3
+	static func fragmentShader(p : Point2) -> Color
 }
 
 
 class TestShader : Protocol {
-	func vertexShader(v : Point3) -> Point3{
+	static func vertexShader(v : Point3) -> Point3{
 		return v
 	}
 	
-	func fragmentShader(p : Point2)-> Color{
+	static func fragmentShader(p : Point2)-> Color{
 		return (255,255,255)
 	}
 }

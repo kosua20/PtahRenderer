@@ -8,6 +8,7 @@
 
 import Foundation
 
+typealias Point4 = (Scalar, Scalar, Scalar,Scalar)
 typealias Point3 = (Scalar, Scalar, Scalar)
 typealias Point2 = (Scalar, Scalar)
 typealias Vertex = Point3
@@ -240,7 +241,7 @@ func * (left: Matrix4, right: Matrix4) -> Matrix4 {
 	return Matrix4(matrix: m)
 }
 
-func * (left: Matrix4, rhs: (Scalar,Scalar,Scalar,Scalar)) -> (Scalar,Scalar,Scalar,Scalar) {
+func * (left: Matrix4, rhs: Point4) -> Point4 {
 	let m1 = left.matrix
 	var m = (0.0,0.0,0.0,0.0)
 	m.0 = m1[ 0]*rhs.0 + m1[ 1]*rhs.1 + m1[ 2]*rhs.2 + m1[ 3]*rhs.3

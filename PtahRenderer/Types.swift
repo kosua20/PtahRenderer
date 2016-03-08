@@ -55,6 +55,13 @@ struct Pixel {
 		b = _b
 	}
 	
+	init(_ _r: UInt8,_ _g: UInt8,_ _b: UInt8, _ _a: UInt8){
+		r = _r
+		g = _g
+		b = _b
+		a = _a
+	}
+	
 	init(_ val : UInt8){
 		r = val
 		g = val

@@ -68,6 +68,8 @@ class Framebuffer {
 	/*Courtesy of Simon Gladman, http://flexmonkey.blogspot.fr */
 	/*---------------------------------------------------------*/
 	
+	//MARK: OSX dependant
+	
 	private let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
 	private let bitmapInfo:CGBitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.PremultipliedLast.rawValue)
 	

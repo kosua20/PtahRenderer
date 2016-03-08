@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F44A6D971C8F2B5900D12DBD /* TGALoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44A6D961C8F2B5900D12DBD /* TGALoader.swift */; };
 		F4998B801C7111FD00FEFFD4 /* GeometricTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4998B7F1C7111FD00FEFFD4 /* GeometricTypes.swift */; };
 		F4998B821C7113EF00FEFFD4 /* GeometricOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4998B811C7113EF00FEFFD4 /* GeometricOperations.swift */; };
 		F4998B841C71188D00FEFFD4 /* Framebuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4998B831C71188D00FEFFD4 /* Framebuffer.swift */; };
@@ -22,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F44A6D961C8F2B5900D12DBD /* TGALoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGALoader.swift; sourceTree = "<group>"; };
 		F4998B7F1C7111FD00FEFFD4 /* GeometricTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeometricTypes.swift; sourceTree = "<group>"; };
 		F4998B811C7113EF00FEFFD4 /* GeometricOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = GeometricOperations.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F4998B831C71188D00FEFFD4 /* Framebuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Framebuffer.swift; sourceTree = "<group>"; };
@@ -71,6 +73,7 @@
 				F49C6CE51C6FC6F200C5F852 /* AppDelegate.swift */,
 				F49C6CE71C6FC6F200C5F852 /* ViewController.swift */,
 				F49C6CF41C6FC76000C5F852 /* Renderer.swift */,
+				F44A6D961C8F2B5900D12DBD /* TGALoader.swift */,
 				F4C1EF821C73DF6000551FAA /* Shaders.swift */,
 				F4998B831C71188D00FEFFD4 /* Framebuffer.swift */,
 				F49C6CF61C6FD01E00C5F852 /* Texture.swift */,
@@ -164,6 +167,7 @@
 				F4C1EF831C73DF6000551FAA /* Shaders.swift in Sources */,
 				F49C6CF51C6FC76000C5F852 /* Renderer.swift in Sources */,
 				F49C6CE61C6FC6F200C5F852 /* AppDelegate.swift in Sources */,
+				F44A6D971C8F2B5900D12DBD /* TGALoader.swift in Sources */,
 				F4998B821C7113EF00FEFFD4 /* GeometricOperations.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

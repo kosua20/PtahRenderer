@@ -23,12 +23,18 @@ class ViewController: NSViewController {
 		print("[Total]: " + String(format: "%.4fs", CFAbsoluteTimeGetCurrent() - startTime))
 		// Do any additional setup after loading the view.*/
 		//Launch the timer
-		timer = NSTimer(timeInterval: 1.0 / 60.0, target: self, selector: "timerFired:", userInfo: nil, repeats: true)
-		NSRunLoop.currentRunLoop().addTimer(timer, forMode: NSDefaultRunLoopMode)
+		//timer = NSTimer(timeInterval: 1.0 / 60.0, target: self, selector: "timerFired:", userInfo: nil, repeats: true)
+		//NSRunLoop.currentRunLoop().addTimer(timer, forMode: NSDefaultRunLoopMode)
+		renderer.clear()
+		let pixels = renderer.renderBuffer()
+		TGALoader.writeTGA(pixels, width: 512, height: 512, path: "/Users/simon/Desktop/out1.tga")
+		
+		
 	}
 	
 	private var avg = 0
 	private var count = 0
+	
 	func timerFired(sender: NSTimer!) {
 		let startTime = CFAbsoluteTimeGetCurrent();
 			renderer.clear()

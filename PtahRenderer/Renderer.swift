@@ -20,9 +20,9 @@ class Renderer {
 		height = _height
 		buffer = Framebuffer(width: width, height: height)
 		
-		tex = Texture(path: "/Developer/Xcode/PtahRenderer/models/balloon.png")
+		tex = Texture(path: "/Developer/Xcode/PtahRenderer/models/floor.png")
 		tex.flipVertically()
-		mesh = Model(path: "/Developer/Xcode/PtahRenderer/models/balloon.obj")
+		mesh = Model(path: "/Developer/Xcode/PtahRenderer/models/floor.obj")
 		mesh.center()
 		mesh.normalize()
 		
@@ -33,10 +33,10 @@ class Renderer {
 	private var time = 0.0
 	
 	func render(){
-		//drawMesh(mesh,texture: tex)
-		drawTest()
+		drawMesh(mesh,texture: tex)
+		//drawTest()
 		let theta = time/10.0
-		cam_pos = normalized((cos(theta),/*0.0*sin(theta)*/ 0.5,sin(theta)))
+		//cam_pos = normalized((cos(theta),/*0.0*sin(theta)*/ 0.5,sin(theta)))
 		time+=1.0
 	}
 	
@@ -63,7 +63,7 @@ class Renderer {
 			})
 		print(csr)
 		
-		if v.map({$0.1 > $0.3}).filter({$0}).count > 0 {
+		if v.filter({$0.1 > $0.3}).count > 0 {
 			return
 		}
 		
@@ -120,6 +120,7 @@ class Renderer {
 	}
 	
 	func triangle(v : [Vertex], _ n : [Normal], _ uv : [UV],_ texture : Texture){
+		//print("newtri")
 		let (mini, maxi) = boundingBox(v,width,height)
 		for x in Int(mini.0)...Int(maxi.0) {
 			for y in Int(mini.1)...Int(maxi.1) {
@@ -128,7 +129,9 @@ class Renderer {
 				let z =  v[0].2 * bary.0 + v[1].2 * bary.1 + v[2].2 * bary.2
 				if (buffer.getDepth(x,y) < z){
 					buffer.setDepth(x, y, z)
-					let tex = barycentricInterpolation(bary, t1: uv[0], t2: uv[1], t3: uv[2])
+					//let tex = barycentricInterpolation(bary, t1: uv[0], t2: uv[1], t3: uv[2])
+					let tex = perspectiveCorrectInterpolation(bary, t1: uv[0], t2: uv[1], t3: uv[2], z1: abs(v[0].2), z2: abs(v[1].2), z3: abs(v[2].2))
+					//print(v[0].2,", ", v[1].2, ", " , v[2].2)
 					//let nor = normalized(barycentricInterpolation(bary, t1: n[0], t2: n[1], t3: n[2]))
 					//let cosfactor = max(0.0,dot(-1.0*nor,l))
 					buffer.set(x, y, texture[tex.0,tex.1].rgb)
@@ -205,13 +208,26 @@ class Renderer {
 		}
 	}
 	
+	func renderBuffer() -> [Pixel] {
+	
+		
+		var startTime = CFAbsoluteTimeGetCurrent();
+		render()
+		print("[Render]: \t" + String(format: "%.4fs", CFAbsoluteTimeGetCurrent() - startTime))
+		startTime = CFAbsoluteTimeGetCurrent();
+		buffer.flipVertically()
+		
+		print("[Backing]: \t" + String(format: "%.4fs", CFAbsoluteTimeGetCurrent() - startTime))
+		return buffer.pixels
+	}
+	
+	
+	//MARK: OSX dependant
 	func renderImage() -> NSImage {
 		
 		var startTime = CFAbsoluteTimeGetCurrent();
 		render()
 		print("[Render]: \t" + String(format: "%.4fs", CFAbsoluteTimeGetCurrent() - startTime))
-
-		
 		startTime = CFAbsoluteTimeGetCurrent();
 		//buffer.flipVertically()
 		let image = buffer.imageFromRGBA32Bitmap()

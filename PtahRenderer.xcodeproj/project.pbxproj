@@ -7,14 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F42368F91C90625500500AE3 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42368F81C90625500500AE3 /* main.swift */; };
+		F42368FE1C90686400500AE3 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C6CF41C6FC76000C5F852 /* Renderer.swift */; };
+		F42368FF1C90686400500AE3 /* TGALoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44A6D961C8F2B5900D12DBD /* TGALoader.swift */; };
+		F42369001C90686400500AE3 /* Shaders.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C1EF821C73DF6000551FAA /* Shaders.swift */; };
+		F42369011C90686400500AE3 /* Framebuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4998B831C71188D00FEFFD4 /* Framebuffer.swift */; };
+		F42369021C90686400500AE3 /* Texture.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C6CF61C6FD01E00C5F852 /* Texture.swift */; };
+		F42369031C90686400500AE3 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C6CF81C6FD02800C5F852 /* Model.swift */; };
+		F42369041C90686400500AE3 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C6CFA1C6FD0A400C5F852 /* Types.swift */; };
+		F42369051C90686400500AE3 /* GeometricTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4998B7F1C7111FD00FEFFD4 /* GeometricTypes.swift */; };
+		F42369061C90686400500AE3 /* GeometricOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4998B811C7113EF00FEFFD4 /* GeometricOperations.swift */; };
+		F42369081C906A0700500AE3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42369071C906A0700500AE3 /* AppDelegate.swift */; };
+		F423690B1C906A1B00500AE3 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F42369091C906A1B00500AE3 /* Info.plist */; };
+		F423690C1C906A1B00500AE3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F423690A1C906A1B00500AE3 /* ViewController.swift */; };
+		F423690E1C906A2E00500AE3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F423690D1C906A2E00500AE3 /* Assets.xcassets */; };
+		F42369111C906A3800500AE3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F423690F1C906A3800500AE3 /* Main.storyboard */; };
 		F44A6D971C8F2B5900D12DBD /* TGALoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44A6D961C8F2B5900D12DBD /* TGALoader.swift */; };
 		F4998B801C7111FD00FEFFD4 /* GeometricTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4998B7F1C7111FD00FEFFD4 /* GeometricTypes.swift */; };
 		F4998B821C7113EF00FEFFD4 /* GeometricOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4998B811C7113EF00FEFFD4 /* GeometricOperations.swift */; };
 		F4998B841C71188D00FEFFD4 /* Framebuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4998B831C71188D00FEFFD4 /* Framebuffer.swift */; };
-		F49C6CE61C6FC6F200C5F852 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C6CE51C6FC6F200C5F852 /* AppDelegate.swift */; };
-		F49C6CE81C6FC6F200C5F852 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C6CE71C6FC6F200C5F852 /* ViewController.swift */; };
-		F49C6CEA1C6FC6F200C5F852 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F49C6CE91C6FC6F200C5F852 /* Assets.xcassets */; };
-		F49C6CED1C6FC6F200C5F852 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F49C6CEB1C6FC6F200C5F852 /* Main.storyboard */; };
 		F49C6CF51C6FC76000C5F852 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C6CF41C6FC76000C5F852 /* Renderer.swift */; };
 		F49C6CF71C6FD01E00C5F852 /* Texture.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C6CF61C6FD01E00C5F852 /* Texture.swift */; };
 		F49C6CF91C6FD02800C5F852 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C6CF81C6FD02800C5F852 /* Model.swift */; };
@@ -22,17 +33,31 @@
 		F4C1EF831C73DF6000551FAA /* Shaders.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C1EF821C73DF6000551FAA /* Shaders.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		F42368F41C90625500500AE3 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		F42368F61C90625500500AE3 /* PtahRendererOffline */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PtahRendererOffline; sourceTree = BUILT_PRODUCTS_DIR; };
+		F42368F81C90625500500AE3 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		F42369071C906A0700500AE3 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = PtahRendererOnline/AppDelegate.swift; sourceTree = SOURCE_ROOT; };
+		F42369091C906A1B00500AE3 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = PtahRendererOnline/Info.plist; sourceTree = SOURCE_ROOT; };
+		F423690A1C906A1B00500AE3 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = PtahRendererOnline/ViewController.swift; sourceTree = SOURCE_ROOT; };
+		F423690D1C906A2E00500AE3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = PtahRendererOnline/Assets.xcassets; sourceTree = SOURCE_ROOT; };
+		F42369101C906A3800500AE3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = PtahRendererOnline/Base.lproj/Main.storyboard; sourceTree = SOURCE_ROOT; };
 		F44A6D961C8F2B5900D12DBD /* TGALoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGALoader.swift; sourceTree = "<group>"; };
 		F4998B7F1C7111FD00FEFFD4 /* GeometricTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeometricTypes.swift; sourceTree = "<group>"; };
 		F4998B811C7113EF00FEFFD4 /* GeometricOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = GeometricOperations.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F4998B831C71188D00FEFFD4 /* Framebuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Framebuffer.swift; sourceTree = "<group>"; };
-		F49C6CE21C6FC6F200C5F852 /* PtahRenderer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PtahRenderer.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		F49C6CE51C6FC6F200C5F852 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		F49C6CE71C6FC6F200C5F852 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		F49C6CE91C6FC6F200C5F852 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		F49C6CEC1C6FC6F200C5F852 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		F49C6CEE1C6FC6F200C5F852 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F49C6CE21C6FC6F200C5F852 /* PtahRendererOnline.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PtahRendererOnline.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F49C6CF41C6FC76000C5F852 /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		F49C6CF61C6FD01E00C5F852 /* Texture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Texture.swift; sourceTree = "<group>"; };
 		F49C6CF81C6FD02800C5F852 /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
@@ -41,6 +66,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		F42368F31C90625500500AE3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F49C6CDF1C6FC6F200C5F852 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -51,27 +83,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		F49C6CD91C6FC6F100C5F852 = {
+		F42368F71C90625500500AE3 /* PtahRendererOffline */ = {
 			isa = PBXGroup;
 			children = (
-				F49C6CE41C6FC6F200C5F852 /* PtahRenderer */,
-				F49C6CE31C6FC6F200C5F852 /* Products */,
+				F42368F81C90625500500AE3 /* main.swift */,
 			);
+			path = PtahRendererOffline;
 			sourceTree = "<group>";
 		};
-		F49C6CE31C6FC6F200C5F852 /* Products */ = {
+		F42368FD1C90626800500AE3 /* PtahRenderer */ = {
 			isa = PBXGroup;
 			children = (
-				F49C6CE21C6FC6F200C5F852 /* PtahRenderer.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		F49C6CE41C6FC6F200C5F852 /* PtahRenderer */ = {
-			isa = PBXGroup;
-			children = (
-				F49C6CE51C6FC6F200C5F852 /* AppDelegate.swift */,
-				F49C6CE71C6FC6F200C5F852 /* ViewController.swift */,
 				F49C6CF41C6FC76000C5F852 /* Renderer.swift */,
 				F44A6D961C8F2B5900D12DBD /* TGALoader.swift */,
 				F4C1EF821C73DF6000551FAA /* Shaders.swift */,
@@ -81,19 +103,65 @@
 				F49C6CFA1C6FD0A400C5F852 /* Types.swift */,
 				F4998B7F1C7111FD00FEFFD4 /* GeometricTypes.swift */,
 				F4998B811C7113EF00FEFFD4 /* GeometricOperations.swift */,
-				F49C6CE91C6FC6F200C5F852 /* Assets.xcassets */,
-				F49C6CEB1C6FC6F200C5F852 /* Main.storyboard */,
-				F49C6CEE1C6FC6F200C5F852 /* Info.plist */,
 			);
+			path = PtahRenderer;
+			sourceTree = "<group>";
+		};
+		F49C6CD91C6FC6F100C5F852 = {
+			isa = PBXGroup;
+			children = (
+				F42368FD1C90626800500AE3 /* PtahRenderer */,
+				F49C6CE41C6FC6F200C5F852 /* PtahRendererOnline */,
+				F42368F71C90625500500AE3 /* PtahRendererOffline */,
+				F49C6CE31C6FC6F200C5F852 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F49C6CE31C6FC6F200C5F852 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F49C6CE21C6FC6F200C5F852 /* PtahRendererOnline.app */,
+				F42368F61C90625500500AE3 /* PtahRendererOffline */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F49C6CE41C6FC6F200C5F852 /* PtahRendererOnline */ = {
+			isa = PBXGroup;
+			children = (
+				F42369071C906A0700500AE3 /* AppDelegate.swift */,
+				F42369091C906A1B00500AE3 /* Info.plist */,
+				F423690F1C906A3800500AE3 /* Main.storyboard */,
+				F423690A1C906A1B00500AE3 /* ViewController.swift */,
+				F423690D1C906A2E00500AE3 /* Assets.xcassets */,
+			);
+			name = PtahRendererOnline;
 			path = PtahRenderer;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		F49C6CE11C6FC6F200C5F852 /* PtahRenderer */ = {
+		F42368F51C90625500500AE3 /* PtahRendererOffline */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F49C6CF11C6FC6F200C5F852 /* Build configuration list for PBXNativeTarget "PtahRenderer" */;
+			buildConfigurationList = F42368FC1C90625500500AE3 /* Build configuration list for PBXNativeTarget "PtahRendererOffline" */;
+			buildPhases = (
+				F42368F21C90625500500AE3 /* Sources */,
+				F42368F31C90625500500AE3 /* Frameworks */,
+				F42368F41C90625500500AE3 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PtahRendererOffline;
+			productName = PtahRendererOffline;
+			productReference = F42368F61C90625500500AE3 /* PtahRendererOffline */;
+			productType = "com.apple.product-type.tool";
+		};
+		F49C6CE11C6FC6F200C5F852 /* PtahRendererOnline */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F49C6CF11C6FC6F200C5F852 /* Build configuration list for PBXNativeTarget "PtahRendererOnline" */;
 			buildPhases = (
 				F49C6CDE1C6FC6F200C5F852 /* Sources */,
 				F49C6CDF1C6FC6F200C5F852 /* Frameworks */,
@@ -103,9 +171,9 @@
 			);
 			dependencies = (
 			);
-			name = PtahRenderer;
+			name = PtahRendererOnline;
 			productName = PtahRenderer;
-			productReference = F49C6CE21C6FC6F200C5F852 /* PtahRenderer.app */;
+			productReference = F49C6CE21C6FC6F200C5F852 /* PtahRendererOnline.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -118,6 +186,9 @@
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "Simon Rodriguez";
 				TargetAttributes = {
+					F42368F51C90625500500AE3 = {
+						CreatedOnToolsVersion = 7.2.1;
+					};
 					F49C6CE11C6FC6F200C5F852 = {
 						CreatedOnToolsVersion = 7.2.1;
 					};
@@ -136,7 +207,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				F49C6CE11C6FC6F200C5F852 /* PtahRenderer */,
+				F49C6CE11C6FC6F200C5F852 /* PtahRendererOnline */,
+				F42368F51C90625500500AE3 /* PtahRendererOffline */,
 			);
 		};
 /* End PBXProject section */
@@ -146,27 +218,45 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F49C6CEA1C6FC6F200C5F852 /* Assets.xcassets in Resources */,
-				F49C6CED1C6FC6F200C5F852 /* Main.storyboard in Resources */,
+				F42369111C906A3800500AE3 /* Main.storyboard in Resources */,
+				F423690E1C906A2E00500AE3 /* Assets.xcassets in Resources */,
+				F423690B1C906A1B00500AE3 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		F42368F21C90625500500AE3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F42369031C90686400500AE3 /* Model.swift in Sources */,
+				F42368FE1C90686400500AE3 /* Renderer.swift in Sources */,
+				F42369021C90686400500AE3 /* Texture.swift in Sources */,
+				F42369041C90686400500AE3 /* Types.swift in Sources */,
+				F42369051C90686400500AE3 /* GeometricTypes.swift in Sources */,
+				F42368FF1C90686400500AE3 /* TGALoader.swift in Sources */,
+				F42369001C90686400500AE3 /* Shaders.swift in Sources */,
+				F42368F91C90625500500AE3 /* main.swift in Sources */,
+				F42369011C90686400500AE3 /* Framebuffer.swift in Sources */,
+				F42369061C90686400500AE3 /* GeometricOperations.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F49C6CDE1C6FC6F200C5F852 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F42369081C906A0700500AE3 /* AppDelegate.swift in Sources */,
 				F49C6CF91C6FD02800C5F852 /* Model.swift in Sources */,
-				F49C6CE81C6FC6F200C5F852 /* ViewController.swift in Sources */,
 				F49C6CF71C6FD01E00C5F852 /* Texture.swift in Sources */,
 				F49C6CFB1C6FD0A400C5F852 /* Types.swift in Sources */,
+				F423690C1C906A1B00500AE3 /* ViewController.swift in Sources */,
 				F4998B841C71188D00FEFFD4 /* Framebuffer.swift in Sources */,
 				F4998B801C7111FD00FEFFD4 /* GeometricTypes.swift in Sources */,
 				F4C1EF831C73DF6000551FAA /* Shaders.swift in Sources */,
 				F49C6CF51C6FC76000C5F852 /* Renderer.swift in Sources */,
-				F49C6CE61C6FC6F200C5F852 /* AppDelegate.swift in Sources */,
 				F44A6D971C8F2B5900D12DBD /* TGALoader.swift in Sources */,
 				F4998B821C7113EF00FEFFD4 /* GeometricOperations.swift in Sources */,
 			);
@@ -175,10 +265,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		F49C6CEB1C6FC6F200C5F852 /* Main.storyboard */ = {
+		F423690F1C906A3800500AE3 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				F49C6CEC1C6FC6F200C5F852 /* Base */,
+				F42369101C906A3800500AE3 /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -186,6 +276,22 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		F42368FA1C90625500500AE3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		F42368FB1C90625500500AE3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		F49C6CEF1C6FC6F200C5F852 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -272,7 +378,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = PtahRenderer/Info.plist;
+				INFOPLIST_FILE = PtahRendererOnline/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.simonrodriguez.PtahRenderer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -284,7 +390,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = PtahRenderer/Info.plist;
+				INFOPLIST_FILE = PtahRendererOnline/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.simonrodriguez.PtahRenderer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -294,6 +400,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		F42368FC1C90625500500AE3 /* Build configuration list for PBXNativeTarget "PtahRendererOffline" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F42368FA1C90625500500AE3 /* Debug */,
+				F42368FB1C90625500500AE3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		F49C6CDD1C6FC6F100C5F852 /* Build configuration list for PBXProject "PtahRenderer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -303,7 +417,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F49C6CF11C6FC6F200C5F852 /* Build configuration list for PBXNativeTarget "PtahRenderer" */ = {
+		F49C6CF11C6FC6F200C5F852 /* Build configuration list for PBXNativeTarget "PtahRendererOnline" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F49C6CF21C6FC6F200C5F852 /* Debug */,

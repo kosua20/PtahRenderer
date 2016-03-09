@@ -7,7 +7,9 @@
 //
 
 import Foundation
+#if os(OSX)
 import Cocoa
+#endif
 
 class Framebuffer {
 	internal var pixels : [Pixel] = []
@@ -68,7 +70,7 @@ class Framebuffer {
 	/*Courtesy of Simon Gladman, http://flexmonkey.blogspot.fr */
 	/*---------------------------------------------------------*/
 	
-	//MARK: OSX dependant
+	#if os(OSX)
 	
 	private let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
 	private let bitmapInfo:CGBitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.PremultipliedLast.rawValue)
@@ -83,6 +85,8 @@ class Framebuffer {
 		let cgim = CGImageCreate(width, height, bitsPerComponent, bitsPerPixel, width * Int(sizeof(Pixel)), rgbColorSpace, bitmapInfo, providerRef, nil, true, .RenderingIntentDefault)
 		return NSImage(CGImage: cgim!, size: NSSize(width: width, height: height))
 	}
+	
+	#endif
 	
 	internal func dumpZbuffer(){
 		print("Not yet implemented.")

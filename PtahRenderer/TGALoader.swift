@@ -45,10 +45,10 @@ class TGALoader {
 		data.writeToFile(path.hasSuffix(".tga") ? path : (path + ".tga") , atomically: true)
 	}
 	
-	static func loadTGA(path : String) -> [Pixel]{
+	static func loadTGA(path : String) -> (Int, Int,[Pixel]){
 		guard let data = NSData(contentsOfFile: path) else {
 			assertionFailure("Couldn't load the tga")
-			return []
+			return (0,0,[])
 		}
 		var header : [UInt8] = [UInt8](count:18, repeatedValue:0)
 		data.getBytes(&header, range:NSRange(location:0,length:18))
@@ -58,6 +58,7 @@ class TGALoader {
 		let imageType = Int(header[2])
 		if useColorMap || ([0, 1, 3].contains(imageType)) {
 			assertionFailure("Not a color TGA")
+			return (0,0,[])
 		}
 		
 		let IDLength = header[0]
@@ -92,6 +93,6 @@ class TGALoader {
 			}
 
 		}
-		return pixels
+		return (width, height,pixels)
 	}
 }

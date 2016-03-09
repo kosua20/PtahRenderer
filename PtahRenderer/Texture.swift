@@ -15,45 +15,67 @@ class Texture {
 	var pixels : [Pixel]
 	var mode : TextureMode = .Wrap
 	
+	
+	
+	
 	init(path : String){
-		let dataProvider = CGDataProviderCreateWithFilename(path)
-		assert(dataProvider != nil)
-		let image = CGImageCreateWithPNGDataProvider(dataProvider!, nil, false, .RenderingIntentDefault)
-		if let imageData = CGDataProviderCopyData(CGImageGetDataProvider(image)) {
-			width = CGImageGetWidth(image)
-			height = CGImageGetHeight(image)
-			components = CGImageGetBitsPerPixel(image) / 8
-			let data = imageData as NSData
-			if components == 4 {
-				pixels = Array(UnsafeBufferPointer(start: UnsafePointer<Pixel>(data.bytes), count: data.length/4))
-			} else {
-				let temp_pixels = Array(UnsafeBufferPointer(start: UnsafePointer<UInt8>(data.bytes), count: data.length))
-				
-				pixels = [Pixel](count: temp_pixels.count / components, repeatedValue: Pixel(0))
-				switch components {
-				case 3:
-					for i in 0..<(temp_pixels.count / components){
-						pixels[i] = Pixel(temp_pixels[3*i],temp_pixels[3*i+1],temp_pixels[3*i+2])
+		
+		if path.hasSuffix(".png"){
+			
+		#if os(Linux)
+			assert(false,"On Linux, only TGA can be currently loaded.")
+		#else
+			let dataProvider = CGDataProviderCreateWithFilename(path)
+			assert(dataProvider != nil)
+			let image = CGImageCreateWithPNGDataProvider(dataProvider!, nil, false, .RenderingIntentDefault)
+			if let imageData = CGDataProviderCopyData(CGImageGetDataProvider(image)) {
+				width = CGImageGetWidth(image)
+				height = CGImageGetHeight(image)
+				components = CGImageGetBitsPerPixel(image) / 8
+				let data = imageData as NSData
+				if components == 4 {
+					pixels = Array(UnsafeBufferPointer(start: UnsafePointer<Pixel>(data.bytes), count: data.length/4))
+				} else {
+					let temp_pixels = Array(UnsafeBufferPointer(start: UnsafePointer<UInt8>(data.bytes), count: data.length))
+					
+					pixels = [Pixel](count: temp_pixels.count / components, repeatedValue: Pixel(0))
+					switch components {
+					case 3:
+						for i in 0..<(temp_pixels.count / components){
+							pixels[i] = Pixel(temp_pixels[3*i],temp_pixels[3*i+1],temp_pixels[3*i+2])
+						}
+					case 2:
+						for i in 0..<(temp_pixels.count / components){
+							pixels[i] = Pixel(temp_pixels[2*i],temp_pixels[2*i+1],0)
+						}
+					case 1:
+						for i in 0..<(temp_pixels.count){
+							pixels[i] = Pixel(temp_pixels[i])
+						}
+					default:
+						pixels = []
 					}
-				case 2:
-					for i in 0..<(temp_pixels.count / components){
-						pixels[i] = Pixel(temp_pixels[2*i],temp_pixels[2*i+1],0)
-					}
-				case 1:
-					for i in 0..<(temp_pixels.count){
-						pixels[i] = Pixel(temp_pixels[i])
-					}
-				default:
-					pixels = []
+					
 				}
-				
+				return
 			}
+		#endif
+		} else if path.hasSuffix(".tga"){
+			let (w,h,p) = TGALoader.loadTGA(path)
+			width = w
+			height = h
+			components = 3
+			pixels = p
+			return
 		} else {
-			width = 0
-			height = 0
-			components = 0
-			pixels = []
+			assert(false,"Only .png and .tga can currently be loaded.")
 		}
+		width = 0
+		height = 0
+		components = 0
+		pixels = []
+		
+		
 	}
 	
 	//Nearest neighbours

@@ -15,7 +15,8 @@ protocol Shader {
 }
 
 
-class TestShader : Protocol {
+class TestShader : Shader {
+	var uniforms : [Texture] = []
 	static func vertexShader(v : Point3) -> Point3{
 		return v
 	}

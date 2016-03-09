@@ -18,7 +18,7 @@ class Model {
 	var faces : [Face] = []
 	
 	init(path : String){
-		let stringContent = try? String(contentsOfFile: path)
+		let stringContent = try? String(contentsOfFile: path, encoding: NSUTF8StringEncoding)
 		guard let lines = stringContent?.componentsSeparatedByCharactersInSet(NSCharacterSet.newlineCharacterSet()) else {
 			print("Couldn't load the mesh")
 			return

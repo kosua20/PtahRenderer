@@ -7,7 +7,16 @@
 //
 
 import Foundation
+#if os(OSX)
 import Cocoa
+#endif
+
+#if os (Linux)
+let rootDir = NSFileManager.defaultManager().currentDirectoryPath + "/Data/"
+#else
+let rootDir = "/Developer/Xcode/PtahRenderer/Data/"
+#endif
+
 
 class Renderer {
 	private var width = 512
@@ -20,12 +29,11 @@ class Renderer {
 		height = _height
 		buffer = Framebuffer(width: width, height: height)
 		
-		tex = Texture(path: "/Developer/Xcode/PtahRenderer/models/floor.png")
+		tex = Texture(path: rootDir + "textures/floor.png")
 		tex.flipVertically()
-		mesh = Model(path: "/Developer/Xcode/PtahRenderer/models/floor.obj")
+		mesh = Model(path: rootDir + "models/floor.obj")
 		mesh.center()
 		mesh.normalize()
-		
 		mesh.expand()
 	}
 	private var tex : Texture
@@ -209,20 +217,18 @@ class Renderer {
 	}
 	
 	func renderBuffer() -> [Pixel] {
-	
-		
-		var startTime = CFAbsoluteTimeGetCurrent();
+		//var startTime = CFAbsoluteTimeGetCurrent();
 		render()
-		print("[Render]: \t" + String(format: "%.4fs", CFAbsoluteTimeGetCurrent() - startTime))
-		startTime = CFAbsoluteTimeGetCurrent();
+		//print("[Render]: \t" + String(format: "%.4fs", CFAbsoluteTimeGetCurrent() - startTime))
+		//startTime = CFAbsoluteTimeGetCurrent();
 		buffer.flipVertically()
-		
-		print("[Backing]: \t" + String(format: "%.4fs", CFAbsoluteTimeGetCurrent() - startTime))
+		//print("[Backing]: \t" + String(format: "%.4fs", CFAbsoluteTimeGetCurrent() - startTime))
 		return buffer.pixels
 	}
 	
 	
 	//MARK: OSX dependant
+	#if os(OSX)
 	func renderImage() -> NSImage {
 		
 		var startTime = CFAbsoluteTimeGetCurrent();
@@ -234,5 +240,6 @@ class Renderer {
 		print("[Backing]: \t" + String(format: "%.4fs", CFAbsoluteTimeGetCurrent() - startTime))
 		return image
 	}
+	#endif
 	
 }

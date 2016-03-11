@@ -66,6 +66,7 @@ class Texture {
 			height = h
 			components = 3
 			pixels = p
+			self.flipVertically()
 			return
 		} else {
 			assert(false,"Only .png and .tga can currently be loaded.")

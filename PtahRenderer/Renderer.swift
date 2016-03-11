@@ -29,7 +29,7 @@ class Renderer {
 		height = _height
 		buffer = Framebuffer(width: width, height: height)
 		
-		tex = Texture(path: rootDir + "textures/floor.png")
+		tex = Texture(path: rootDir + "textures/floor.tga")
 		tex.flipVertically()
 		mesh = Model(path: rootDir + "models/floor.obj")
 		mesh.center()
@@ -44,12 +44,12 @@ class Renderer {
 		drawMesh(mesh,texture: tex)
 		//drawTest()
 		let theta = time/10.0
-		//cam_pos = normalized((cos(theta),/*0.0*sin(theta)*/ 0.5,sin(theta)))
+		cam_pos = 2*normalized((cos(theta),/*0.0*sin(theta)*/ 0.5,sin(theta)))
 		time+=1.0
 	}
 	
 	private var l = normalized((1.0,0.0,-1.0))
-	private var cam_pos = normalized((1.0,1.0,0.0))
+	private var cam_pos = 2*normalized((1.0,1.0,0.0))
 	
 	
 	func drawTest(){
@@ -108,38 +108,38 @@ class Renderer {
 				if v_p1.map({$0.1 > $0.3}).filter({$0}).count > 0 {
 					continue
 				}
+				//More here...
+				
+				//We will need the perspective factors later on
+				let ws = v_p1.map({$0.3})
 				
 				//--NDC space
 				let v_p = v_p1.map({($0.0/$0.3,$0.1/$0.3,-$0.2/$0.3)})
-				
-				
-				
-				
 				
 				//--Screen space
 				let v_s = v_p.map({ (floor(($0.0 + 1.0)*halfWidth),floor((-1.0*$0.1 + 1.0)*halfHeight),$0.2)})
 				
 				//--Fragment
-				
-				triangle(v_s,f.n, f.t,texture)
-				triangleWire(v_s.map({($0.0,$0.1)}),(255,255,255))
+				triangle(v_s,ws,f.n, f.t,texture)
+				//triangleWire(v_s.map({($0.0,$0.1)}),(255,255,255))
 			}
 		}
 	}
 	
-	func triangle(v : [Vertex], _ n : [Normal], _ uv : [UV],_ texture : Texture){
-		//print("newtri")
+	func triangle(v : [Vertex], _ w : [Scalar], _ n : [Normal], _ uv : [UV],_ texture : Texture){
 		let (mini, maxi) = boundingBox(v,width,height)
 		for x in Int(mini.0)...Int(maxi.0) {
 			for y in Int(mini.1)...Int(maxi.1) {
 				let bary = barycentre(Point3(Scalar(x),Scalar(y),0.0),v[0],v[1],v[2])
 				if (bary.0 < 0.0 || bary.1 < 0.0 || bary.2 < 0.0){ continue }
+				
+				var persp = (bary.0/w[0], bary.1/w[1], bary.2/w[2])
+				persp = persp / (persp.0 + persp.1 + persp.2)
+				//Maybe need to compute the depth with the same interpolation ?
 				let z =  v[0].2 * bary.0 + v[1].2 * bary.1 + v[2].2 * bary.2
 				if (buffer.getDepth(x,y) < z){
 					buffer.setDepth(x, y, z)
-					//let tex = barycentricInterpolation(bary, t1: uv[0], t2: uv[1], t3: uv[2])
-					let tex = perspectiveCorrectInterpolation(bary, t1: uv[0], t2: uv[1], t3: uv[2], z1: abs(v[0].2), z2: abs(v[1].2), z3: abs(v[2].2))
-					//print(v[0].2,", ", v[1].2, ", " , v[2].2)
+					let tex = barycentricInterpolation(persp, t1: uv[0], t2: uv[1], t3: uv[2])
 					//let nor = normalized(barycentricInterpolation(bary, t1: n[0], t2: n[1], t3: n[2]))
 					//let cosfactor = max(0.0,dot(-1.0*nor,l))
 					buffer.set(x, y, texture[tex.0,tex.1].rgb)

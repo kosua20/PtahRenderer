@@ -382,6 +382,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.simonrodriguez.PtahRenderer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 			};
 			name = Debug;
 		};
@@ -407,6 +408,7 @@
 				F42368FB1C90625500500AE3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F49C6CDD1C6FC6F100C5F852 /* Build configuration list for PBXProject "PtahRenderer" */ = {
 			isa = XCConfigurationList;

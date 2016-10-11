@@ -23,7 +23,7 @@ func +(lhs : Point3, rhs : Point3) -> Point3 {
 	return (lhs.0 + rhs.0,lhs.1+rhs.1,lhs.2+rhs.2)
 }
 
-func +=(inout lhs : Point3, rhs : Point3) {
+func +=(lhs : inout Point3, rhs : Point3) {
 	lhs.0 += rhs.0
 	lhs.1 += rhs.1
 	lhs.2 += rhs.2
@@ -33,7 +33,7 @@ func -(lhs : Point3, rhs : Point3) -> Point3 {
 	return (lhs.0 - rhs.0,lhs.1-rhs.1,lhs.2-rhs.2)
 }
 
-func -=(inout lhs : Point3, rhs : Point3) {
+func -=(lhs : inout Point3, rhs : Point3) {
 	lhs.0 -= rhs.0
 	lhs.1 -= rhs.1
 	lhs.2 -= rhs.2
@@ -47,7 +47,7 @@ func *(rhs : Point3, lhs : Scalar) -> Point3 {
 	return (lhs*rhs.0,lhs*rhs.1,lhs*rhs.2)
 }
 
-func *=(inout lhs : Point3, rhs : Scalar){
+func *=(lhs : inout Point3, rhs : Scalar){
 	lhs.0 = lhs.0*rhs
 	lhs.1 = lhs.1*rhs
 	lhs.2 = lhs.2*rhs
@@ -57,36 +57,36 @@ func /(rhs : Point3, lhs : Scalar) -> Point3 {
 	return (rhs.0/lhs,rhs.1/lhs,rhs.2/lhs)
 }
 
-func /=(inout lhs : Point3, rhs : Scalar){
+func /=(lhs : inout Point3, rhs : Scalar){
 	lhs.0 = lhs.0/rhs
 	lhs.1 = lhs.1/rhs
 	lhs.2 = lhs.2/rhs
 }
 
 
-func cross(lhs : Point3,_ rhs : Point3) -> Point3 {
+func cross(_ lhs : Point3,_ rhs : Point3) -> Point3 {
 	return (lhs.1*rhs.2 - lhs.2*rhs.1,lhs.2*rhs.0 - lhs.0*rhs.2,lhs.0*rhs.1 - lhs.1*rhs.0)
 }
 
-func dot(lhs : Point3, _ rhs : Point3) -> Scalar {
+func dot(_ lhs : Point3, _ rhs : Point3) -> Scalar {
 	return lhs.0*rhs.0+lhs.1*rhs.1+lhs.2*rhs.2
 }
 
-func norm(lhs : Point3) -> Scalar {
+func norm(_ lhs : Point3) -> Scalar {
 	return sqrt(dot(lhs,lhs))
 }
 
-func norm2(lhs : Point3) -> Scalar {
+func norm2(_ lhs : Point3) -> Scalar {
 	return dot(lhs,lhs)
 }
 
-func normalize(inout n : Point3){
+func normalize(_ n : inout Point3){
 	let norm = sqrt(dot(n,n))
 	if(norm==0.0){ return }
 	n /= norm
 }
 
-func normalized(n : Point3) -> Point3 {
+func normalized(_ n : Point3) -> Point3 {
 	let norm = sqrt(dot(n,n))
 	if(norm==0.0){ return n}
 	return n/norm
@@ -132,7 +132,7 @@ struct Matrix4 {
 		0.0, 0.0, 0.0, 1.0
 	]
 	
-	static func translationMatrix(t : Point3) -> Matrix4 {
+	static func translationMatrix(_ t : Point3) -> Matrix4 {
 		var matrix = Matrix4()
 		matrix.matrix[3] = t.0
 		matrix.matrix[7] = t.1
@@ -140,11 +140,11 @@ struct Matrix4 {
 		return matrix
 	}
 	
-	static func scaleMatrix(x: Scalar) -> Matrix4 {
+	static func scaleMatrix(_ x: Scalar) -> Matrix4 {
 		return Matrix4.scaleMatrix((x,x,x))
 	}
 	
-	static func scaleMatrix(s : Point3) -> Matrix4 {
+	static func scaleMatrix(_ s : Point3) -> Matrix4 {
 		var matrix = Matrix4()
 		matrix.matrix[0] = s.0
 		matrix.matrix[5] = s.1
@@ -152,7 +152,7 @@ struct Matrix4 {
 		return matrix
 	}
 	
-	static func rotationMatrix(angle: Scalar, axis: Point3) -> Matrix4 {
+	static func rotationMatrix(_ angle: Scalar, axis: Point3) -> Matrix4 {
 		var matrix = Matrix4()
 		let u = normalized(axis)
 		let c = cos(angle)
@@ -204,7 +204,7 @@ struct Matrix4 {
 		return matrix
 	}
 	
-	static func perspectiveMatrix(fov fov: Scalar, aspect: Scalar, near: Scalar, far: Scalar) -> Matrix4 {
+	static func perspectiveMatrix(fov: Scalar, aspect: Scalar, near: Scalar, far: Scalar) -> Matrix4 {
 		var matrix = Matrix4()
 		let radfov = M_PI * fov / 180.0
 		let f = 1.0 / tan(radfov / 2.0)
@@ -221,7 +221,7 @@ struct Matrix4 {
 func * (left: Matrix4, right: Matrix4) -> Matrix4 {
 	let m1 = left.matrix
 	let m2 = right.matrix
-	var m = [Scalar](count: 16, repeatedValue: 0.0)
+	var m = [Scalar](repeating: 0.0, count: 16)
 	m[ 0] = m1[ 0]*m2[ 0] + m1[ 1]*m2[ 4] + m1[ 2]*m2[ 8] + m1[ 3]*m2[12]
 	m[ 1] = m1[ 0]*m2[ 1] + m1[ 1]*m2[ 5] + m1[ 2]*m2[ 9] + m1[ 3]*m2[13]
 	m[ 2] = m1[ 0]*m2[ 2] + m1[ 1]*m2[ 6] + m1[ 2]*m2[10] + m1[ 3]*m2[14]

@@ -14,34 +14,34 @@ import Cocoa
 class Framebuffer {
 	internal var pixels : [Pixel] = []
 	internal var zbuffer : [Scalar] = []
-	private var width : Int = 512
-	private var height : Int = 512
+	fileprivate var width : Int = 512
+	fileprivate var height : Int = 512
 	
 	init(width _width : Int,height _height : Int){
-		pixels = [Pixel](count: width*height, repeatedValue: Pixel(0))
-		zbuffer = [Scalar](count: width*height, repeatedValue: -Scalar.infinity)
+		pixels = [Pixel](repeating: Pixel(0), count: width*height)
+		zbuffer = [Scalar](repeating: -Scalar.infinity, count: width*height)
 	}
 	
-	func set(x : Int,_ y : Int,_ color : Color){
+	func set(_ x : Int,_ y : Int,_ color : Color){
 		if(x < width && y < height && x >= 0 && y >= 0){
 			pixels[y * width + x].rgb = color
 		}
 	}
 	
-	func set(x : Int,_ y : Int,_ color : Pixel){
+	func set(_ x : Int,_ y : Int,_ color : Pixel){
 		if(x < width && y < height && x >= 0 && y >= 0){
 			pixels[y * width + x] = color
 		}
 	}
 	
-	func getDepth(x : Int, _ y : Int) -> Scalar {
+	func getDepth(_ x : Int, _ y : Int) -> Scalar {
 		if(x < width && y < height && x >= 0 && y >= 0){
 			return zbuffer[y * width + x]
 		}
 		return Scalar.infinity
 	}
 	
-	func setDepth(x : Int,_ y : Int,_ depth : Scalar){
+	func setDepth(_ x : Int,_ y : Int,_ depth : Scalar){
 		//if(x < width && y < height && x >= 0 && y >= 0){
 			zbuffer[y * width + x] = depth
 		//}
@@ -54,7 +54,7 @@ class Framebuffer {
 		}
 	}
 	
-	func clearColor(col : Color){
+	func clearColor(_ col : Color){
 		for i in 0..<width*height {
 			pixels[i].rgb = col
 		}
@@ -72,18 +72,24 @@ class Framebuffer {
 	
 	#if os(OSX)
 	
-	private let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
-	private let bitmapInfo:CGBitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.PremultipliedLast.rawValue)
+	fileprivate let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
+	fileprivate let bitmapInfo:CGBitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
 	
 	internal func imageFromRGBA32Bitmap() -> NSImage {
 		let bitsPerComponent:Int = 8
 		let bitsPerPixel:Int = 32
 		assert(pixels.count == width * height)
-		var data = pixels // Copy to mutable []
-		let providerRef = CGDataProviderCreateWithCFData(NSData(bytes: &data, length: data.count * sizeof(Pixel)))
+		let data = pixels // Copy to mutable []
+		//let dda = Data(bytes: UnsafePointer<UInt8>(&data), count: data.count * sizeof(Pixel))
+		let callback: CGDataProviderReleaseDataCallback = { (info: UnsafeMutableRawPointer?, data: UnsafeRawPointer, size: Int) -> () in
+			return
+		}
+		guard let providerRef = CGDataProvider(dataInfo: nil, data: data , size: data.count * MemoryLayout<Pixel>.size, releaseData: callback) else {
+				return NSImage()
+		}
 		
-		let cgim = CGImageCreate(width, height, bitsPerComponent, bitsPerPixel, width * Int(sizeof(Pixel)), rgbColorSpace, bitmapInfo, providerRef, nil, true, .RenderingIntentDefault)
-		return NSImage(CGImage: cgim!, size: NSSize(width: width, height: height))
+		let cgim = CGImage(width: width, height: height, bitsPerComponent: bitsPerComponent, bitsPerPixel: bitsPerPixel, bytesPerRow: width * Int(MemoryLayout<Pixel>.size), space: rgbColorSpace, bitmapInfo: bitmapInfo, provider: providerRef, decode: nil, shouldInterpolate: true, intent: .defaultIntent)
+		return NSImage(cgImage: cgim!, size: NSSize(width: width, height: height))
 	}
 	
 	#endif

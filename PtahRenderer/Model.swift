@@ -18,27 +18,27 @@ class Model {
 	var faces : [Face] = []
 	
 	init(path : String){
-		let stringContent = try? String(contentsOfFile: path, encoding: NSUTF8StringEncoding)
-		guard let lines = stringContent?.componentsSeparatedByCharactersInSet(NSCharacterSet.newlineCharacterSet()) else {
+		let stringContent = try? String(contentsOfFile: path, encoding: String.Encoding.utf8)
+		guard let lines = stringContent?.components(separatedBy: CharacterSet.newlines) else {
 			print("Couldn't load the mesh")
 			return
 		}
 		
 		for line in lines {
 			if (line.hasPrefix("v ")){//Vertex
-				var components = line.componentsSeparatedByCharactersInSet(NSCharacterSet.whitespaceCharacterSet()).filter({!$0.isEmpty})
+				var components = line.components(separatedBy: CharacterSet.whitespaces).filter({!$0.isEmpty})
 				vertices.append((Scalar(components[1])!,Scalar(components[2])!,Scalar(components[3])!))
 			} else if (line.hasPrefix("vt ")) {//UV coords
-				var components = line.componentsSeparatedByCharactersInSet(NSCharacterSet.whitespaceCharacterSet()).filter({!$0.isEmpty})
+				var components = line.components(separatedBy: CharacterSet.whitespaces).filter({!$0.isEmpty})
 				uvs.append((Scalar(components[1])!,Scalar(components[2])!))
 				
 			} else if (line.hasPrefix("vn ")) {//Normal coords
-				var components = line.componentsSeparatedByCharactersInSet(NSCharacterSet.whitespaceCharacterSet()).filter({!$0.isEmpty})
+				var components = line.components(separatedBy: CharacterSet.whitespaces).filter({!$0.isEmpty})
 				normals.append((Scalar(components[1])!,Scalar(components[2])!,Scalar(components[3])!))
 			} else if (line.hasPrefix("f ")) {//Face with vertices/uv/normals
-				let components = line.componentsSeparatedByCharactersInSet(NSCharacterSet.whitespaceCharacterSet()).filter({!$0.isEmpty})
+				let components = line.components(separatedBy: CharacterSet.whitespaces).filter({!$0.isEmpty})
 				
-				let splittedComponents = components.map({$0.componentsSeparatedByString("/")})
+				let splittedComponents = components.map({$0.components(separatedBy: "/")})
 				// print(splittedComponents)
 				
 				let intComps1 = splittedComponents[1].map({ $0 == "" ? 0 : Int($0)!})
@@ -56,14 +56,14 @@ class Model {
 	}
 	
 	func center(){
-		var bary = vertices.reduce((0.0,0.0,0.0), combine: {($0.0+$1.0,$0.1+$1.1,$0.2+$1.2)})
+		var bary = vertices.reduce((0.0,0.0,0.0), {($0.0+$1.0,$0.1+$1.1,$0.2+$1.2)})
 		bary.0 /= Scalar(vertices.count)
 		bary.1 /= Scalar(vertices.count)
 		bary.2 /= Scalar(vertices.count)
 		vertices = vertices.map({($0.0 - bary.0,$0.1 - bary.1,$0.2 - bary.2)})
 	}
 	
-	func normalize(scale : Double = 1.0){
+	func normalize(_ scale : Double = 1.0){
 		var mini = vertices[0]
 		var maxi = vertices[0]
 		for vert in vertices {

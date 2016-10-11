@@ -19,10 +19,10 @@ let rootDir = "/Developer/Xcode/PtahRenderer/Data/"
 
 
 class Renderer {
-	private var width = 512
-	private var height = 512
+	fileprivate var width = 512
+	fileprivate var height = 512
 	
-	private var buffer : Framebuffer
+	fileprivate var buffer : Framebuffer
 
 	init(width _width : Int,height _height : Int){
 		width = _width
@@ -36,9 +36,9 @@ class Renderer {
 		mesh.normalize()
 		mesh.expand()
 	}
-	private var tex : Texture
-	private var mesh : Model
-	private var time = 0.0
+	fileprivate var tex : Texture
+	fileprivate var mesh : Model
+	fileprivate var time = 0.0
 	
 	func render(){
 		drawMesh(mesh,texture: tex)
@@ -48,8 +48,8 @@ class Renderer {
 		time+=1.0
 	}
 	
-	private var l = normalized((1.0,0.0,-1.0))
-	private var cam_pos = 2*normalized((1.0,1.0,0.0))
+	fileprivate var l = normalized((1.0,0.0,-1.0))
+	fileprivate var cam_pos = 2*normalized((1.0,1.0,0.0))
 	
 	
 	func drawTest(){
@@ -83,8 +83,8 @@ class Renderer {
 		triangleWire(v_s.map({($0.0,$0.1)}),(255,255,255))
 	}
 	
-	func drawMesh(mesh : Model, texture : Texture){
-		let view = Matrix4.lookAtMatrix(cam_pos, target: (0.0,0.0,0.0), up: (0.0,1.0,0.0))
+	func drawMesh(_ mesh : Model, texture : Texture){
+		let view = Matrix4.lookAtMatrix(eye: cam_pos, target: (0.0,0.0,0.0), up: (0.0,1.0,0.0))
 		let proj = Matrix4.perspectiveMatrix(fov:70.0, aspect: Scalar(width)/Scalar(height), near: 0.01, far: 30.0)
 		let halfWidth = Scalar(width)*0.5
 		let halfHeight = Scalar(height)*0.5
@@ -126,7 +126,7 @@ class Renderer {
 		}
 	}
 	
-	func triangle(v : [Vertex], _ w : [Scalar], _ n : [Normal], _ uv : [UV],_ texture : Texture){
+	func triangle(_ v : [Vertex], _ w : [Scalar], _ n : [Normal], _ uv : [UV],_ texture : Texture){
 		let (mini, maxi) = boundingBox(v,width,height)
 		for x in Int(mini.0)...Int(maxi.0) {
 			for y in Int(mini.1)...Int(maxi.1) {
@@ -148,7 +148,7 @@ class Renderer {
 		}
 	}
 	
-	func triangle(v : [Vertex],_ color : Color){
+	func triangle(_ v : [Vertex],_ color : Color){
 		let (mini, maxi) = boundingBox(v,width,height)
 		for x in Int(mini.0)...Int(maxi.0) {
 			for y in Int(mini.1)...Int(maxi.1) {
@@ -163,14 +163,14 @@ class Renderer {
 		}
 	}
 	
-	func triangleWire(v : [Point2],_ color : Color){
+	func triangleWire(_ v : [Point2],_ color : Color){
 			line(v[0], v[1], color)
 			line(v[1], v[2], color)
 			line(v[2], v[0], color)
 	}
 
 	
-	func line(a_ : Point2,_ b_ : Point2,_ color : Color){
+	func line(_ a_ : Point2,_ b_ : Point2,_ color : Color){
 		var steep = false
 		var a = a_
 		var b = b_
@@ -207,7 +207,7 @@ class Renderer {
 		}
 	}
 	
-	func clear(color : Bool = true, depth: Bool = true){
+	func clear(_ color : Bool = true, depth: Bool = true){
 		if(color){
 			buffer.clearColor((0,0,0))
 		}

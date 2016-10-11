@@ -11,25 +11,25 @@ import Cocoa
 class ViewController: NSViewController {
 
 	@IBOutlet weak var imageView: NSImageView!
-	private var renderer : Renderer!
-	private var timer: NSTimer!
+	fileprivate var renderer : Renderer!
+	fileprivate var timer: Timer!
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
 		renderer = Renderer(width: 512,height: 512)
 		//Launch the timer
-		timer = NSTimer(timeInterval: 1.0 / 60.0, target: self, selector: "timerFired:", userInfo: nil, repeats: true)
-		NSRunLoop.currentRunLoop().addTimer(timer, forMode: NSDefaultRunLoopMode)
+		timer = Timer(timeInterval: 1.0 / 60.0, target: self, selector: #selector(ViewController.timerFired(_:)), userInfo: nil, repeats: true)
+		RunLoop.current.add(timer, forMode: RunLoopMode.defaultRunLoopMode)
 		
 		
 		
 	}
 	
-	private var avg = 0
-	private var count = 0
+	fileprivate var avg = 0
+	fileprivate var count = 0
 	
-	func timerFired(sender: NSTimer!) {
+	func timerFired(_ sender: Timer!) {
 		let startTime = CFAbsoluteTimeGetCurrent();
 			renderer.clear()
 			imageView.image = renderer.renderImage()
@@ -43,11 +43,7 @@ class ViewController: NSViewController {
 		self.view.window?.title = "Ptah - ⏲ \(fps) fps"
 	}
 
-	override var representedObject: AnyObject? {
-		didSet {
-		// Update the view, if already loaded.
-		}
-	}
+	
 
 
 }

@@ -13,7 +13,7 @@ class Texture {
 	let height : Int
 	let components : Int
 	var pixels : [Pixel]
-	var mode : TextureMode = .Wrap
+	var mode : TextureMode = .wrap
 	
 	
 	
@@ -25,20 +25,20 @@ class Texture {
 		#if os(Linux)
 			assert(false,"On Linux, only TGA can be currently loaded.")
 		#else
-			let dataProvider = CGDataProviderCreateWithFilename(path)
+			let dataProvider = CGDataProvider(filename: path)
 			assert(dataProvider != nil)
-			let image = CGImageCreateWithPNGDataProvider(dataProvider!, nil, false, .RenderingIntentDefault)
-			if let imageData = CGDataProviderCopyData(CGImageGetDataProvider(image)) {
-				width = CGImageGetWidth(image)
-				height = CGImageGetHeight(image)
-				components = CGImageGetBitsPerPixel(image) / 8
-				let data = imageData as NSData
+			let image = CGImage(pngDataProviderSource: dataProvider!, decode: nil, shouldInterpolate: false, intent: .defaultIntent)
+			if let imageData = image?.dataProvider?.data {
+				width = (image?.width)!
+				height = (image?.height)!
+				components = (image?.bitsPerPixel)! / 8
+				let data = imageData as Data
 				if components == 4 {
-					pixels = Array(UnsafeBufferPointer(start: UnsafePointer<Pixel>(data.bytes), count: data.length/4))
+					pixels = Array(UnsafeBufferPointer(start: (data as NSData).bytes.bindMemory(to: Pixel.self, capacity: data.count), count: data.count/4))
 				} else {
-					let temp_pixels = Array(UnsafeBufferPointer(start: UnsafePointer<UInt8>(data.bytes), count: data.length))
+					let temp_pixels = Array(UnsafeBufferPointer(start: (data as NSData).bytes.bindMemory(to: UInt8.self, capacity: data.count), count: data.count))
 					
-					pixels = [Pixel](count: temp_pixels.count / components, repeatedValue: Pixel(0))
+					pixels = [Pixel](repeating: Pixel(0), count: temp_pixels.count / components)
 					switch components {
 					case 3:
 						for i in 0..<(temp_pixels.count / components){
@@ -82,10 +82,10 @@ class Texture {
 	//Nearest neighbours
 	subscript(a : Int, b : Int) -> Pixel {
 		//assert(a < width && a >= 0 && b < height && b >= 0, "Index error in texture")
-		if mode == .Clamp {
+		if mode == .clamp {
 			return pixels[min(height-1,max(0,b)) * width + min(width-1,max(0,a))]
 		}
-		if mode == .Wrap {
+		if mode == .wrap {
 			return pixels[(b%height) * width + (a%width)]
 		}
 		return pixels[b*width+a]

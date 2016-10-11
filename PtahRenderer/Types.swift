@@ -70,8 +70,8 @@ struct Pixel {
 }
 
 enum TextureMode {
-	case Clamp
-	case Wrap
+	case clamp
+	case wrap
 }
 
 struct Face {

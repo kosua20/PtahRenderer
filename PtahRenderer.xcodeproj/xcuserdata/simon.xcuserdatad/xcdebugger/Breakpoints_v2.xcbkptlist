@@ -16,7 +16,7 @@
             startingLineNumber = "54"
             endingLineNumber = "54"
             landmarkName = "init(path:)"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -32,7 +32,7 @@
             startingLineNumber = "53"
             endingLineNumber = "53"
             landmarkName = "init(path:)"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -48,7 +48,7 @@
             startingLineNumber = "31"
             endingLineNumber = "31"
             landmarkName = "init(path:)"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

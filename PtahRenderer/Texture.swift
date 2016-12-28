@@ -25,6 +25,7 @@ class Texture {
 		#if os(Linux)
 			assert(false,"On Linux, only TGA can be currently loaded.")
 		#else
+			
 			let dataProvider = CGDataProvider(filename: path)
 			assert(dataProvider != nil)
 			let image = CGImage(pngDataProviderSource: dataProvider!, decode: nil, shouldInterpolate: false, intent: .defaultIntent)
@@ -59,7 +60,9 @@ class Texture {
 				}
 				return
 			}
+			
 		#endif
+			
 		} else if path.hasSuffix(".tga"){
 			let (w,h,p) = TGALoader.loadTGA(path)
 			width = w
@@ -71,11 +74,11 @@ class Texture {
 		} else {
 			assert(false,"Only .png and .tga can currently be loaded.")
 		}
+		
 		width = 0
 		height = 0
 		components = 0
 		pixels = []
-		
 		
 	}
 	
@@ -84,8 +87,7 @@ class Texture {
 		//assert(a < width && a >= 0 && b < height && b >= 0, "Index error in texture")
 		if mode == .clamp {
 			return pixels[min(height-1,max(0,b)) * width + min(width-1,max(0,a))]
-		}
-		if mode == .wrap {
+		} else if mode == .wrap {
 			return pixels[(b%height) * width + (a%width)]
 		}
 		return pixels[b*width+a]
@@ -104,10 +106,9 @@ class Texture {
 			swap(&(pixels[y*width..<(y+1)*width]),&(pixels[width*(height-y-1)..<width*(height-y)]))
 		}
 	}
+	
 	/*subscript(uv : Point2) -> Pixel {
 		return self[uv.0 as Scalar, uv.1 as Scalar]
 	}*/
-	
-	
 	
 }

@@ -52,11 +52,19 @@ func boundingBox(_ vs : [Point3],_ width : Int,_ height : Int) -> (Point2, Point
 	var mini  = (Scalar.infinity,Scalar.infinity)
 	var maxi = (-Scalar.infinity,-Scalar.infinity)
 	let lim = (Scalar(width-1),Scalar(height-1))
+	
+
 	for v in vs {
-		mini.0 = max(min(mini.0,v.0),0)
-		mini.1 = max(min(mini.1,v.1),0)
-		maxi.0 = min(max(maxi.0,v.0),lim.0)
-		maxi.1 = min(max(maxi.1,v.1),lim.1)
+		mini.0 = min(mini.0,v.0)
+		mini.1 = min(mini.1,v.1)
+		maxi.0 = max(maxi.0,v.0)
+		maxi.1 = max(maxi.1,v.1)
 	}
-	return ((min(mini.0,maxi.0),min(mini.1,maxi.01)),(max(mini.0,maxi.0),max(mini.1,maxi.01)))
+	
+	let finalMinX = min(max(min(mini.0,maxi.0),0),lim.0)
+	let finalMinY = min(max(min(mini.1,maxi.1),0),lim.1)
+	let finalMaxX = max(min(max(mini.0,maxi.0),lim.0),0)
+	let finalMaxY = max(min(max(mini.1,maxi.1),lim.1),0)
+	
+	return ((finalMinX,finalMinY),(finalMaxX,finalMaxY))
 }

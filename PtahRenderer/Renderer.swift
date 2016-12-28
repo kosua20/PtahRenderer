@@ -12,15 +12,15 @@ import Cocoa
 #endif
 
 #if os (Linux)
-let rootDir = NSFileManager.defaultManager().currentDirectoryPath + "/Data/"
+let rootDir = NSFileManager.defaultManager().currentDirectoryPath + "/data/"
 #else
-let rootDir = "/Developer/Xcode/PtahRenderer/Data/"
+let rootDir = "/Developer/Graphics/PtahRenderer/data/"
 #endif
 
 
 class Renderer {
-	fileprivate var width = 512
-	fileprivate var height = 512
+	fileprivate var width = 256
+	fileprivate var height = 256
 	
 	fileprivate var buffer : Framebuffer
 
@@ -29,23 +29,25 @@ class Renderer {
 		height = _height
 		buffer = Framebuffer(width: width, height: height)
 		
-		tex = Texture(path: rootDir + "textures/floor.tga")
+		tex = Texture(path: rootDir + "textures/dragon.png")
 		tex.flipVertically()
-		mesh = Model(path: rootDir + "models/floor.obj")
+		mesh = Mesh(path: rootDir + "models/dragon.obj")
 		mesh.center()
 		mesh.normalize()
 		mesh.expand()
 	}
+	
 	fileprivate var tex : Texture
-	fileprivate var mesh : Model
+	fileprivate var mesh : Mesh
 	fileprivate var time = 0.0
 	
-	func render(){
+	func render(elapsed : Double){
 		drawMesh(mesh,texture: tex)
 		//drawTest()
-		let theta = time/10.0
-		cam_pos = 2*normalized((cos(theta),/*0.0*sin(theta)*/ 0.5,sin(theta)))
-		time+=1.0
+		let theta = 2.0*time
+		cam_pos = 2 * normalized((cos(theta),/*0.0*sin(theta)*/ 0.5,sin(theta)))
+		time += elapsed
+		print(elapsed)
 	}
 	
 	fileprivate var l = normalized((1.0,0.0,-1.0))
@@ -83,51 +85,53 @@ class Renderer {
 		triangleWire(v_s.map({($0.0,$0.1)}),(255,255,255))
 	}
 	
-	func drawMesh(_ mesh : Model, texture : Texture){
+	func drawMesh(_ mesh : Mesh, texture : Texture){
 		let view = Matrix4.lookAtMatrix(eye: cam_pos, target: (0.0,0.0,0.0), up: (0.0,1.0,0.0))
 		let proj = Matrix4.perspectiveMatrix(fov:70.0, aspect: Scalar(width)/Scalar(height), near: 0.01, far: 30.0)
 		let halfWidth = Scalar(width)*0.5
 		let halfHeight = Scalar(height)*0.5
 		
+		let mvp = proj*view
+		
 		//--Model space
 		for f in mesh.faces {
 			
-			//--View space
-			let v_view = f.v.map({view*($0.0,$0.1,$0.2,1.0)})
-		
+			//--- Vertex shader
+			//--View space and clip space
+			let v_p1 = f.v.map({mvp*($0.0,$0.1,$0.2,1.0)})
+			//---
+			
+			//--Clipping
+			//Clipping up edge
+			if v_p1.map({$0.1 > $0.3}).filter({$0}).count > 0 {
+				continue
+			}
+			//More here...
+				
+			//We will need the perspective factors later on
+			let ws = v_p1.map({$0.3})
+			
+			//--NDC space
+			let v_p = v_p1.map({($0.0/$0.3,$0.1/$0.3,-$0.2/$0.3)})
+			
 			//--Backface culling
 			//We compute it manually to avoid using a cross product and extract the 3rd component
-			let orientation = (v_view[1].0 - v_view[0].0) * (v_view[2].1 - v_view[0].1) - (v_view[1].1 - v_view[0].1) * (v_view[2].0 - v_view[0].0)
+			let orientation = (v_p[1].0 - v_p[0].0) * (v_p[2].1 - v_p[0].1) - (v_p[1].1 - v_p[0].1) * (v_p[2].0 - v_p[0].0)
+			
 			if orientation > 0.0 {
-				
-				//--Clip space
-				let v_p1 = v_view.map({proj*$0})
-				
-				//--Clipping
-				//Clipping up edge
-				if v_p1.map({$0.1 > $0.3}).filter({$0}).count > 0 {
-					continue
-				}
-				//More here...
-				
-				//We will need the perspective factors later on
-				let ws = v_p1.map({$0.3})
-				
-				//--NDC space
-				let v_p = v_p1.map({($0.0/$0.3,$0.1/$0.3,-$0.2/$0.3)})
-				
 				//--Screen space
 				let v_s = v_p.map({ (floor(($0.0 + 1.0)*halfWidth),floor((-1.0*$0.1 + 1.0)*halfHeight),$0.2)})
 				
-				//--Fragment
+				//--- Fragment shader
 				triangle(v_s,ws,f.n, f.t,texture)
-				//triangleWire(v_s.map({($0.0,$0.1)}),(255,255,255))
+				//---
 			}
 		}
 	}
 	
 	func triangle(_ v : [Vertex], _ w : [Scalar], _ n : [Normal], _ uv : [UV],_ texture : Texture){
 		let (mini, maxi) = boundingBox(v,width,height)
+		
 		for x in Int(mini.0)...Int(maxi.0) {
 			for y in Int(mini.1)...Int(maxi.1) {
 				let bary = barycentre(Point3(Scalar(x),Scalar(y),0.0),v[0],v[1],v[2])
@@ -137,6 +141,7 @@ class Renderer {
 				persp = persp / (persp.0 + persp.1 + persp.2)
 				//Maybe need to compute the depth with the same interpolation ?
 				let z =  v[0].2 * bary.0 + v[1].2 * bary.1 + v[2].2 * bary.2
+				
 				if (buffer.getDepth(x,y) < z){
 					buffer.setDepth(x, y, z)
 					let tex = barycentricInterpolation(persp, t1: uv[0], t2: uv[1], t3: uv[2])
@@ -216,28 +221,25 @@ class Renderer {
 		}
 	}
 	
-	func renderBuffer() -> [Pixel] {
-		//var startTime = CFAbsoluteTimeGetCurrent();
-		render()
-		//print("[Render]: \t" + String(format: "%.4fs", CFAbsoluteTimeGetCurrent() - startTime))
-		//startTime = CFAbsoluteTimeGetCurrent();
-		buffer.flipVertically()
-		//print("[Backing]: \t" + String(format: "%.4fs", CFAbsoluteTimeGetCurrent() - startTime))
+	func renderBuffer(elapsed : Double) -> [Pixel] {
+		render(elapsed: elapsed)
+		//buffer.flipVertically()
 		return buffer.pixels
 	}
 	
 	
 	//MARK: OSX dependant
 	#if os(OSX)
-	func renderImage() -> NSImage {
+	func renderImage(elapsed : Double) -> NSImage {
 		
 		var startTime = CFAbsoluteTimeGetCurrent();
-		render()
+		render(elapsed: elapsed)
 		print("[Render]: \t" + String(format: "%.4fs", CFAbsoluteTimeGetCurrent() - startTime))
+		
 		startTime = CFAbsoluteTimeGetCurrent();
-		//buffer.flipVertically()
 		let image = buffer.imageFromRGBA32Bitmap()
 		print("[Backing]: \t" + String(format: "%.4fs", CFAbsoluteTimeGetCurrent() - startTime))
+		
 		return image
 	}
 	#endif

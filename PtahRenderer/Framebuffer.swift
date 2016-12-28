@@ -12,33 +12,36 @@ import Cocoa
 #endif
 
 class Framebuffer {
+	
 	internal var pixels : [Pixel] = []
 	internal var zbuffer : [Scalar] = []
 	fileprivate var width : Int = 512
 	fileprivate var height : Int = 512
 	
 	init(width _width : Int,height _height : Int){
+		width = _width
+		height = _height
 		pixels = [Pixel](repeating: Pixel(0), count: width*height)
 		zbuffer = [Scalar](repeating: -Scalar.infinity, count: width*height)
 	}
 	
 	func set(_ x : Int,_ y : Int,_ color : Color){
-		if(x < width && y < height && x >= 0 && y >= 0){
+		//if(x < width && y < height && x >= 0 && y >= 0){
 			pixels[y * width + x].rgb = color
-		}
+		//}
 	}
 	
 	func set(_ x : Int,_ y : Int,_ color : Pixel){
-		if(x < width && y < height && x >= 0 && y >= 0){
+		//if(x < width && y < height && x >= 0 && y >= 0){
 			pixels[y * width + x] = color
-		}
+		//}
 	}
 	
 	func getDepth(_ x : Int, _ y : Int) -> Scalar {
-		if(x < width && y < height && x >= 0 && y >= 0){
+		//if(x < width && y < height && x >= 0 && y >= 0){
 			return zbuffer[y * width + x]
-		}
-		return Scalar.infinity
+		//}
+		//return Scalar.infinity
 	}
 	
 	func setDepth(_ x : Int,_ y : Int,_ depth : Scalar){
@@ -80,7 +83,7 @@ class Framebuffer {
 		let bitsPerPixel:Int = 32
 		assert(pixels.count == width * height)
 		let data = pixels // Copy to mutable []
-		//let dda = Data(bytes: UnsafePointer<UInt8>(&data), count: data.count * sizeof(Pixel))
+		
 		let callback: CGDataProviderReleaseDataCallback = { (info: UnsafeMutableRawPointer?, data: UnsafeRawPointer, size: Int) -> () in
 			return
 		}

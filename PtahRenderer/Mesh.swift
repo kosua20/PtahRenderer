@@ -10,7 +10,7 @@ import Foundation
 
 
 
-class Model {
+class Mesh {
 	var vertices : [Vertex] = []
 	var normals : [Normal] = []
 	var uvs : [UV] = []
@@ -39,7 +39,6 @@ class Model {
 				let components = line.components(separatedBy: CharacterSet.whitespaces).filter({!$0.isEmpty})
 				
 				let splittedComponents = components.map({$0.components(separatedBy: "/")})
-				// print(splittedComponents)
 				
 				let intComps1 = splittedComponents[1].map({ $0 == "" ? 0 : Int($0)!})
 				let fi1 = FaceIndices(v: intComps1[0]-1, t: intComps1[1]-1, n: intComps1[2]-1)

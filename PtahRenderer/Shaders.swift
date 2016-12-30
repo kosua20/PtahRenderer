@@ -25,3 +25,13 @@ class TestShader: Shader {
 		return (255, 255, 255)
 	}
 }
+
+func vshader(v: [Vertex], uniforms: [String : Any]) -> [Point4] {
+	let mvp = uniforms["mvp"] as! Matrix4
+	return v.map({ mvp * ($0.0, $0.1, $0.2, 1.0) })
+}
+
+func fshader(uv: UV, uniforms: [String : Any]) -> Color {
+	
+	return (uniforms["texture"] as! Texture)[uv.0, uv.1].rgb
+}

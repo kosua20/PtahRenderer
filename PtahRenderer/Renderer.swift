@@ -44,32 +44,21 @@ final class Renderer {
 		height = _height
 		
 		internalRenderer = InternalRenderer(width: width, height: height)
+		//internalRenderer.mode = .wireframe
 		
-		tex = Texture(path: rootDir + "textures/floor.png")
-		mesh = Mesh(path: rootDir + "models/floor.obj", shouldNormalize: true)
+		let baseName = "dragon"
+		tex = Texture(path: rootDir + "textures/" + baseName + ".png")
+		mesh = Mesh(path: rootDir + "models/" + baseName + ".obj", shouldNormalize: true)
 		
 		let proj = Matrix4.perspectiveMatrix(fov:70.0, aspect: Scalar(width)/Scalar(height), near: 0.01, far: 30.0)
 		let initialPos = 2*normalized((1.0, 0.5, 0.0))
 		camera = Camera(position: initialPos, center: (0.0, 0.0, 0.0), up: (0.0, 1.0, 0.0), projection: proj)
-		//mvp = Matrix4()
 	}
 	
-	func vshader(v: [Vertex], uniforms: [String : Any]) -> [Point4] {
-		let mvp = uniforms["mvp"] as! Matrix4
-		return v.map({ mvp * ($0.0, $0.1, $0.2, 1.0) })
-	}
-	
-	func fshader(uv: UV, uniforms: [String : Any]) -> Color {
-		
-		return (uniforms["texture"] as! Texture)[uv.0, uv.1].rgb
-	}
-	
-		
-	//fileprivate var mvp: Matrix4
 	
 	func update(elapsed: Double){
-		let theta = 2.0*time
-		camera.position = 2 * normalized((cos(theta), /*0.0*sin(theta)*/ 0.5, sin(theta)))
+		let theta = time
+		camera.position = 1.8 * normalized((cos(theta), 0.5, sin(theta)))
 	}
 	
 	func render(elapsed: Double){
@@ -83,11 +72,7 @@ final class Renderer {
 		
 		internalRenderer.drawMesh(mesh: mesh, vertexShader: vshader, fragmentShader:  fshader, uniforms : ["mvp": mvp, "texture": tex])
 		
-		//drawTest()
-		
 	}
-	
-	
 	
 	func flush() -> NSImage {
 		return internalRenderer.flushImage()

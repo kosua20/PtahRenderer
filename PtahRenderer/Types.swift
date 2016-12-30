@@ -69,12 +69,43 @@ struct Pixel {
 	}
 }
 
+func *(lhs : Scalar, rhs : Pixel) -> Pixel {
+	let r = clamp(lhs * Scalar(rhs.r), 0, 255)
+	let g = clamp(lhs * Scalar(rhs.g), 0, 255)
+	let b = clamp(lhs * Scalar(rhs.b), 0, 255)
+	let a = clamp(lhs * Scalar(rhs.a), 0, 255)
+	return Pixel(UInt8(r), UInt8(g), UInt8(b), UInt8(a))
+}
+
+func +(lhs : Pixel, rhs : Pixel) -> Pixel {
+	let r = clamp(lhs.r + rhs.r,0,255)
+	let g = clamp(lhs.g + rhs.g,0,255)
+	let b = clamp(lhs.b + rhs.b,0,255)
+	let a = clamp(lhs.a + rhs.a,0,255)
+	return Pixel(r,g,b,a)
+}
+
+func clamp(_ x : Scalar, _ a : Scalar, _ b : Scalar) -> Scalar {
+	return min(b, max(a, x))
+}
+
+func clamp(_ x : UInt8, _ a : UInt8, _ b : UInt8) -> UInt8 {
+	return min(b, max(a, x))
+}
+
+
 enum TextureMode {
 	case clamp
 	case wrap
 }
 
+enum FilteringMode {
+	case nearest
+	case linear
+}
+
 struct Face {
+	// Use strongly typed data structure.
 	var v : [Vertex]
 	var t : [UV]
 	var n : [Normal]

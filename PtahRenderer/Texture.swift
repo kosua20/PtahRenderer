@@ -8,15 +8,14 @@
 
 import Foundation
 
-class Texture {
+final class Texture {
+	
 	let width : Int
 	let height : Int
 	let components : Int
 	var pixels : [Pixel]
 	var mode : TextureMode = .wrap
-	
-	
-	
+	var filtering : FilteringMode = .nearest
 	
 	init(path : String){
 		
@@ -58,6 +57,8 @@ class Texture {
 					}
 					
 				}
+				
+				flipVertically()
 				return
 			}
 			
@@ -69,7 +70,7 @@ class Texture {
 			height = h
 			components = 3
 			pixels = p
-			self.flipVertically()
+			flipVertically()
 			return
 		} else {
 			assert(false,"Only .png and .tga can currently be loaded.")
@@ -82,9 +83,9 @@ class Texture {
 		
 	}
 	
-	//Nearest neighbours
-	subscript(a : Int, b : Int) -> Pixel {
-		//assert(a < width && a >= 0 && b < height && b >= 0, "Index error in texture")
+	
+	private subscript(a : Int, b : Int) -> Pixel {
+		
 		if mode == .clamp {
 			return pixels[min(height-1,max(0,b)) * width + min(width-1,max(0,a))]
 		} else if mode == .wrap {
@@ -93,14 +94,37 @@ class Texture {
 		return pixels[b*width+a]
 	}
 	
-	subscript(u : Scalar, v : Scalar) -> Pixel {
-		let a = Int(u*Scalar(width))
-		let b = Int(v*Scalar(height))
-		return self[a,b]
+	subscript(u : Scalar, v : Scalar ) -> Pixel {
+		
+		let a = u*Scalar(width)
+		let b = v*Scalar(height)
+		
+		if filtering == .linear {
+			
+			let a0 = Int(floor(a))
+			let b0 = Int(floor(b))
+			let a1 = a0+1
+			let b1 = b0+1
+			let afrac = a - Scalar(a0)
+			let bfrac = b - Scalar(b0)
+			
+			let c00 = self[a0,b0]
+			let c01 = self[a0,b1]
+			let c10 = self[a1,b0]
+			let c11 = self[a1,b1]
+			
+			let d0 = ((1.0 - bfrac) * c00 + bfrac * c01)
+			let d1 = ((1.0 - bfrac) * c10 + bfrac * c11)
+			
+			return (1.0 - afrac) * d0 + afrac * d1
+		}
+		
+		return self[Int(a),Int(b)]
+		
 	}
 	
 	
-	func flipVertically(){
+	private func flipVertically(){
 		let half = height >> 1
 		for y in 0..<half {
 			swap(&(pixels[y*width..<(y+1)*width]),&(pixels[width*(height-y-1)..<width*(height-y)]))

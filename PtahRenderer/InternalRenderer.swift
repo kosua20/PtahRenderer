@@ -62,7 +62,7 @@ final class InternalRenderer {
 		triangleWire(v_s.map({($0.0, $0.1)}), (255, 255, 255))
 	}*/
 	
-	func drawMesh(mesh: Mesh, mvp: Matrix4, texture: Texture, vertexShader: ([Vertex]) -> [Point4], fragmentShader: (UV, Texture) -> Color){
+	func drawMesh(mesh: Mesh, vertexShader: ([Vertex], [String : Any]) -> [Point4], fragmentShader: (UV, [String : Any]) -> Color, uniforms : [String : Any]){
 		
 		let halfWidth = Scalar(width)*0.5
 		let halfHeight = Scalar(height)*0.5
@@ -73,7 +73,7 @@ final class InternalRenderer {
 			
 			//--- Vertex shader
 			//--View space and clip space
-			let v_p1 = vertexShader(f.v)
+			let v_p1 = vertexShader(f.v, uniforms)
 			//---
 			
 			//--Clipping
@@ -98,13 +98,13 @@ final class InternalRenderer {
 				let v_s = v_p.map({ (floor(($0.0 + 1.0)*halfWidth), floor((-1.0*$0.1 + 1.0)*halfHeight), $0.2)})
 				
 				//--- Shading
-				triangle(v_s, ws, f.n, f.t, texture, fragmentShader: fragmentShader)
+				triangle(v_s, ws, f.n, f.t, fragmentShader, uniforms)
 				//---
 			}
 		}
 	}
 	
-	func triangle(_ v: [Vertex], _ w: [Scalar], _ n: [Normal], _ uv: [UV], _ texture: Texture, fragmentShader: (UV, Texture) -> Color){
+	func triangle(_ v: [Vertex], _ w: [Scalar], _ n: [Normal], _ uv: [UV], _ fragmentShader: (UV,  [String : Any]) -> Color, _ uniforms :  [String : Any]){
 		let (mini, maxi) = boundingBox(v, width, height)
 		
 		for x in Int(mini.0)...Int(maxi.0) {
@@ -122,7 +122,7 @@ final class InternalRenderer {
 					let tex = barycentricInterpolation(coeffs: persp, t1: uv[0], t2: uv[1], t3: uv[2])
 					//let nor = normalized(barycentricInterpolation(coeffs: bary, t1: n[0], t2: n[1], t3: n[2]))
 					//let cosfactor = max(0.0, dot(-1.0*nor, l))
-					let color = fragmentShader(tex, texture)
+					let color = fragmentShader(tex, uniforms)
 					buffer.set(x, y, color)
 				}
 			}

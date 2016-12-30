@@ -10,14 +10,15 @@ import Foundation
 
 
 
-class Mesh {
+final class Mesh {
 	var vertices : [Vertex] = []
 	var normals : [Normal] = []
 	var uvs : [UV] = []
 	var indices : [(FaceIndices,FaceIndices,FaceIndices)] = []
 	var faces : [Face] = []
 	
-	init(path : String){
+	init(path : String, shouldNormalize : Bool = false){
+		
 		let stringContent = try? String(contentsOfFile: path, encoding: String.Encoding.utf8)
 		guard let lines = stringContent?.components(separatedBy: CharacterSet.newlines) else {
 			print("Couldn't load the mesh")
@@ -52,9 +53,17 @@ class Mesh {
 			
 			
 		}
+		
+		if shouldNormalize {
+			center()
+			normalize()
+		}
+		
+		// Expand indices.
+		expand()
 	}
 	
-	func center(){
+	private func center(){
 		var bary = vertices.reduce((0.0,0.0,0.0), {($0.0+$1.0,$0.1+$1.1,$0.2+$1.2)})
 		bary.0 /= Scalar(vertices.count)
 		bary.1 /= Scalar(vertices.count)
@@ -62,7 +71,7 @@ class Mesh {
 		vertices = vertices.map({($0.0 - bary.0,$0.1 - bary.1,$0.2 - bary.2)})
 	}
 	
-	func normalize(_ scale : Double = 1.0){
+	private func normalize(_ scale : Double = 1.0){
 		var mini = vertices[0]
 		var maxi = vertices[0]
 		for vert in vertices {
@@ -82,7 +91,7 @@ class Mesh {
 		vertices = vertices.map({($0.0/truemax,$0.1/truemax,$0.2/truemax)})
 	}
 	
-	func expand(){
+	private func expand(){
 		for (ind1, ind2, ind3) in indices {
 			let f = Face(	v: [vertices[ind1.v],vertices[ind2.v],vertices[ind3.v]],
 							t: [uvs[ind1.t],uvs[ind2.t],uvs[ind3.t]],

@@ -20,7 +20,7 @@ class ViewController: NSViewController {
 		
 		// Size of the Cocoa view.
 		let WIDTH = 500
-		let HEIGHT = 350
+		let HEIGHT = 300
 		self.view.setFrameSize(NSSize(width: WIDTH, height: HEIGHT))
 		self.imageView.setFrameSize(NSSize(width: WIDTH, height: HEIGHT))
 		
@@ -30,6 +30,7 @@ class ViewController: NSViewController {
 		//Launch the timer
 		timer = Timer(timeInterval: 1.0 / 60.0, target: self, selector: #selector(ViewController.timerFired(_:)), userInfo: nil, repeats: true)
 		RunLoop.current.add(timer, forMode: RunLoopMode.defaultRunLoopMode)
+		lastTime = CFAbsoluteTimeGetCurrent()
 	}
 	
 	fileprivate var times : [Double] = Array(repeating: 0.0, count: 60)
@@ -40,20 +41,20 @@ class ViewController: NSViewController {
 		
 		let startTime = CFAbsoluteTimeGetCurrent()
 		
-		renderer.clear()
-		imageView.image = renderer.renderImage(elapsed: startTime - lastTime)
+		renderer.render(elapsed: startTime - lastTime)
+		imageView.image = renderer.flush()
 		
 		lastTime = startTime
 		
 		let toc = CFAbsoluteTimeGetCurrent() - startTime
-		print("[Full]: \t" + String(format: "%.4fs", toc))
+		//print("[Full]: \t" + String(format: "%.4fs", toc))
 		
 		times[current] = toc
 		current = (current + 1) % 60
 		
 		let avgFPS = 60.0 / times.reduce(0,+)
 		print("⏲ \(Int(1/toc)) fps - Avg \(avgFPS) fps")
-		print("-----------------------")
+		//print("-----------------------")
 	}
 
 	

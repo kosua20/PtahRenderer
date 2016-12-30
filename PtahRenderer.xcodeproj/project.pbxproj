@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F42368F91C90625500500AE3 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42368F81C90625500500AE3 /* main.swift */; };
-		F42368FE1C90686400500AE3 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C6CF41C6FC76000C5F852 /* Renderer.swift */; };
+		F42368FE1C90686400500AE3 /* InternalRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C6CF41C6FC76000C5F852 /* InternalRenderer.swift */; };
 		F42368FF1C90686400500AE3 /* TGALoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44A6D961C8F2B5900D12DBD /* TGALoader.swift */; };
 		F42369001C90686400500AE3 /* Shaders.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C1EF821C73DF6000551FAA /* Shaders.swift */; };
 		F42369011C90686400500AE3 /* Framebuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4998B831C71188D00FEFFD4 /* Framebuffer.swift */; };
@@ -25,7 +25,8 @@
 		F4998B801C7111FD00FEFFD4 /* GeometricTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4998B7F1C7111FD00FEFFD4 /* GeometricTypes.swift */; };
 		F4998B821C7113EF00FEFFD4 /* GeometricOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4998B811C7113EF00FEFFD4 /* GeometricOperations.swift */; };
 		F4998B841C71188D00FEFFD4 /* Framebuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4998B831C71188D00FEFFD4 /* Framebuffer.swift */; };
-		F49C6CF51C6FC76000C5F852 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C6CF41C6FC76000C5F852 /* Renderer.swift */; };
+		F49B60E21E15BF0900973BDB /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49B60E11E15BF0900973BDB /* Renderer.swift */; };
+		F49C6CF51C6FC76000C5F852 /* InternalRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C6CF41C6FC76000C5F852 /* InternalRenderer.swift */; };
 		F49C6CF71C6FD01E00C5F852 /* Texture.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C6CF61C6FD01E00C5F852 /* Texture.swift */; };
 		F49C6CF91C6FD02800C5F852 /* Mesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C6CF81C6FD02800C5F852 /* Mesh.swift */; };
 		F49C6CFB1C6FD0A400C5F852 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C6CFA1C6FD0A400C5F852 /* Types.swift */; };
@@ -56,8 +57,9 @@
 		F4998B7F1C7111FD00FEFFD4 /* GeometricTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeometricTypes.swift; sourceTree = "<group>"; };
 		F4998B811C7113EF00FEFFD4 /* GeometricOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = GeometricOperations.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F4998B831C71188D00FEFFD4 /* Framebuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Framebuffer.swift; sourceTree = "<group>"; };
+		F49B60E11E15BF0900973BDB /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		F49C6CE21C6FC6F200C5F852 /* PtahRendererOnline.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PtahRendererOnline.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		F49C6CF41C6FC76000C5F852 /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+		F49C6CF41C6FC76000C5F852 /* InternalRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternalRenderer.swift; sourceTree = "<group>"; };
 		F49C6CF61C6FD01E00C5F852 /* Texture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Texture.swift; sourceTree = "<group>"; };
 		F49C6CF81C6FD02800C5F852 /* Mesh.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mesh.swift; sourceTree = "<group>"; };
 		F49C6CFA1C6FD0A400C5F852 /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
@@ -93,7 +95,8 @@
 		F42368FD1C90626800500AE3 /* PtahRenderer */ = {
 			isa = PBXGroup;
 			children = (
-				F49C6CF41C6FC76000C5F852 /* Renderer.swift */,
+				F49C6CF41C6FC76000C5F852 /* InternalRenderer.swift */,
+				F49B60E11E15BF0900973BDB /* Renderer.swift */,
 				F4C1EF821C73DF6000551FAA /* Shaders.swift */,
 				F4998B831C71188D00FEFFD4 /* Framebuffer.swift */,
 				F49C6CF81C6FD02800C5F852 /* Mesh.swift */,
@@ -248,7 +251,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F42369031C90686400500AE3 /* Mesh.swift in Sources */,
-				F42368FE1C90686400500AE3 /* Renderer.swift in Sources */,
+				F42368FE1C90686400500AE3 /* InternalRenderer.swift in Sources */,
 				F42369021C90686400500AE3 /* Texture.swift in Sources */,
 				F42369041C90686400500AE3 /* Types.swift in Sources */,
 				F42369051C90686400500AE3 /* GeometricTypes.swift in Sources */,
@@ -268,11 +271,12 @@
 				F49C6CF91C6FD02800C5F852 /* Mesh.swift in Sources */,
 				F49C6CF71C6FD01E00C5F852 /* Texture.swift in Sources */,
 				F49C6CFB1C6FD0A400C5F852 /* Types.swift in Sources */,
+				F49B60E21E15BF0900973BDB /* Renderer.swift in Sources */,
 				F423690C1C906A1B00500AE3 /* ViewController.swift in Sources */,
 				F4998B841C71188D00FEFFD4 /* Framebuffer.swift in Sources */,
 				F4998B801C7111FD00FEFFD4 /* GeometricTypes.swift in Sources */,
 				F4C1EF831C73DF6000551FAA /* Shaders.swift in Sources */,
-				F49C6CF51C6FC76000C5F852 /* Renderer.swift in Sources */,
+				F49C6CF51C6FC76000C5F852 /* InternalRenderer.swift in Sources */,
 				F44A6D971C8F2B5900D12DBD /* TGALoader.swift in Sources */,
 				F4998B821C7113EF00FEFFD4 /* GeometricOperations.swift in Sources */,
 			);
@@ -402,8 +406,10 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = PtahRendererOnline/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LLVM_LTO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.simonrodriguez.PtahRenderer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_DISABLE_SAFETY_CHECKS = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;
 			};
@@ -414,10 +420,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
 				INFOPLIST_FILE = PtahRendererOnline/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LLVM_LTO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.simonrodriguez.PtahRenderer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_DISABLE_SAFETY_CHECKS = NO;
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;

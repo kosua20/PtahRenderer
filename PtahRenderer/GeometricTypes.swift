@@ -8,7 +8,7 @@
 
 import Foundation
 
-typealias Point4 = (Scalar, Scalar, Scalar,Scalar)
+typealias Point4 = (Scalar, Scalar, Scalar, Scalar)
 typealias Point3 = (Scalar, Scalar, Scalar)
 typealias Point2 = (Scalar, Scalar)
 typealias Vertex = Point3
@@ -16,78 +16,77 @@ typealias Normal = Point3
 typealias UV = Point2
 
 
-
 /*--Point3--------*/
 
-func +(lhs : Point3, rhs : Point3) -> Point3 {
-	return (lhs.0 + rhs.0,lhs.1+rhs.1,lhs.2+rhs.2)
+func +(lhs: Point3, rhs: Point3) -> Point3 {
+	return (lhs.0 + rhs.0, lhs.1+rhs.1, lhs.2+rhs.2)
 }
 
-func +=(lhs : inout Point3, rhs : Point3) {
+func +=(lhs: inout Point3, rhs: Point3) {
 	lhs.0 += rhs.0
 	lhs.1 += rhs.1
 	lhs.2 += rhs.2
 }
 
-func -(lhs : Point3, rhs : Point3) -> Point3 {
-	return (lhs.0 - rhs.0,lhs.1-rhs.1,lhs.2-rhs.2)
+func -(lhs: Point3, rhs: Point3) -> Point3 {
+	return (lhs.0 - rhs.0, lhs.1-rhs.1, lhs.2-rhs.2)
 }
 
-func -=(lhs : inout Point3, rhs : Point3) {
+func -=(lhs: inout Point3, rhs: Point3) {
 	lhs.0 -= rhs.0
 	lhs.1 -= rhs.1
 	lhs.2 -= rhs.2
 }
 
-func *(lhs : Scalar, rhs : Point3) -> Point3 {
-	return (lhs*rhs.0,lhs*rhs.1,lhs*rhs.2)
+func *(lhs: Scalar, rhs: Point3) -> Point3 {
+	return (lhs*rhs.0, lhs*rhs.1, lhs*rhs.2)
 }
 
-func *(rhs : Point3, lhs : Scalar) -> Point3 {
-	return (lhs*rhs.0,lhs*rhs.1,lhs*rhs.2)
+func *(rhs: Point3, lhs: Scalar) -> Point3 {
+	return (lhs*rhs.0, lhs*rhs.1, lhs*rhs.2)
 }
 
-func *=(lhs : inout Point3, rhs : Scalar){
+func *=(lhs: inout Point3, rhs: Scalar){
 	lhs.0 = lhs.0*rhs
 	lhs.1 = lhs.1*rhs
 	lhs.2 = lhs.2*rhs
 }
 
-func /(rhs : Point3, lhs : Scalar) -> Point3 {
-	return (rhs.0/lhs,rhs.1/lhs,rhs.2/lhs)
+func /(rhs: Point3, lhs: Scalar) -> Point3 {
+	return (rhs.0/lhs, rhs.1/lhs, rhs.2/lhs)
 }
 
-func /=(lhs : inout Point3, rhs : Scalar){
+func /=(lhs: inout Point3, rhs: Scalar){
 	lhs.0 = lhs.0/rhs
 	lhs.1 = lhs.1/rhs
 	lhs.2 = lhs.2/rhs
 }
 
 
-func cross(_ lhs : Point3,_ rhs : Point3) -> Point3 {
-	return (lhs.1*rhs.2 - lhs.2*rhs.1,lhs.2*rhs.0 - lhs.0*rhs.2,lhs.0*rhs.1 - lhs.1*rhs.0)
+func cross(_ lhs: Point3, _ rhs: Point3) -> Point3 {
+	return (lhs.1*rhs.2 - lhs.2*rhs.1, lhs.2*rhs.0 - lhs.0*rhs.2, lhs.0*rhs.1 - lhs.1*rhs.0)
 }
 
-func dot(_ lhs : Point3, _ rhs : Point3) -> Scalar {
+func dot(_ lhs: Point3, _ rhs: Point3) -> Scalar {
 	return lhs.0*rhs.0+lhs.1*rhs.1+lhs.2*rhs.2
 }
 
-func norm(_ lhs : Point3) -> Scalar {
-	return sqrt(dot(lhs,lhs))
+func norm(_ lhs: Point3) -> Scalar {
+	return sqrt(dot(lhs, lhs))
 }
 
-func norm2(_ lhs : Point3) -> Scalar {
-	return dot(lhs,lhs)
+func norm2(_ lhs: Point3) -> Scalar {
+	return dot(lhs, lhs)
 }
 
-func normalize(_ n : inout Point3){
-	let norm = sqrt(dot(n,n))
+func normalize(_ n: inout Point3){
+	let norm = sqrt(dot(n, n))
 	if(norm==0.0){ return }
 	n /= norm
 }
 
-func normalized(_ n : Point3) -> Point3 {
-	let norm = sqrt(dot(n,n))
+func normalized(_ n: Point3) -> Point3 {
+	let norm = sqrt(dot(n, n))
 	if(norm==0.0){ return n}
 	return n/norm
 }
@@ -110,11 +109,8 @@ func normalized(_ n : Point3) -> Point3 {
 * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
 * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
 * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-* IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-* SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-* PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
-* OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-* WHETHER IN CONTACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+* IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+* OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, * WHETHER IN CONTACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
 * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
@@ -123,16 +119,13 @@ func normalized(_ n : Point3) -> Point3 {
 struct Matrix4 {
 	var matrix: [Scalar] = [
 		//0	  1	   2	3
-		1.0, 0.0, 0.0, 0.0,
-		//4	  5	   6	7
-		0.0, 1.0, 0.0, 0.0,
-		//8	  9	   10	11
-		0.0, 0.0, 1.0, 0.0,
-		//12  13   14	15
+		1.0, 0.0, 0.0, 0.0, 		//4	  5	   6	7
+		0.0, 1.0, 0.0, 0.0, 		//8	  9	   10	11
+		0.0, 0.0, 1.0, 0.0, 		//12  13   14	15
 		0.0, 0.0, 0.0, 1.0
 	]
 	
-	static func translationMatrix(_ t : Point3) -> Matrix4 {
+	static func translationMatrix(_ t: Point3) -> Matrix4 {
 		var matrix = Matrix4()
 		matrix.matrix[3] = t.0
 		matrix.matrix[7] = t.1
@@ -141,10 +134,10 @@ struct Matrix4 {
 	}
 	
 	static func scaleMatrix(_ x: Scalar) -> Matrix4 {
-		return Matrix4.scaleMatrix((x,x,x))
+		return Matrix4.scaleMatrix((x, x, x))
 	}
 	
-	static func scaleMatrix(_ s : Point3) -> Matrix4 {
+	static func scaleMatrix(_ s: Point3) -> Matrix4 {
 		var matrix = Matrix4()
 		matrix.matrix[0] = s.0
 		matrix.matrix[5] = s.1
@@ -152,7 +145,7 @@ struct Matrix4 {
 		return matrix
 	}
 	
-	static func rotationMatrix(_ angle: Scalar, axis: Point3) -> Matrix4 {
+	static func rotationMatrix(angle: Scalar, axis: Point3) -> Matrix4 {
 		var matrix = Matrix4()
 		let u = normalized(axis)
 		let c = cos(angle)
@@ -180,12 +173,12 @@ struct Matrix4 {
 	}
 
 	
-	static func lookAtMatrix(eye : Point3, target : Point3, up : Point3) -> Matrix4 {
+	static func lookAtMatrix(eye: Point3, target: Point3, up: Point3) -> Matrix4 {
 		var matrix = Matrix4()
 		let n = normalized(target - eye)
 		var v = normalized(up)
-		let u = normalized(cross(n,v))
-		v = normalized(cross(u,n))
+		let u = normalized(cross(n, v))
+		v = normalized(cross(u, n))
 		matrix.matrix[0] = u.0
 		matrix.matrix[1] = u.1
 		matrix.matrix[2] = u.2
@@ -198,9 +191,9 @@ struct Matrix4 {
 		matrix.matrix[9] = -n.1
 		matrix.matrix[10] = -n.2
 		
-		matrix.matrix[3] = -dot(u,eye)
-		matrix.matrix[7] = -dot(v,eye)
-		matrix.matrix[11] = dot(n,eye)
+		matrix.matrix[3] = -dot(u, eye)
+		matrix.matrix[7] = -dot(v, eye)
+		matrix.matrix[11] = dot(n, eye)
 		return matrix
 	}
 	
@@ -243,7 +236,7 @@ func * (left: Matrix4, right: Matrix4) -> Matrix4 {
 
 func * (left: Matrix4, rhs: Point4) -> Point4 {
 	let m1 = left.matrix
-	var m = (0.0,0.0,0.0,0.0)
+	var m = (0.0, 0.0, 0.0, 0.0)
 	m.0 = m1[ 0]*rhs.0 + m1[ 1]*rhs.1 + m1[ 2]*rhs.2 + m1[ 3]*rhs.3
 	m.1 = m1[ 4]*rhs.0 + m1[ 5]*rhs.1 + m1[ 6]*rhs.2 + m1[ 7]*rhs.3
 	m.2 = m1[ 8]*rhs.0 + m1[ 9]*rhs.1 + m1[10]*rhs.2 + m1[11]*rhs.3

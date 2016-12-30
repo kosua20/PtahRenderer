@@ -8,26 +8,40 @@
 
 import Foundation
 
+enum TextureMode {
+	case clamp
+	case wrap
+}
+
+enum FilteringMode {
+	case nearest
+	case linear
+}
+
 final class Texture {
 	
-	let width : Int
-	let height : Int
-	let components : Int
-	var pixels : [Pixel]
-	var mode : TextureMode = .wrap
-	var filtering : FilteringMode = .nearest
+	let width: Int
+	let height: Int
+	let components: Int
+	var pixels: [Pixel]
+	var mode: TextureMode = .wrap
+	var filtering: FilteringMode = .nearest
 	
-	init(path : String){
+	init(path: String){
 		
 		if path.hasSuffix(".png"){
 			
 		#if os(Linux)
-			assert(false,"On Linux, only TGA can be currently loaded.")
+			assert(false, "On Linux, only TGA can be currently loaded.")
 		#else
 			
 			let dataProvider = CGDataProvider(filename: path)
 			assert(dataProvider != nil)
-			let image = CGImage(pngDataProviderSource: dataProvider!, decode: nil, shouldInterpolate: false, intent: .defaultIntent)
+			let image = CGImage(pngDataProviderSource: dataProvider!,
+			                    decode: nil,
+			                    shouldInterpolate: false,
+			                    intent: .defaultIntent)
+			
 			if let imageData = image?.dataProvider?.data {
 				width = (image?.width)!
 				height = (image?.height)!
@@ -42,11 +56,11 @@ final class Texture {
 					switch components {
 					case 3:
 						for i in 0..<(temp_pixels.count / components){
-							pixels[i] = Pixel(temp_pixels[3*i],temp_pixels[3*i+1],temp_pixels[3*i+2])
+							pixels[i] = Pixel(temp_pixels[3*i], temp_pixels[3*i+1], temp_pixels[3*i+2])
 						}
 					case 2:
 						for i in 0..<(temp_pixels.count / components){
-							pixels[i] = Pixel(temp_pixels[2*i],temp_pixels[2*i+1],0)
+							pixels[i] = Pixel(temp_pixels[2*i], temp_pixels[2*i+1], 0)
 						}
 					case 1:
 						for i in 0..<(temp_pixels.count){
@@ -65,7 +79,7 @@ final class Texture {
 		#endif
 			
 		} else if path.hasSuffix(".tga"){
-			let (w,h,p) = TGALoader.loadTGA(path)
+			let (w, h, p) = TGALoader.loadTGA(path: path)
 			width = w
 			height = h
 			components = 3
@@ -73,7 +87,7 @@ final class Texture {
 			flipVertically()
 			return
 		} else {
-			assert(false,"Only .png and .tga can currently be loaded.")
+			assert(false, "Only .png and .tga can currently be loaded.")
 		}
 		
 		width = 0
@@ -84,17 +98,17 @@ final class Texture {
 	}
 	
 	
-	private subscript(a : Int, b : Int) -> Pixel {
+	private subscript(a: Int, b: Int) -> Pixel {
 		
 		if mode == .clamp {
-			return pixels[min(height-1,max(0,b)) * width + min(width-1,max(0,a))]
+			return pixels[min(height-1, max(0, b)) * width + min(width-1, max(0, a))]
 		} else if mode == .wrap {
 			return pixels[(b%height) * width + (a%width)]
 		}
 		return pixels[b*width+a]
 	}
 	
-	subscript(u : Scalar, v : Scalar ) -> Pixel {
+	subscript(u: Scalar, v: Scalar ) -> Pixel {
 		
 		let a = u*Scalar(width)
 		let b = v*Scalar(height)
@@ -108,10 +122,10 @@ final class Texture {
 			let afrac = a - Scalar(a0)
 			let bfrac = b - Scalar(b0)
 			
-			let c00 = self[a0,b0]
-			let c01 = self[a0,b1]
-			let c10 = self[a1,b0]
-			let c11 = self[a1,b1]
+			let c00 = self[a0, b0]
+			let c01 = self[a0, b1]
+			let c10 = self[a1, b0]
+			let c11 = self[a1, b1]
 			
 			let d0 = ((1.0 - bfrac) * c00 + bfrac * c01)
 			let d1 = ((1.0 - bfrac) * c10 + bfrac * c11)
@@ -119,7 +133,7 @@ final class Texture {
 			return (1.0 - afrac) * d0 + afrac * d1
 		}
 		
-		return self[Int(a),Int(b)]
+		return self[Int(a), Int(b)]
 		
 	}
 	
@@ -127,11 +141,11 @@ final class Texture {
 	private func flipVertically(){
 		let half = height >> 1
 		for y in 0..<half {
-			swap(&(pixels[y*width..<(y+1)*width]),&(pixels[width*(height-y-1)..<width*(height-y)]))
+			swap(&(pixels[y*width..<(y+1)*width]), &(pixels[width*(height-y-1)..<width*(height-y)]))
 		}
 	}
 	
-	/*subscript(uv : Point2) -> Pixel {
+	/*subscript(uv: Point2) -> Pixel {
 		return self[uv.0 as Scalar, uv.1 as Scalar]
 	}*/
 	

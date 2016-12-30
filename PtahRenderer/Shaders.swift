@@ -9,19 +9,19 @@
 import Foundation
 
 protocol Shader {
-	var uniforms : [Texture] { get set }
-	static func vertexShader(_ v : Point3) -> Point3
-	static func fragmentShader(_ p : Point2) -> Color
+	var uniforms: [Texture] { get set }
+	static func vertexShader(_ v: Point3) -> Point3
+	static func fragmentShader(_ p: Point2) -> Color
 }
 
 
-class TestShader : Shader {
-	var uniforms : [Texture] = []
-	static func vertexShader(_ v : Point3) -> Point3{
+class TestShader: Shader {
+	var uniforms: [Texture] = []
+	static func vertexShader(_ v: Point3) -> Point3{
 		return v
 	}
 	
-	static func fragmentShader(_ p : Point2)-> Color{
-		return (255,255,255)
+	static func fragmentShader(_ p: Point2)-> Color{
+		return (255, 255, 255)
 	}
 }

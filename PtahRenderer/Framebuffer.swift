@@ -13,38 +13,38 @@ import Cocoa
 
 final class Framebuffer {
 	
-	internal var pixels : [Pixel] = []
-	internal var zbuffer : [Scalar] = []
-	fileprivate var width : Int = 512
-	fileprivate var height : Int = 512
+	internal var pixels: [Pixel] = []
+	internal var zbuffer: [Scalar] = []
+	fileprivate var width: Int = 512
+	fileprivate var height: Int = 512
 	
-	init(width _width : Int,height _height : Int){
+	init(width _width: Int, height _height: Int){
 		width = _width
 		height = _height
 		pixels = [Pixel](repeating: Pixel(0), count: width*height)
 		zbuffer = [Scalar](repeating: -Scalar.infinity, count: width*height)
 	}
 	
-	func set(_ x : Int,_ y : Int,_ color : Color){
+	func set(_ x: Int, _ y: Int, _ color: Color){
 		//if(x < width && y < height && x >= 0 && y >= 0){
 			pixels[y * width + x].rgb = color
 		//}
 	}
 	
-	func set(_ x : Int,_ y : Int,_ color : Pixel){
+	func set(_ x: Int, _ y: Int, _ color: Pixel){
 		//if(x < width && y < height && x >= 0 && y >= 0){
 			pixels[y * width + x] = color
 		//}
 	}
 	
-	func getDepth(_ x : Int, _ y : Int) -> Scalar {
+	func getDepth(_ x: Int, _ y: Int) -> Scalar {
 		//if(x < width && y < height && x >= 0 && y >= 0){
 			return zbuffer[y * width + x]
 		//}
 		//return Scalar.infinity
 	}
 	
-	func setDepth(_ x : Int,_ y : Int,_ depth : Scalar){
+	func setDepth(_ x: Int, _ y: Int, _ depth: Scalar){
 		//if(x < width && y < height && x >= 0 && y >= 0){
 			zbuffer[y * width + x] = depth
 		//}
@@ -53,11 +53,11 @@ final class Framebuffer {
 	func flipVertically(){
 		let half = height >> 1
 		for y in 0..<half {
-			swap(&(pixels[y*width..<(y+1)*width]),&(pixels[width*(height-y-1)..<width*(height-y)]))
+			swap(&(pixels[y*width..<(y+1)*width]), &(pixels[width*(height-y-1)..<width*(height-y)]))
 		}
 	}
 	
-	func clearColor(_ col : Color){
+	func clearColor(_ col: Color){
 		for i in 0..<width*height {
 			pixels[i].rgb = col
 		}

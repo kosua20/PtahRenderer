@@ -23,7 +23,7 @@ import Foundation
 
 final class TGALoader {
 	
-	static func writeTGA(_ pixels : [Pixel], width: Int, height: Int, path: String){
+	static func writeTGA(pixels: [Pixel], width: Int, height: Int, path: String){
 		let data = NSMutableData()
 		
 		var header = [UInt8](repeating: 0, count: 18)
@@ -42,23 +42,23 @@ final class TGALoader {
 		let imageLength = width*height*3
 		let pixeldata = pixels.flatMap({[$0.b, $0.g, $0.r]})
 		data.append(pixeldata, length: imageLength)
-		data.write(toFile: path.hasSuffix(".tga") ? path : (path + ".tga") , atomically: true)
+		data.write(toFile: path.hasSuffix(".tga") ? path: (path + ".tga") , atomically: true)
 	}
 	
-	static func loadTGA(_ path : String) -> (Int, Int,[Pixel]){
+	static func loadTGA(path: String) -> (Int, Int, [Pixel]){
 		guard let data = try? Data(contentsOf: URL(fileURLWithPath: path)) else {
 			assertionFailure("Couldn't load the tga")
-			return (0,0,[])
+			return (0, 0, [])
 		}
-		var header : [UInt8] = [UInt8](repeating: 0, count: 18)
-		(data as NSData).getBytes(&header, range:NSRange(location:0,length:18))
+		var header: [UInt8] = [UInt8](repeating: 0, count: 18)
+		(data as NSData).getBytes(&header, range:NSRange(location:0, length:18))
 		
 		let useColorMap = header[1] != 0
 		
 		let imageType = Int(header[2])
 		if useColorMap || ([0, 1, 3].contains(imageType)) {
 			assertionFailure("Not a color TGA")
-			return (0,0,[])
+			return (0, 0, [])
 		}
 		
 		let IDLength = header[0]
@@ -73,26 +73,26 @@ final class TGALoader {
 		//let imageDescriptor = header[17]
 		
 		let lengthImage = Int(pixelDepth) * width * height / 8
-		let range = NSRange(location:18+Int(IDLength),length:lengthImage)
-		var content : [UInt8] = [UInt8](repeating: 0, count: lengthImage)
+		let range = NSRange(location:18+Int(IDLength), length:lengthImage)
+		var content: [UInt8] = [UInt8](repeating: 0, count: lengthImage)
 		(data as NSData).getBytes(&content, range: range)
-		var pixels : [Pixel]
+		var pixels: [Pixel]
 		if pixelDepth == 8 {
-			pixels = content.map({Pixel($0,$0,$0)})
+			pixels = content.map({Pixel($0, $0, $0)})
 		} else {
 			pixels = [Pixel](repeating: Pixel(0), count: width * height)
 			if pixelDepth == 24 {
 				for i in 0..<(width * height){
-					pixels[i].rgb = (content[3*i+2],content[3*i+1],content[3*i])
+					pixels[i].rgb = (content[3*i+2], content[3*i+1], content[3*i])
 				}
 			} else if pixelDepth == 32 {
 				for i in 0..<(width * height){
-					pixels[i].rgb = (content[4*i+2],content[4*i+1],content[4*i])
+					pixels[i].rgb = (content[4*i+2], content[4*i+1], content[4*i])
 					pixels[i].a = content[4*i+3]
 				}
 			}
 
 		}
-		return (width, height,pixels)
+		return (width, height, pixels)
 	}
 }

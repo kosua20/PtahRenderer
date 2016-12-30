@@ -9,7 +9,7 @@
 import Foundation
 print("Starting Ptah Renderer...")
 
-let renderer = Renderer(width: 512,height: 512)
+let renderer = Renderer(width: 512, height: 512)
 renderer.clear()
 
 let pixels = renderer.renderBuffer()

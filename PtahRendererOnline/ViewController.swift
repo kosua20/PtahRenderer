@@ -11,7 +11,7 @@ import Cocoa
 class ViewController: NSViewController {
 
 	@IBOutlet weak var imageView: NSImageView!
-	fileprivate var renderer : Renderer!
+	fileprivate var renderer: Renderer!
 	fileprivate var timer: Timer!
 	
 	override func viewDidLoad() {
@@ -25,7 +25,7 @@ class ViewController: NSViewController {
 		self.imageView.setFrameSize(NSSize(width: WIDTH, height: HEIGHT))
 		
 		//Initialize renderer.
-		renderer = Renderer(width: WIDTH,height: HEIGHT)
+		renderer = Renderer(width: WIDTH, height: HEIGHT)
 		
 		//Launch the timer
 		timer = Timer(timeInterval: 1.0 / 60.0, target: self, selector: #selector(ViewController.timerFired(_:)), userInfo: nil, repeats: true)
@@ -33,7 +33,7 @@ class ViewController: NSViewController {
 		lastTime = CFAbsoluteTimeGetCurrent()
 	}
 	
-	fileprivate var times : [Double] = Array(repeating: 0.0, count: 60)
+	fileprivate var times: [Double] = Array(repeating: 0.0, count: 60)
 	fileprivate var current = 0
 	fileprivate var lastTime = CFAbsoluteTimeGetCurrent()
 	
@@ -52,7 +52,7 @@ class ViewController: NSViewController {
 		times[current] = toc
 		current = (current + 1) % 60
 		
-		let avgFPS = 60.0 / times.reduce(0,+)
+		let avgFPS = 60.0 / times.reduce(0, +)
 		print("⏲ \(Int(1/toc)) fps - Avg \(avgFPS) fps")
 		//print("-----------------------")
 	}

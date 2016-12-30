@@ -11,7 +11,7 @@ import Foundation
 import Cocoa
 #endif
 
-class Framebuffer {
+final class Framebuffer {
 	
 	internal var pixels : [Pixel] = []
 	internal var zbuffer : [Scalar] = []

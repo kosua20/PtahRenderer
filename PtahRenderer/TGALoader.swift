@@ -21,7 +21,7 @@ import Foundation
 		- 3: B&W
 */
 
-class TGALoader {
+final class TGALoader {
 	
 	static func writeTGA(_ pixels : [Pixel], width: Int, height: Int, path: String){
 		let data = NSMutableData()

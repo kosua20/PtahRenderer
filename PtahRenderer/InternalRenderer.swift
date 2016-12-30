@@ -11,6 +11,16 @@ import Foundation
 	import Cocoa
 #endif
 
+enum RenderingMode {
+	case wireframe
+	case shaded
+}
+
+enum CullingMode {
+	case backface
+	case none
+}
+
 
 
 
@@ -20,47 +30,16 @@ final class InternalRenderer {
 	fileprivate var height = 256
 	
 	fileprivate var buffer: Framebuffer
-
+	var mode : RenderingMode
+	var culling : CullingMode
+	
 	init(width _width: Int, height _height: Int){
 		width = _width
 		height = _height
 		buffer = Framebuffer(width: width, height: height)
+		mode = .shaded
+		culling = .backface
 	}
-	
-	/*
-	
-	
-	
-	func drawTest(){
-		let v0 = (-1.0, -1.0, 0.0, 1.0)
-		let v1 = (1.0, -1.0, 0.0, 1.0)
-		let v2 = (1.0, 1.0, 0.0, 1.0)
-		let view = Matrix4.translationMatrix((0.5, 0.0, 0.0)) * Matrix4.rotationMatrix(0.65, axis: (0.0, 0.0, 1.0)) * Matrix4.scaleMatrix(0.5)
-		let v = ([v0, v1, v2].map({view*$0}))
-		let halfWidth = Scalar(width)*0.5
-		let halfHeight = Scalar(height)*0.5
-		
-		//Culling
-		//Cohen-Sutherland region
-		let csr = v.map({ (vv: Point4) -> Int in
-			let xbit = (vv.0 < -vv.3 ? 0b1: 0b0) + (vv.0 > vv.3 ? 0b10: 0b0) as Int
-			let ybit = (vv.1 < -vv.3 ? 0b100: 0b0) + (vv.1 > vv.3 ? 0b1000: 0b0) as Int
-			let zbit = (vv.2 < -vv.3 ? 0b10000: 0b0) + (vv.2 > vv.3 ? 0b100000: 0b0) as Int
-			return xbit + ybit + zbit
-			})
-		print(csr)
-		
-		if v.filter({$0.1 > $0.3}).count > 0 {
-			return
-		}
-		
-		let v_s = v.map({ (floor(($0.0 + 1.0)*halfWidth), floor((-1.0*$0.1 + 1.0)*halfHeight), $0.2)})
-		
-		//--Fragment
-		
-		triangle(v_s, (255, 128, 0))
-		triangleWire(v_s.map({($0.0, $0.1)}), (255, 255, 255))
-	}*/
 	
 	func drawMesh(mesh: Mesh, vertexShader: ([Vertex], [String : Any]) -> [Point4], fragmentShader: (UV, [String : Any]) -> Color, uniforms : [String : Any]){
 		
@@ -77,11 +56,19 @@ final class InternalRenderer {
 			//---
 			
 			//--Clipping
-			//Clipping up edge
-			if v_p1.map({$0.1 > $0.3}).filter({$0}).count > 0 {
+
+			// Due to the way the rasterizer work, the clipping needs are limited.
+			// Indeed, each traingle bounding box is clamped wtr the screen dimensions,
+			// Preventing any off-screen fragment evaluation.
+			/*let csr = v_p1.map({ (vv: Point4) -> Int in
+				let xbit = (vv.0 < -vv.3 ? 0b1: 0b0) + (vv.0 > vv.3 ? 0b10: 0b0)// as Int
+				let ybit = (vv.1 < -vv.3 ? 0b100: 0b0) + (vv.1 > vv.3 ? 0b1000: 0b0)// as Int
+				let zbit = (vv.2 < -vv.3 ? 0b10000: 0b0) + (vv.2 > vv.3 ? 0b100000: 0b0)// as Int
+				return xbit + ybit + zbit
+			})
+			if csr.reduce(1,&) > 0 {
 				continue
-			}
-			//More here...
+			}*/
 				
 			//We will need the perspective factors later on
 			let ws = v_p1.map({$0.3})
@@ -91,15 +78,18 @@ final class InternalRenderer {
 			
 			//--Backface culling
 			//We compute it manually to avoid using a cross product and extract the 3rd component
-			let orientation = (v_p[1].0 - v_p[0].0) * (v_p[2].1 - v_p[0].1) - (v_p[1].1 - v_p[0].1) * (v_p[2].0 - v_p[0].0)
+			let orientation = (culling == .backface) ? (v_p[1].0 - v_p[0].0) * (v_p[2].1 - v_p[0].1) - (v_p[1].1 - v_p[0].1) * (v_p[2].0 - v_p[0].0) : 1.0
 			
 			if orientation > 0.0 {
 				//--Screen space
 				let v_s = v_p.map({ (floor(($0.0 + 1.0)*halfWidth), floor((-1.0*$0.1 + 1.0)*halfHeight), $0.2)})
 				
 				//--- Shading
-				triangle(v_s, ws, f.n, f.t, fragmentShader, uniforms)
-				//---
+				if mode == .shaded {
+					triangle(v_s, ws, f.n, f.t, fragmentShader, uniforms)
+				} else if mode == .wireframe {
+					triangleWire(v_s.map({($0.0,$0.1)}), (255,255,255))
+				}
 			}
 		}
 	}
@@ -128,7 +118,7 @@ final class InternalRenderer {
 			}
 		}
 	}
-	
+	/*
 	func triangle(_ v: [Vertex], _ color: Color){
 		let (mini, maxi) = boundingBox(v, width, height)
 		for x in Int(mini.0)...Int(maxi.0) {
@@ -143,11 +133,78 @@ final class InternalRenderer {
 			}
 		}
 	}
-	
+	*/
 	func triangleWire(_ v: [Point2], _ color: Color){
-			line(v[0], v[1], color)
-			line(v[1], v[2], color)
-			line(v[2], v[0], color)
+		let csr = v.map({ (vv: Point2) -> Int in
+			let xbit = (vv.0 < 0 ? 0b1: 0b0) + (vv.0 >= Scalar(width) ? 0b10: 0b0)// as Int
+			let ybit = (vv.1 < 0 ? 0b100: 0b0) + (vv.1 >= Scalar(height) ? 0b1000: 0b0)// as Int
+			return xbit + ybit
+		})
+		
+		clippedLine(v[0], v[1], csr[0], csr[1], color)
+		clippedLine(v[1], v[2], csr[1], csr[2], color)
+		clippedLine(v[2], v[0], csr[2], csr[0], color)
+		
+	}
+	
+	func clippedLine(_ p0: Point2, _ p1: Point2, _ c0: Int, _ c1: Int, _ color: Color){
+		if (c0 & c1) > 0 {
+			return
+			
+		} else if (c0 | c1) == 0 {
+			line(p0, p1, color)
+			
+		} else {
+			// We want c0 != 0, swap if needed (we know both won't be null).
+			let lc0, lc1 : Int
+			let lp0, lp1 : Point2
+			if c0 != 0 {
+				lc0 = c0
+				lc1 = c1
+				lp0 = p0
+				lp1 = p1
+			} else {
+				lc0 = c1
+				lc1 = c0
+				lp0 = p1
+				lp1 = p0
+			}
+			
+			let w = Scalar(width) - 1
+			let h = Scalar(height) - 1
+			let lp = lp0 - lp1 // lp != 0
+			let nlp0 : Point2
+			
+			// Intersects lp0 with the side.
+			if (lc0 >> 3) == 1 {
+				//bottom
+				let nlp0x = (lp.0 / lp.1) * (h - lp1.1) + lp1.0
+				nlp0 = (floor(nlp0x),h)
+				
+			} else if ((lc0 >> 2) & 0b1) == 1 {
+				//top
+				let nlp0x = (lp.0 / lp.1) * (0 - lp1.1) + lp1.0
+				nlp0 = (floor(nlp0x),0)
+				
+			} else if ((lc0 >> 1) & 0b1) == 1 {
+				//right
+				let nlp0y = (lp.1 / lp.0) * (w - lp1.0) + lp1.1
+				nlp0 = (w,floor(nlp0y))
+				
+			} else {
+				// left
+				let nlp0y = (lp.1 / lp.0) * (0 - lp1.0) + lp1.1
+				nlp0 = (0,floor(nlp0y))
+				
+			}
+			// Update c0
+			let xbit = (nlp0.0 < 0 ? 0b1: 0b0) + (nlp0.0 >= Scalar(width) ? 0b10: 0b0)// as Int
+			let ybit = (nlp0.1 < 0 ? 0b100: 0b0) + (nlp0.1 >= Scalar(height) ? 0b1000: 0b0)// as Int
+			let nlc0 = xbit + ybit
+			// Draw new line
+			clippedLine(nlp0, lp1, nlc0, lc1, color)
+			
+		}
 	}
 
 	

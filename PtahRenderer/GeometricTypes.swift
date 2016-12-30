@@ -15,6 +15,47 @@ typealias Vertex = Point3
 typealias Normal = Point3
 typealias UV = Point2
 
+/*--Point2--------*/
+
+func +(lhs: Point2, rhs: Point2) -> Point2 {
+	return (lhs.0 + rhs.0, lhs.1+rhs.1)
+}
+
+func +=(lhs: inout Point2, rhs: Point2) {
+	lhs.0 += rhs.0
+	lhs.1 += rhs.1
+}
+
+func -(lhs: Point2, rhs: Point2) -> Point2 {
+	return (lhs.0 - rhs.0, lhs.1-rhs.1)
+}
+
+func -=(lhs: inout Point2, rhs: Point2) {
+	lhs.0 -= rhs.0
+	lhs.1 -= rhs.1
+}
+
+func *(lhs: Scalar, rhs: Point2) -> Point2 {
+	return (lhs*rhs.0, lhs*rhs.1)
+}
+
+func *(rhs: Point2, lhs: Scalar) -> Point2 {
+	return (lhs*rhs.0, lhs*rhs.1)
+}
+
+func *=(lhs: inout Point2, rhs: Scalar){
+	lhs.0 = lhs.0*rhs
+	lhs.1 = lhs.1*rhs
+}
+
+func /(rhs: Point2, lhs: Scalar) -> Point2 {
+	return (rhs.0/lhs, rhs.1/lhs)
+}
+
+func /=(lhs: inout Point2, rhs: Scalar){
+	lhs.0 = lhs.0/rhs
+	lhs.1 = lhs.1/rhs
+}
 
 /*--Point3--------*/
 

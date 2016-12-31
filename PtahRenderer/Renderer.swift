@@ -37,6 +37,7 @@ final class Renderer {
 	private var mesh: Mesh
 	private var time = 0.0
 	private var camera: Camera
+	private let program : Program
 	
 	
 	init(width _width: Int, height _height: Int){
@@ -49,6 +50,8 @@ final class Renderer {
 		let baseName = "dragon"
 		tex = Texture(path: rootDir + "textures/" + baseName + ".png")
 		mesh = Mesh(path: rootDir + "models/" + baseName + ".obj", shouldNormalize: true)
+		program = TestProgram()
+		program.register(name: "texture", value: tex)
 		
 		let proj = Matrix4.perspectiveMatrix(fov:70.0, aspect: Scalar(width)/Scalar(height), near: 0.01, far: 30.0)
 		let initialPos = 2*normalized((1.0, 0.5, 0.0))
@@ -67,10 +70,10 @@ final class Renderer {
 		let view = Matrix4.lookAtMatrix(eye: camera.position, target: camera.center, up: camera.up)
 		
 		let mvp = camera.projection*view
-
+		program.register(name: "mvp", value: mvp)
 		internalRenderer.clear()
 		
-		internalRenderer.drawMesh(mesh: mesh, vertexShader: vshader, fragmentShader:  fshader, uniforms : ["mvp": mvp, "texture": tex])
+		internalRenderer.drawMesh(mesh: mesh, program: program)
 		
 	}
 	

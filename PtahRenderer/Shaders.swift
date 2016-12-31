@@ -8,30 +8,33 @@
 
 import Foundation
 
-protocol Shader {
-	var uniforms: [Texture] { get set }
-	static func vertexShader(_ v: Point3) -> Point3
-	static func fragmentShader(_ p: Point2) -> Color
+class Program  {
+	
+	var uniforms: [String : Any] = [:]
+	var textures: [String : Texture] = [:]
+	var matrices: [String : Matrix4] = [:]
+	
+	func vertexShader(_ v: Point3) -> Point4 { fatalError("Must Override") }
+	
+	func fragmentShader(_ p: Point2) -> Color { fatalError("Must Override") }
+	
+	func register(name : String, value : Texture) { textures[name] = value }
+	
+	func register(name : String, value : Matrix4) { matrices[name] = value }
+	
+	func register(name : String, value : Any) { uniforms[name] = value }
 }
 
 
-class TestShader: Shader {
-	var uniforms: [Texture] = []
-	static func vertexShader(_ v: Point3) -> Point3{
-		return v
+class TestProgram: Program {
+	
+	override func vertexShader(_ v: Point3) -> Point4 {
+		let mvp = matrices["mvp"]!
+		return mvp * (v.0, v.1, v.2, 1.0)
 	}
 	
-	static func fragmentShader(_ p: Point2)-> Color{
-		return (255, 255, 255)
+	override func fragmentShader(_ p: Point2)-> Color{
+		return (textures["texture"]!)[p.0, p.1].rgb
 	}
-}
-
-func vshader(v: [Vertex], uniforms: [String : Any]) -> [Point4] {
-	let mvp = uniforms["mvp"] as! Matrix4
-	return v.map({ mvp * ($0.0, $0.1, $0.2, 1.0) })
-}
-
-func fshader(uv: UV, uniforms: [String : Any]) -> Color {
 	
-	return (uniforms["texture"] as! Texture)[uv.0, uv.1].rgb
 }

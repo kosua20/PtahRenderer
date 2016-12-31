@@ -41,7 +41,7 @@ final class InternalRenderer {
 		culling = .backface
 	}
 	
-	func drawMesh(mesh: Mesh, vertexShader: ([Vertex], [String : Any]) -> [Point4], fragmentShader: (UV, [String : Any]) -> Color, uniforms : [String : Any]){
+	func drawMesh(mesh: Mesh, program: Program){
 		
 		let halfWidth = Scalar(width)*0.5
 		let halfHeight = Scalar(height)*0.5
@@ -52,7 +52,9 @@ final class InternalRenderer {
 			
 			//--- Vertex shader
 			//--View space and clip space
-			let v_p1 = vertexShader(f.v, uniforms)
+			let v_p1 = [program.vertexShader(f.v[0]),
+						program.vertexShader(f.v[1]),
+						program.vertexShader(f.v[2])]
 			//---
 			
 			//--Clipping
@@ -71,10 +73,14 @@ final class InternalRenderer {
 			}*/
 				
 			//We will need the perspective factors later on
-			let ws = v_p1.map({$0.3})
+			let ws = [v_p1[0].3,
+			          v_p1[1].3,
+			          v_p1[2].3]
 			
 			//--NDC space
-			let v_p = v_p1.map({($0.0/$0.3, $0.1/$0.3, -$0.2/$0.3)})
+			let v_p = [(v_p1[0].0/v_p1[0].3, v_p1[0].1/v_p1[0].3, -v_p1[0].2/v_p1[0].3),
+			           (v_p1[1].0/v_p1[1].3, v_p1[1].1/v_p1[1].3, -v_p1[1].2/v_p1[1].3),
+			           (v_p1[2].0/v_p1[2].3, v_p1[2].1/v_p1[2].3, -v_p1[2].2/v_p1[2].3)]
 			
 			//--Backface culling
 			//We compute it manually to avoid using a cross product and extract the 3rd component
@@ -82,19 +88,21 @@ final class InternalRenderer {
 			
 			if orientation > 0.0 {
 				//--Screen space
-				let v_s = v_p.map({ (floor(($0.0 + 1.0)*halfWidth), floor((-1.0*$0.1 + 1.0)*halfHeight), $0.2)})
+				let v_s = [(floor((v_p[0].0 + 1.0) * halfWidth), floor((-1.0 * v_p[0].1 + 1.0) * halfHeight), v_p[0].2),
+				           (floor((v_p[1].0 + 1.0) * halfWidth), floor((-1.0 * v_p[1].1 + 1.0) * halfHeight), v_p[1].2),
+				           (floor((v_p[2].0 + 1.0) * halfWidth), floor((-1.0 * v_p[2].1 + 1.0) * halfHeight), v_p[2].2)]
 				
 				//--- Shading
 				if mode == .shaded {
-					triangle(v_s, ws, f.n, f.t, fragmentShader, uniforms)
+					triangle(v_s, ws, f.n, f.t, program)
 				} else if mode == .wireframe {
-					triangleWire(v_s.map({($0.0,$0.1)}), (255,255,255))
+					triangleWire([(v_s[0].0,v_s[0].1), (v_s[1].0,v_s[1].1), (v_s[2].0,v_s[2].1)], (255,255,255))
 				}
 			}
 		}
 	}
 	
-	func triangle(_ v: [Vertex], _ w: [Scalar], _ n: [Normal], _ uv: [UV], _ fragmentShader: (UV,  [String : Any]) -> Color, _ uniforms :  [String : Any]){
+	func triangle(_ v: [Vertex], _ w: [Scalar], _ n: [Normal], _ uv: [UV], _ program: Program){
 		let (mini, maxi) = boundingBox(v, width, height)
 		
 		for x in Int(mini.0)...Int(maxi.0) {
@@ -105,45 +113,34 @@ final class InternalRenderer {
 				var persp = (bary.0/w[0], bary.1/w[1], bary.2/w[2])
 				persp = persp / (persp.0 + persp.1 + persp.2)
 				//Maybe need to compute the depth with the same interpolation ?
-				let z =  v[0].2 * bary.0 + v[1].2 * bary.1 + v[2].2 * bary.2
+				let z = v[0].2 * bary.0 + v[1].2 * bary.1 + v[2].2 * bary.2
 				
 				if (buffer.getDepth(x, y) < z){
 					buffer.setDepth(x, y, z)
 					let tex = barycentricInterpolation(coeffs: persp, t1: uv[0], t2: uv[1], t3: uv[2])
 					//let nor = normalized(barycentricInterpolation(coeffs: bary, t1: n[0], t2: n[1], t3: n[2]))
 					//let cosfactor = max(0.0, dot(-1.0*nor, l))
-					let color = fragmentShader(tex, uniforms)
+					let color = program.fragmentShader(tex)
 					buffer.set(x, y, color)
 				}
 			}
 		}
 	}
-	/*
-	func triangle(_ v: [Vertex], _ color: Color){
-		let (mini, maxi) = boundingBox(v, width, height)
-		for x in Int(mini.0)...Int(maxi.0) {
-			for y in Int(mini.1)...Int(maxi.1) {
-				let bary = barycentre(Point3(Scalar(x), Scalar(y), 0.0), v[0], v[1], v[2])
-				if (bary.0 < 0.0 || bary.1 < 0.0 || bary.2 < 0.0){ continue }
-				let z =  v[0].2 * bary.0 + v[1].2 * bary.1 + v[2].2 * bary.2
-				if (buffer.getDepth(x, y) < z){
-					buffer.setDepth(x, y, z)
-					buffer.set(x, y, color)
-				}
-			}
-		}
-	}
-	*/
+	
 	func triangleWire(_ v: [Point2], _ color: Color){
-		let csr = v.map({ (vv: Point2) -> Int in
-			let xbit = (vv.0 < 0 ? 0b1: 0b0) + (vv.0 >= Scalar(width) ? 0b10: 0b0)// as Int
-			let ybit = (vv.1 < 0 ? 0b100: 0b0) + (vv.1 >= Scalar(height) ? 0b1000: 0b0)// as Int
-			return xbit + ybit
-		})
 		
-		clippedLine(v[0], v[1], csr[0], csr[1], color)
-		clippedLine(v[1], v[2], csr[1], csr[2], color)
-		clippedLine(v[2], v[0], csr[2], csr[0], color)
+		let csr0 = (v[0].0 < 0 ? 0b1: 0b0) + (v[0].0 >= Scalar(width) ? 0b10: 0b0)
+				 + (v[0].1 < 0 ? 0b100: 0b0) + (v[0].1 >= Scalar(height) ? 0b1000: 0b0)
+		
+		let csr1 = (v[1].0 < 0 ? 0b1: 0b0) + (v[1].0 >= Scalar(width) ? 0b10: 0b0)
+				 + (v[1].1 < 0 ? 0b100: 0b0) + (v[1].1 >= Scalar(height) ? 0b1000: 0b0)
+		
+		let csr2 = (v[2].0 < 0 ? 0b1: 0b0) + (v[2].0 >= Scalar(width) ? 0b10: 0b0)
+				 + (v[2].1 < 0 ? 0b100: 0b0) + (v[2].1 >= Scalar(height) ? 0b1000: 0b0)
+
+		clippedLine(v[0], v[1], csr0, csr1, color)
+		clippedLine(v[1], v[2], csr1, csr2, color)
+		clippedLine(v[2], v[0], csr2, csr0, color)
 		
 	}
 	
@@ -198,9 +195,10 @@ final class InternalRenderer {
 				
 			}
 			// Update c0
-			let xbit = (nlp0.0 < 0 ? 0b1: 0b0) + (nlp0.0 >= Scalar(width) ? 0b10: 0b0)// as Int
-			let ybit = (nlp0.1 < 0 ? 0b100: 0b0) + (nlp0.1 >= Scalar(height) ? 0b1000: 0b0)// as Int
+			let xbit = (nlp0.0 < 0 ? 0b1: 0b0) + (nlp0.0 >= Scalar(width) ? 0b10: 0b0)
+			let ybit = (nlp0.1 < 0 ? 0b100: 0b0) + (nlp0.1 >= Scalar(height) ? 0b1000: 0b0)
 			let nlc0 = xbit + ybit
+			
 			// Draw new line
 			clippedLine(nlp0, lp1, nlc0, lc1, color)
 			

@@ -21,6 +21,7 @@
 		F423690C1C906A1B00500AE3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F423690A1C906A1B00500AE3 /* ViewController.swift */; };
 		F423690E1C906A2E00500AE3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F423690D1C906A2E00500AE3 /* Assets.xcassets */; };
 		F42369111C906A3800500AE3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F423690F1C906A3800500AE3 /* Main.storyboard */; };
+		F4489A111E17D1F9008EDCAB /* Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4489A101E17D1F9008EDCAB /* Object.swift */; };
 		F44A6D971C8F2B5900D12DBD /* TGALoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44A6D961C8F2B5900D12DBD /* TGALoader.swift */; };
 		F4998B801C7111FD00FEFFD4 /* GeometricTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4998B7F1C7111FD00FEFFD4 /* GeometricTypes.swift */; };
 		F4998B821C7113EF00FEFFD4 /* GeometricOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4998B811C7113EF00FEFFD4 /* GeometricOperations.swift */; };
@@ -53,6 +54,7 @@
 		F423690A1C906A1B00500AE3 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = PtahRendererOnline/ViewController.swift; sourceTree = SOURCE_ROOT; };
 		F423690D1C906A2E00500AE3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = PtahRendererOnline/Assets.xcassets; sourceTree = SOURCE_ROOT; };
 		F42369101C906A3800500AE3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = PtahRendererOnline/Base.lproj/Main.storyboard; sourceTree = SOURCE_ROOT; };
+		F4489A101E17D1F9008EDCAB /* Object.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Object.swift; sourceTree = "<group>"; };
 		F44A6D961C8F2B5900D12DBD /* TGALoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGALoader.swift; sourceTree = "<group>"; };
 		F4998B7F1C7111FD00FEFFD4 /* GeometricTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = GeometricTypes.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F4998B811C7113EF00FEFFD4 /* GeometricOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = GeometricOperations.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -97,6 +99,7 @@
 			children = (
 				F49C6CF41C6FC76000C5F852 /* InternalRenderer.swift */,
 				F49B60E11E15BF0900973BDB /* Renderer.swift */,
+				F4489A101E17D1F9008EDCAB /* Object.swift */,
 				F4C1EF821C73DF6000551FAA /* Shaders.swift */,
 				F4998B831C71188D00FEFFD4 /* Framebuffer.swift */,
 				F49C6CF81C6FD02800C5F852 /* Mesh.swift */,
@@ -277,6 +280,7 @@
 				F4998B801C7111FD00FEFFD4 /* GeometricTypes.swift in Sources */,
 				F4C1EF831C73DF6000551FAA /* Shaders.swift in Sources */,
 				F49C6CF51C6FC76000C5F852 /* InternalRenderer.swift in Sources */,
+				F4489A111E17D1F9008EDCAB /* Object.swift in Sources */,
 				F44A6D971C8F2B5900D12DBD /* TGALoader.swift in Sources */,
 				F4998B821C7113EF00FEFFD4 /* GeometricOperations.swift in Sources */,
 			);

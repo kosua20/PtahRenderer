@@ -8,7 +8,7 @@
 
 import Foundation
 
-typealias Scalar = Double
+typealias Scalar = Float
 typealias Color = (UInt8, UInt8, UInt8)
 
 
@@ -93,18 +93,54 @@ func clamp(_ x: UInt8, _ a: UInt8, _ b: UInt8) -> UInt8 {
 	return min(b, max(a, x))
 }
 
+func clamp(_ x: Int, _ a: Int, _ b: Int) -> Int {
+	return min(b, max(a, x))
+}
 
+func ==(_ x: OutputVertex, _ y: OutputVertex) -> Bool {
+	// Ignore 'others' attribute.
+	return x.v == y.v && x.n == y.n && x.t == y.t
+}
+
+func !=(_ x: OutputVertex, _ y: OutputVertex) -> Bool {
+	// Ignore 'others' attribute.
+	return x.v != y.v || x.n != y.n || x.t != y.t
+}
+
+struct InputVertex {
+	let v: Vertex
+	let t: UV
+	let n: Normal
+}
+
+struct OutputVertex {
+	var v: Point4
+	var t: UV
+	var n: Normal
+	var others : [Scalar]
+}
+
+struct OutputFace {
+	let v0: OutputVertex
+	let v1: OutputVertex
+	let v2: OutputVertex
+}
+
+struct InputFragment {
+	let n: Normal
+	let t: UV
+	let others: [Scalar]
+}
 
 struct Face {
-	// Use strongly typed data structure.
-	var v: [Vertex]
-	var t: [UV]
-	var n: [Normal]
+	let v0: InputVertex
+	let v1: InputVertex
+	let v2: InputVertex
 }
 
 struct FaceIndices {
-	var v: Int
-	var t: Int
-	var n: Int
+	let v: Int
+	let t: Int
+	let n: Int
 }
 

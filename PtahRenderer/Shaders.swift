@@ -19,9 +19,9 @@ class Program  {
 	fileprivate var scalars: [String : Scalar] = [:]
 	
 	
-	func vertexShader(_ v: Point3) -> Point4 { fatalError("Must Override") }
+	func vertexShader(_ v: InputVertex) -> OutputVertex { fatalError("Must Override") }
 	
-	func fragmentShader(_ p: Point2) -> Color { fatalError("Must Override") }
+	func fragmentShader(_ p: InputFragment) -> Color { fatalError("Must Override") }
 	
 	func register(name: String, value: Texture) { textures[name] = value }
 	
@@ -39,14 +39,31 @@ class Program  {
 }
 
 
-class TestProgram: Program {
+class DefaultProgram: Program {
 	
-	override func vertexShader(_ v: Point3) -> Point4 {
-		return matrices["mvp"]! * (v.0, v.1, v.2, 1.0)
+	override func vertexShader(_ input: InputVertex) -> OutputVertex {
+		let position = matrices["mvp"]! * (input.v.0, input.v.1, input.v.2, 1.0)
+		return OutputVertex(v: position, t: input.t, n: input.n, others: [])
 	}
 	
-	override func fragmentShader(_ p: Point2)-> Color{
-		return (textures["texture"]!)[p.0, p.1].rgb
+	override func fragmentShader(_ input: InputFragment)-> Color{
+		//let col = normalized(input.n)*Scalar(0.5)+(0.5,0.5,0.5)
+		//return (UInt8(255.0 * col.0), UInt8(255.0 * col.1), UInt8(255.0 * col.2))
+		return (textures["texture"]!)[input.t.0, input.t.1].rgb
+	}
+	
+}
+
+class SkyboxProgram: Program {
+	
+	override func vertexShader(_ input: InputVertex) -> OutputVertex {
+		let position = matrices["mvp"]! * (input.v.0, input.v.1, input.v.2, 1.0)
+		return OutputVertex(v: position, t: input.t, n: input.n, others: [])
+	}
+	
+	override func fragmentShader(_ p: InputFragment)-> Color{
+		let tex = textures["texture"]!
+		return (0,128,0)//tex[p.0, p.1].rgb
 	}
 	
 }

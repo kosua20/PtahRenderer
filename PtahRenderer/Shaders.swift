@@ -43,11 +43,14 @@ class DefaultProgram: Program {
 	
 	override func vertexShader(_ input: InputVertex) -> OutputVertex {
 		let position = matrices["mvp"]! * (input.v.0, input.v.1, input.v.2, 1.0)
-		return OutputVertex(v: position, t: input.t, n: input.n, others: [])
+		let normal = matrices["invmv"]! * (input.n.0, input.n.1, input.n.2, 0.0)
+		return OutputVertex(v: position, t: input.t, n: (normal.0, normal.1, normal.2), others: [])
 	}
 	
 	override func fragmentShader(_ input: InputFragment)-> Color! {
-		return (textures["texture"]!)[input.t.0, input.t.1].rgb
+		let lighting = max(0.0, dot(normalized(input.n), -1.0*points3["lightDir"]!))
+		let diffuse = (textures["texture"]!)[input.t.0, input.t.1].rgb
+		return lighting * diffuse
 	}
 	
 }

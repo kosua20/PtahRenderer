@@ -47,11 +47,13 @@ final class Renderer {
 	
 	private var time : Scalar = 0.0
 	private var camera: Camera
+	private let ligthDir: Point4 = (-0.57735, -0.57735, -0.57735, 0.0)
 	
 	private let dragon: Object
 	private let floor: Object
 	private let monkey: Object
 	private let cubemap: Object
+	
 	
 	init(width _width: Int, height _height: Int){
 		width = _width
@@ -89,22 +91,31 @@ final class Renderer {
 		let theta : Float = 3.14159*time*0.1
 		camera.position =  2.0*normalized((cos(theta), 0.5, sin(theta)))
 		camera.update()
-		let mv = camera.projection*camera.view
+		let vp = camera.projection*camera.view
+		let lightViewDir4 = camera.view * ligthDir
+		let lightViewDir = normalized((lightViewDir4.0, lightViewDir4.1, lightViewDir4.2))
 		
-		let mvpDragon = mv*dragon.model
+		let mvpDragon = vp*dragon.model
+		let invMVDragon = inverse(transpose(camera.view * dragon.model))
 		dragon.program.register(name: "mvp", value: mvpDragon)
-		dragon.program.register(name: "mv", value: camera.view)
-		let mvpFloor = mv*floor.model
+		dragon.program.register(name: "invmv", value: invMVDragon)
+		dragon.program.register(name: "lightDir", value: lightViewDir)
+		
+		let mvpFloor = vp*floor.model
+		let invMVFloor = inverse(transpose(camera.view * floor.model))
 		floor.program.register(name: "mvp", value: mvpFloor)
-		floor.program.register(name: "mv", value: camera.view)
+		floor.program.register(name: "invmv", value: invMVFloor)
+		floor.program.register(name: "lightDir", value: lightViewDir)
+		
 		monkey.model = Matrix4.translationMatrix((0.5,0.0,0.5)) * Matrix4.scaleMatrix(0.4) * Matrix4.rotationMatrix(angle: time, axis: (0.0,1.0,0.0))
-		let mvpMonkey = mv*monkey.model
+		let mvpMonkey = vp*monkey.model
+		let invMVMonkey = inverse(transpose(camera.view * monkey.model))
 		monkey.program.register(name: "mvp", value: mvpMonkey)
-		monkey.program.register(name: "mv", value: camera.view)
-		//cubemap.model = Matrix4.scaleMatrix(5*abs(sin(0.3*time)))
-		let mvpCubemap = mv*cubemap.model
+		monkey.program.register(name: "invmv", value: invMVMonkey)
+		monkey.program.register(name: "lightDir", value: lightViewDir)
+		
+		let mvpCubemap = vp*cubemap.model
 		cubemap.program.register(name: "mvp", value: mvpCubemap)
-		monkey.program.register(name: "mv", value: camera.view)
 	}
 	
 	func render(elapsed: Scalar){

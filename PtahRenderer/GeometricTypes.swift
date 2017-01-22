@@ -15,7 +15,7 @@ typealias Vertex = Point3
 typealias Normal = Point3
 typealias UV = Point2
 
-import simd
+//import simd
 
 /*--Point2--------*/
 
@@ -207,7 +207,135 @@ func /=(lhs: inout Point4, rhs: Scalar){
 * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+struct Matrix4 {
+	var matrix: [Scalar] = [
+		//0	  1	   2	3
+		1.0, 0.0, 0.0, 0.0, 		//4	  5	   6	7
+		0.0, 1.0, 0.0, 0.0, 		//8	  9	   10	11
+		0.0, 0.0, 1.0, 0.0, 		//12  13   14	15
+		0.0, 0.0, 0.0, 1.0
+	]
+	
+	static func translationMatrix(_ t: Point3) -> Matrix4 {
+		var matrix = Matrix4()
+		matrix.matrix[3] = t.0
+		matrix.matrix[7] = t.1
+		matrix.matrix[11] = t.2
+		return matrix
+	}
+	
+	static func scaleMatrix(_ x: Scalar) -> Matrix4 {
+		return Matrix4.scaleMatrix((x, x, x))
+	}
+	
+	static func scaleMatrix(_ s: Point3) -> Matrix4 {
+		var matrix = Matrix4()
+		matrix.matrix[0] = s.0
+		matrix.matrix[5] = s.1
+		matrix.matrix[10] = s.2
+		return matrix
+	}
+	
+	static func rotationMatrix(angle: Scalar, axis: Point3) -> Matrix4 {
+		var matrix = Matrix4()
+		let u = normalized(axis)
+		let c = cos(angle)
+		let mc = 1.0 - c
+		let s = sin(angle)
+		
+		let xy = u.0 * u.1 * mc
+		let xz = u.0 * u.2 * mc
+		let yz = u.1 * u.2 * mc
+		let xs = u.0 * s
+		let ys = u.1 * s
+		let zs = u.2 * s
+		matrix.matrix[0] = u.0 * u.0 * mc + c
+		matrix.matrix[1] = xy - zs
+		matrix.matrix[2] = xz + ys
+		
+		matrix.matrix[4] = xy + zs
+		matrix.matrix[5] = u.1 * u.1 * mc + c
+		matrix.matrix[6] = yz - xs
+		
+		matrix.matrix[8] = xz - ys
+		matrix.matrix[9] = yz + xs
+		matrix.matrix[10] = u.2 * u.2 * mc + c
+		return matrix
+	}
+	
+	
+	static func lookAtMatrix(eye: Point3, target: Point3, up: Point3) -> Matrix4 {
+		var matrix = Matrix4()
+		let n = normalized(target - eye)
+		var v = normalized(up)
+		let u = normalized(cross(n, v))
+		v = normalized(cross(u, n))
+		matrix.matrix[0] = u.0
+		matrix.matrix[1] = u.1
+		matrix.matrix[2] = u.2
+		
+		matrix.matrix[4] = v.0
+		matrix.matrix[5] = v.1
+		matrix.matrix[6] = v.2
+		
+		matrix.matrix[8] = -n.0
+		matrix.matrix[9] = -n.1
+		matrix.matrix[10] = -n.2
+		
+		matrix.matrix[3] = -dot(u, eye)
+		matrix.matrix[7] = -dot(v, eye)
+		matrix.matrix[11] = dot(n, eye)
+		return matrix
+	}
+	
+	static func perspectiveMatrix(fov: Scalar, aspect: Scalar, near: Scalar, far: Scalar) -> Matrix4 {
+		var matrix = Matrix4()
+		let radfov = Scalar(M_PI) * fov / 180.0
+		let f = 1.0 / tan(radfov / 2.0)
+		matrix.matrix[0] = f / aspect
+		matrix.matrix[5] = f
+		matrix.matrix[10] = (far + near) / (near - far)
+		matrix.matrix[14] = -1.0
+		matrix.matrix[11] = (2.0 * far * near) / (near - far)
+		matrix.matrix[15] = 0.0
+		return matrix
+	}
+}
 
+func * (left: Matrix4, right: Matrix4) -> Matrix4 {
+	let m1 = left.matrix
+	let m2 = right.matrix
+	var m = [Scalar](repeating: 0.0, count: 16)
+	m[ 0] = m1[ 0]*m2[ 0] + m1[ 1]*m2[ 4] + m1[ 2]*m2[ 8] + m1[ 3]*m2[12]
+	m[ 1] = m1[ 0]*m2[ 1] + m1[ 1]*m2[ 5] + m1[ 2]*m2[ 9] + m1[ 3]*m2[13]
+	m[ 2] = m1[ 0]*m2[ 2] + m1[ 1]*m2[ 6] + m1[ 2]*m2[10] + m1[ 3]*m2[14]
+	m[ 3] = m1[ 0]*m2[ 3] + m1[ 1]*m2[ 7] + m1[ 2]*m2[11] + m1[ 3]*m2[15]
+	m[ 4] = m1[ 4]*m2[ 0] + m1[ 5]*m2[ 4] + m1[ 6]*m2[ 8] + m1[ 7]*m2[12]
+	m[ 5] = m1[ 4]*m2[ 1] + m1[ 5]*m2[ 5] + m1[ 6]*m2[ 9] + m1[ 7]*m2[13]
+	m[ 6] = m1[ 4]*m2[ 2] + m1[ 5]*m2[ 6] + m1[ 6]*m2[10] + m1[ 7]*m2[14]
+	m[ 7] = m1[ 4]*m2[ 3] + m1[ 5]*m2[ 7] + m1[ 6]*m2[11] + m1[ 7]*m2[15]
+	m[ 8] = m1[ 8]*m2[ 0] + m1[ 9]*m2[ 4] + m1[10]*m2[ 8] + m1[11]*m2[12]
+	m[ 9] = m1[ 8]*m2[ 1] + m1[ 9]*m2[ 5] + m1[10]*m2[ 9] + m1[11]*m2[13]
+	m[10] = m1[ 8]*m2[ 2] + m1[ 9]*m2[ 6] + m1[10]*m2[10] + m1[11]*m2[14]
+	m[11] = m1[ 8]*m2[ 3] + m1[ 9]*m2[ 7] + m1[10]*m2[11] + m1[11]*m2[15]
+	m[12] = m1[12]*m2[ 0] + m1[13]*m2[ 4] + m1[14]*m2[ 8] + m1[15]*m2[12]
+	m[13] = m1[12]*m2[ 1] + m1[13]*m2[ 5] + m1[14]*m2[ 9] + m1[15]*m2[13]
+	m[14] = m1[12]*m2[ 2] + m1[13]*m2[ 6] + m1[14]*m2[10] + m1[15]*m2[14]
+	m[15] = m1[12]*m2[ 3] + m1[13]*m2[ 7] + m1[14]*m2[11] + m1[15]*m2[15]
+	return Matrix4(matrix: m)
+}
+
+func * (left: Matrix4, rhs: Point4) -> Point4 {
+	let m1 = left.matrix
+	var m : Point4 = (0.0, 0.0, 0.0, 0.0)
+	m.0 = m1[ 0]*rhs.0 + m1[ 1]*rhs.1 + m1[ 2]*rhs.2 + m1[ 3]*rhs.3
+	m.1 = m1[ 4]*rhs.0 + m1[ 5]*rhs.1 + m1[ 6]*rhs.2 + m1[ 7]*rhs.3
+	m.2 = m1[ 8]*rhs.0 + m1[ 9]*rhs.1 + m1[10]*rhs.2 + m1[11]*rhs.3
+	m.3 = m1[12]*rhs.0 + m1[13]*rhs.1 + m1[14]*rhs.2 + m1[15]*rhs.3
+	return m
+}
+
+/*
 struct Matrix4 {
 	/*var matrix: [Scalar] = [
 		//0	  1	   2	3
@@ -340,3 +468,5 @@ func * (left: Matrix4, rhs: Point4) -> Point4 {
 	m.3 = m1[3][0]*rhs.0 + m1[3][1]*rhs.1 + m1[3][2]*rhs.2 + m1[3][3]*rhs.3
 	return m
 }
+
+*/

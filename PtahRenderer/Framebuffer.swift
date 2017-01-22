@@ -15,8 +15,8 @@ final class Framebuffer {
 	
 	internal var pixels: [Pixel] = []
 	internal var zbuffer: [Scalar] = []
-	fileprivate var width: Int = 512
-	fileprivate var height: Int = 512
+	let width: Int
+	let height: Int
 	
 	init(width _width: Int, height _height: Int){
 		width = _width
@@ -91,7 +91,7 @@ final class Framebuffer {
 				return NSImage()
 		}
 		
-		let cgim = CGImage(width: width, height: height, bitsPerComponent: bitsPerComponent, bitsPerPixel: bitsPerPixel, bytesPerRow: width * Int(MemoryLayout<Pixel>.size), space: rgbColorSpace, bitmapInfo: bitmapInfo, provider: providerRef, decode: nil, shouldInterpolate: true, intent: .defaultIntent)
+		let cgim = CGImage(width: width, height: height, bitsPerComponent: bitsPerComponent, bitsPerPixel: bitsPerPixel, bytesPerRow: width * Int(MemoryLayout<Pixel>.size), space: rgbColorSpace, bitmapInfo: bitmapInfo, provider: providerRef, decode: nil, shouldInterpolate: false, intent: .defaultIntent)
 		return NSImage(cgImage: cgim!, size: NSSize(width: width, height: height))
 	}
 	

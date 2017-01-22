@@ -29,16 +29,31 @@ final class InternalRenderer {
 	fileprivate var width = 256
 	fileprivate var height = 256
 	
-	fileprivate var buffer: Framebuffer
+	fileprivate var buffers: [Framebuffer]
+	fileprivate var currentBuffer: Int
 	var mode : RenderingMode
 	var culling : CullingMode
 	
 	init(width _width: Int, height _height: Int){
 		width = _width
 		height = _height
-		buffer = Framebuffer(width: width, height: height)
+		buffers = [Framebuffer(width: _width, height: _height)]
+		currentBuffer = 0
 		mode = .shaded
 		culling = .backface
+	}
+	
+	func addFramebuffer(width _width: Int, height _height: Int){
+		buffers.append(Framebuffer(width: _width, height: _height))
+	}
+	
+	func bindFramebuffer(i: Int){
+		if i < buffers.count {
+			currentBuffer = i
+			width = buffers[currentBuffer].width
+			height = buffers[currentBuffer].height
+		}
+		
 	}
 	
 	func drawMesh(mesh: Mesh, program: Program){
@@ -49,7 +64,6 @@ final class InternalRenderer {
 		//let f = mesh.faces[1]
 		for f in mesh.faces {
 		
-			
 			//--- Vertex shader
 			//--View space and clip space
 			let v_proj = OutputFace(v0: program.vertexShader(f.v0),
@@ -59,7 +73,7 @@ final class InternalRenderer {
 			//--Clipping
 
 			// Due to the way the rasterizer work, the clipping needs are limited.
-			// Indeed, each traingle bounding box is clamped wtr the screen dimensions,
+			// Indeed, each triangle bounding box is clamped wtr the screen dimensions,
 			// Preventing any off-screen fragment evaluation.
 			/*let csr = v_p1.map({ (vv: Point4) -> Int in
 				let xbit = (vv.0 < -vv.3 ? 0b1: 0b0) + (vv.0 > vv.3 ? 0b10: 0b0)// as Int
@@ -71,8 +85,7 @@ final class InternalRenderer {
 				continue
 			}*/
 			
-			
-			
+
 			// Clip half space if v_proj.3 <= 0
 			if (v_proj.v0.v.3 <= 0.0 && v_proj.v1.v.3 <= 0.0 && v_proj.v2.v.3 <= 0.0) {
 				continue
@@ -161,7 +174,7 @@ final class InternalRenderer {
 							//Maybe need to compute the depth with the same interpolation ?
 							//let z = (persp.0 * v_s[0].2 + persp.1 * v_s[1].2 + persp.2 * v_s[2].2)
 							
-							if (buffer.getDepth(x, y) > z){
+							if (buffers[currentBuffer].getDepth(x, y) > z){
 								
 								
 								let tex = barycentricInterpolation(coeffs: persp, t1: v_p.v0.t, t2: v_p.v1.t, t3: v_p.v2.t)
@@ -172,8 +185,8 @@ final class InternalRenderer {
 								
 								if let color = program.fragmentShader(fragmentInput) {
 									// If color is nil, the fragment is discarded.
-									buffer.set(x, y, color)
-									buffer.setDepth(x, y, z)
+									buffers[currentBuffer].set(x, y, color)
+									buffers[currentBuffer].setDepth(x, y, z)
 								}
 							}
 						}
@@ -340,7 +353,7 @@ final class InternalRenderer {
 		
 		var y = Int(a.1)
 		for x in Int(a.0)...Int(b.0) {
-			steep ? buffer.set(y, x, color): buffer.set(x, y, color)
+			steep ? buffers[currentBuffer].set(y, x, color): buffers[currentBuffer].set(x, y, color)
 			error += differror
 			if(error > 0.5){
 				y += shift
@@ -351,15 +364,15 @@ final class InternalRenderer {
 	
 	func clear(color: Bool = true, depth: Bool = true){
 		if(color){
-			buffer.clearColor((0, 0, 0))
+			buffers[currentBuffer].clearColor((0, 0, 0))
 		}
 		if(depth){
-			buffer.clearDepth()
+			buffers[currentBuffer].clearDepth()
 		}
 	}
 	
 	func flushBuffer() -> [Pixel] {
-		return buffer.pixels
+		return buffers[currentBuffer].pixels
 	}
 	
 	
@@ -369,7 +382,7 @@ final class InternalRenderer {
 	
 	func flushImage() -> NSImage {
 		//startTime = CFAbsoluteTimeGetCurrent();
-		let image = buffer.imageFromRGBA32Bitmap()
+		let image = buffers[currentBuffer].imageFromRGBA32Bitmap()
 		//print("[Backing]: \t" + String(format: "%.4fs", CFAbsoluteTimeGetCurrent() - startTime))
 		return image
 	}

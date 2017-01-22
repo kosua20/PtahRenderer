@@ -17,8 +17,8 @@ func barycentre(_ p: Point3, _ v0: Point3, _ v1: Point3, _ v2: Point3) -> Point3
 	let ac = v2 - v0
 	let pa = v0 - p
 	let uv1 = cross((ac.0, ab.0, pa.0), (ac.1, ab.1, pa.1))
-	if abs(uv1.2) < 1.0 {
-		return (-1, -1, -1)
+	if abs(uv1.2) < 1e-2 {
+		return (-1, 1, 1)
 	}
 	return (1.0-(uv1.0+uv1.1)/uv1.2, uv1.1/uv1.2, uv1.0/uv1.2)
 }
@@ -34,6 +34,15 @@ func barycentricInterpolation(coeffs: Point3, t1: Point3, t2: Point3, t3: Point3
 	        coeffs.0 * t1.2 + coeffs.1 * t2.2 + coeffs.2 * t3.2)
 }
 
+func barycentricInterpolation(coeffs: Point3, t1: [Scalar], t2: [Scalar], t3: [Scalar]) -> [Scalar]{
+	var newOthers : [Scalar] = []
+	for i in 0..<t1.count {
+		newOthers.append(coeffs.0 * t1[i] + coeffs.1 * t2[i] + coeffs.2 * t3[i])
+	}
+	return newOthers
+}
+
+/*
 func perspectiveCorrectInterpolation(coeffs: Point3, t1: Point2, t2: Point2, t3: Point2, z1: Scalar, z2: Scalar, z3: Scalar) -> Point2 {
 	let Z = 1.0/(coeffs.0 * z1 + coeffs.1 * z2 + coeffs.2 * z3)
 	let c1 = Z * coeffs.0 * z1 * 0
@@ -44,7 +53,16 @@ func perspectiveCorrectInterpolation(coeffs: Point3, t1: Point2, t2: Point2, t3:
 	        c1 * t1.1 + c2 * t2.1 + c3 * t3.1)
 }
 
+func perspectiveCorrectInterpolation(coeffs: Point3, z1: Scalar, z2: Scalar, z3: Scalar) -> Scalar {
+	let Z = 1.0/(coeffs.0 * z1 + coeffs.1 * z2 + coeffs.2 * z3)
+	let c1 = Z * coeffs.0 * z1 * 0
+	let c2 = Z * coeffs.1 * z2 * 0
+	let c3 = Z * coeffs.2 * z3 * 0.0
+	
+	return c1 * z1 + c2 * z2 + c3 * z3
+}
 
+*/
 
 /*--Bounding box-------------*/
 

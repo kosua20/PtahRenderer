@@ -11,6 +11,7 @@ import Foundation
 enum TextureMode {
 	case clamp
 	case wrap
+	case unsafe
 }
 
 enum FilteringMode {
@@ -24,7 +25,7 @@ final class Texture {
 	let height: Int
 	let components: Int
 	var pixels: [Pixel]
-	var mode: TextureMode = .wrap
+	var mode: TextureMode = .clamp
 	var filtering: FilteringMode = .nearest
 	
 	init(path: String){
@@ -101,9 +102,11 @@ final class Texture {
 	private subscript(a: Int, b: Int) -> Pixel {
 		
 		if mode == .clamp {
-			return pixels[min(height-1, max(0, b)) * width + min(width-1, max(0, a))]
+			return pixels[clamp(b, 0, height-1) * width + clamp(a, 0, width-1)]
 		} else if mode == .wrap {
-			return pixels[(b%height) * width + (a%width)]
+			let nb = b%height
+			let na = a%width
+			return pixels[(nb < 0 ? nb + height : nb) * width + (na < 0 ? na + width : na)]
 		}
 		return pixels[b*width+a]
 	}

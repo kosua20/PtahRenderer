@@ -41,14 +41,10 @@ final class InternalRenderer {
 		culling = .backface
 	}
 	
-	func drawMesh(mesh: Mesh, program: Program, cheat: Bool = false){
+	func drawMesh(mesh: Mesh, program: Program){
 		
 		let halfWidth = Scalar(width)*0.5
 		let halfHeight = Scalar(height)*0.5
-		let colors : [Color] = [(128,128,128),(255,255,0),(255,0,255),(0,255,0), (0,255,255), (0,0,255), (128,128,0), (128,0,128), (0,128,128), (128,0,0), (0,128,0), (0,0,128)]
-		
-		var fcount = 0
-		//--Model space
 		
 		//let f = mesh.faces[1]
 		for f in mesh.faces {
@@ -90,7 +86,7 @@ final class InternalRenderer {
 				 abs(v_proj.v2.v.2) < v_proj.v2.v.3) {
 				
 				
-				var v_ndc = OutputFace(
+				let v_ndc = OutputFace(
 					v0: OutputVertex(
 						v: (v_proj.v0.v.0/v_proj.v0.v.3, v_proj.v0.v.1/v_proj.v0.v.3, v_proj.v0.v.2/v_proj.v0.v.3, v_proj.v0.v.3),
 						t: v_proj.v0.t, n: v_proj.v0.n, others: v_proj.v0.others),
@@ -166,21 +162,19 @@ final class InternalRenderer {
 							//let z = (persp.0 * v_s[0].2 + persp.1 * v_s[1].2 + persp.2 * v_s[2].2)
 							
 							if (buffer.getDepth(x, y) > z){
-								buffer.setDepth(x, y, z)
+								
 								
 								let tex = barycentricInterpolation(coeffs: persp, t1: v_p.v0.t, t2: v_p.v1.t, t3: v_p.v2.t)
-								let nor = barycentricInterpolation(coeffs: bary, t1: v_p.v0.n, t2: v_p.v1.n, t3: v_p.v2.n)
-								let others = barycentricInterpolation(coeffs: bary, t1: v_p.v0.others, t2: v_p.v1.others, t3: v_p.v2.others)
+								let nor = barycentricInterpolation(coeffs: persp, t1: v_p.v0.n, t2: v_p.v1.n, t3: v_p.v2.n)
+								let others = barycentricInterpolation(coeffs: persp, t1: v_p.v0.others, t2: v_p.v1.others, t3: v_p.v2.others)
 								
-								let fragmentInput = InputFragment(n: nor, t: tex, others: others)
+								let fragmentInput = InputFragment(p: (x,y), n: nor, t: tex, others: others)
 								
-								let color : Color
-								if cheat {
-									color = colors[fcount]
-								} else {
-									color = program.fragmentShader(fragmentInput)
+								if let color = program.fragmentShader(fragmentInput) {
+									// If color is nil, the fragment is discarded.
+									buffer.set(x, y, color)
+									buffer.setDepth(x, y, z)
 								}
-								buffer.set(x, y, color)
 							}
 						}
 					}
@@ -188,7 +182,6 @@ final class InternalRenderer {
 					triangleWire([(v_s[0].0,v_s[0].1), (v_s[1].0,v_s[1].1), (v_s[2].0,v_s[2].1)], (255,255,255))
 				}
 			}
-			fcount += 1
 		}
 	}
 	

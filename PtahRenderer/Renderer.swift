@@ -89,8 +89,6 @@ final class Renderer {
 		let theta : Float = 3.14159*time*0.1
 		camera.position =  2.0*normalized((cos(theta), 0.5, sin(theta)))
 		camera.update()
-		//print(camera.view)
-		//print(camera.projection)
 		let mv = camera.projection*camera.view
 		
 		let mvpDragon = mv*dragon.model
@@ -118,7 +116,7 @@ final class Renderer {
 		internalRenderer.drawMesh(mesh: dragon.mesh, program: dragon.program)
 		internalRenderer.drawMesh(mesh: floor.mesh, program: floor.program)
 		
-		internalRenderer.drawMesh(mesh: cubemap.mesh, program: cubemap.program, cheat: true)
+		internalRenderer.drawMesh(mesh: cubemap.mesh, program: cubemap.program)
 		
 	}
 	

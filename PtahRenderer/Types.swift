@@ -127,6 +127,7 @@ struct OutputFace {
 }
 
 struct InputFragment {
+	let p: (Int, Int)
 	let n: Normal
 	let t: UV
 	let others: [Scalar]

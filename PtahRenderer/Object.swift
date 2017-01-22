@@ -14,10 +14,10 @@ class Object {
 	let program: Program
 	var model: Matrix4 = Matrix4()
 	
-	init(meshPath: String, textureNames: [String], texturePaths: [String]) {
+	init(meshPath: String, program: Program = DefaultProgram(), textureNames: [String], texturePaths: [String]) {
 		
-		mesh = Mesh(path: meshPath, shouldNormalize: true)
-		program = TestProgram()
+		self.mesh = Mesh(path: meshPath, shouldNormalize: true)
+		self.program = program
 		
 		for i in 0..<min(textureNames.count, texturePaths.count) {
 			let texture = Texture(path: texturePaths[i])
@@ -25,12 +25,5 @@ class Object {
 		}
 		
 	}
-	
-	func update(time: Double, elapsed: Double){
-	
-	}
-	
-	
-	
 	
 }

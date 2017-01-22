@@ -41,7 +41,7 @@ class ViewController: NSViewController {
 		
 		let startTime = CFAbsoluteTimeGetCurrent()
 		
-		renderer.render(elapsed: startTime - lastTime)
+		renderer.render(elapsed: Scalar(startTime - lastTime))
 		imageView.image = renderer.flush()
 		
 		lastTime = startTime

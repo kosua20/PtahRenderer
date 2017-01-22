@@ -71,7 +71,7 @@ final class Mesh {
 		vertices = vertices.map({($0.0 - bary.0, $0.1 - bary.1, $0.2 - bary.2)})
 	}
 	
-	private func normalize(scale: Double = 1.0){
+	private func normalize(scale: Scalar = 1.0){
 		var mini = vertices[0]
 		var maxi = vertices[0]
 		for vert in vertices {
@@ -93,7 +93,9 @@ final class Mesh {
 	
 	private func expand(){
 		for (ind1, ind2, ind3) in indices {
-			let f = Face(	v: [vertices[ind1.v], vertices[ind2.v], vertices[ind3.v]], 							t: [uvs[ind1.t], uvs[ind2.t], uvs[ind3.t]], 							n: [normals[ind1.n], normals[ind2.n], normals[ind3.n]]
+			let f = Face(v0: InputVertex(v: vertices[ind1.v], t: uvs[ind1.t], n: normals[ind1.n]),
+			             v1: InputVertex(v: vertices[ind2.v], t: uvs[ind2.t], n: normals[ind2.n]),
+			             v2: InputVertex(v: vertices[ind3.v], t: uvs[ind3.t], n: normals[ind3.n])
 						)
 			faces.append(f)
 		}

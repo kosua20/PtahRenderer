@@ -41,22 +41,25 @@ final class InternalRenderer {
 		culling = .backface
 	}
 	
-	func drawMesh(mesh: Mesh, program: Program){
+	func drawMesh(mesh: Mesh, program: Program, cheat: Bool = false){
 		
 		let halfWidth = Scalar(width)*0.5
 		let halfHeight = Scalar(height)*0.5
+		let colors : [Color] = [(128,128,128),(255,255,0),(255,0,255),(0,255,0), (0,255,255), (0,0,255), (128,128,0), (128,0,128), (0,128,128), (128,0,0), (0,128,0), (0,0,128)]
 		
-		
+		var fcount = 0
 		//--Model space
+		
+		//let f = mesh.faces[1]
 		for f in mesh.faces {
+		
 			
 			//--- Vertex shader
 			//--View space and clip space
-			let v_p1 = [program.vertexShader(f.v[0]),
-						program.vertexShader(f.v[1]),
-						program.vertexShader(f.v[2])]
-			//---
-			
+			let v_proj = OutputFace(v0: program.vertexShader(f.v0),
+			                        v1: program.vertexShader(f.v1),
+			                        v2: program.vertexShader(f.v2))
+		
 			//--Clipping
 
 			// Due to the way the rasterizer work, the clipping needs are limited.
@@ -71,63 +74,173 @@ final class InternalRenderer {
 			if csr.reduce(1,&) > 0 {
 				continue
 			}*/
+			
+			
+			
+			// Clip half space if v_proj.3 <= 0
+			if (v_proj.v0.v.3 <= 0.0 && v_proj.v1.v.3 <= 0.0 && v_proj.v2.v.3 <= 0.0) {
+				continue
+			}
+			
+			var triangles : [OutputFace] = []
+
+			if	(v_proj.v0.v.3 > 0.0 && v_proj.v1.v.3 > 0.0 && v_proj.v2.v.3 > 0.0) &&
+				(abs(v_proj.v0.v.2) < v_proj.v0.v.3 &&
+				 abs(v_proj.v1.v.2) < v_proj.v1.v.3 &&
+				 abs(v_proj.v2.v.2) < v_proj.v2.v.3) {
 				
-			//We will need the perspective factors later on
-			let ws = [v_p1[0].3,
-			          v_p1[1].3,
-			          v_p1[2].3]
+				
+				var v_ndc = OutputFace(
+					v0: OutputVertex(
+						v: (v_proj.v0.v.0/v_proj.v0.v.3, v_proj.v0.v.1/v_proj.v0.v.3, v_proj.v0.v.2/v_proj.v0.v.3, v_proj.v0.v.3),
+						t: v_proj.v0.t, n: v_proj.v0.n, others: v_proj.v0.others),
+					v1: OutputVertex(
+						v: (v_proj.v1.v.0/v_proj.v1.v.3, v_proj.v1.v.1/v_proj.v1.v.3, v_proj.v1.v.2/v_proj.v1.v.3, v_proj.v1.v.3),
+						t: v_proj.v1.t, n: v_proj.v1.n, others: v_proj.v1.others),
+					v2: OutputVertex(
+						v: (v_proj.v2.v.0/v_proj.v2.v.3, v_proj.v2.v.1/v_proj.v2.v.3, v_proj.v2.v.2/v_proj.v2.v.3, v_proj.v2.v.3),
+						t: v_proj.v2.t, n: v_proj.v2.n, others: v_proj.v2.others)
+				)
+				
+				
+				triangles = [v_ndc]
+				
+			} else {
+				
+				var vertices : [OutputVertex] = []
+				clipEdge(v0: v_proj.v0, v1: v_proj.v1, vertices: &vertices)
+				clipEdge(v0: v_proj.v1, v1: v_proj.v2,  vertices: &vertices)
+				clipEdge(v0: v_proj.v2, v1: v_proj.v0, vertices: &vertices)
+				
+				if vertices.count < 3 {
+					continue
+				}
+				
+				if vertices.last! == vertices.first! {
+					vertices.remove(at: vertices.count - 1)
+				}
+				for i in 0..<vertices.count {
+					vertices[i].v = (vertices[i].v.0 / vertices[i].v.3, vertices[i].v.1/vertices[i].v.3, vertices[i].v.2/vertices[i].v.3, vertices[i].v.3)
+				}
+				
+				for i in 1..<vertices.count-1 {
+					triangles.append(OutputFace(v0: vertices[0], v1: vertices[i], v2: vertices[i+1]))
+				}
+
+			}
 			
-			//--NDC space
-			let v_p = [(v_p1[0].0/v_p1[0].3, v_p1[0].1/v_p1[0].3, -v_p1[0].2/v_p1[0].3),
-			           (v_p1[1].0/v_p1[1].3, v_p1[1].1/v_p1[1].3, -v_p1[1].2/v_p1[1].3),
-			           (v_p1[2].0/v_p1[2].3, v_p1[2].1/v_p1[2].3, -v_p1[2].2/v_p1[2].3)]
-			
-			//--Backface culling
-			//We compute it manually to avoid using a cross product and extract the 3rd component
-			let orientation = (culling == .backface) ? (v_p[1].0 - v_p[0].0) * (v_p[2].1 - v_p[0].1) - (v_p[1].1 - v_p[0].1) * (v_p[2].0 - v_p[0].0) : 1.0
-			
-			if orientation > 0.0 {
+			for v_p in triangles {
+				
+				//--Backface culling
+				//We compute it manually to avoid using a cross product and extract the 3rd component
+				let orientation =  (culling == .backface) ? (v_p.v1.v.0 - v_p.v0.v.0) * (v_p.v2.v.1 - v_p.v0.v.1) - (v_p.v1.v.1 - v_p.v0.v.1) * (v_p.v2.v.0 - v_p.v0.v.0) : 1.0
+				
+				if orientation < 0.0 {
+					continue
+				}
+				
 				//--Screen space
-				let v_s = [(floor((v_p[0].0 + 1.0) * halfWidth), floor((-1.0 * v_p[0].1 + 1.0) * halfHeight), v_p[0].2),
-				           (floor((v_p[1].0 + 1.0) * halfWidth), floor((-1.0 * v_p[1].1 + 1.0) * halfHeight), v_p[1].2),
-				           (floor((v_p[2].0 + 1.0) * halfWidth), floor((-1.0 * v_p[2].1 + 1.0) * halfHeight), v_p[2].2)]
+				let v_s = [(floor((v_p.v0.v.0 + 1.0) * halfWidth), floor((-1.0 * v_p.v0.v.1 + 1.0) * halfHeight), v_p.v0.v.2),
+						   (floor((v_p.v1.v.0 + 1.0) * halfWidth), floor((-1.0 * v_p.v1.v.1 + 1.0) * halfHeight), v_p.v1.v.2),
+						   (floor((v_p.v2.v.0 + 1.0) * halfWidth), floor((-1.0 * v_p.v2.v.1 + 1.0) * halfHeight), v_p.v2.v.2)]
 				
 				//--- Shading
 				if mode == .shaded {
-					triangle(v_s, ws, f.n, f.t, program)
+					
+					//triangle(v_s, ws, f.n, f.t, program)
+					let (mini, maxi) = boundingBox(v_s, width, height)
+					
+					for x in Int(mini.0)...Int(maxi.0) {
+						for y in Int(mini.1)...Int(maxi.1) {
+							
+							let bary = barycentre(Point3(Scalar(x), Scalar(y), 0.0), v_s[0], v_s[1], v_s[2])
+							
+							if (bary.0 < 0.0 || bary.1 < 0.0 || bary.2 < 0.0){ continue }
+							
+							var persp = (bary.0/v_p.v0.v.3, bary.1/v_p.v1.v.3, bary.2/v_p.v2.v.3)
+							persp = persp / (persp.0 + persp.1 + persp.2)
+							
+							
+							let z = (v_s[0].2 * bary.0 + v_s[1].2 * bary.1 + v_s[2].2 * bary.2)
+							//Maybe need to compute the depth with the same interpolation ?
+							//let z = (persp.0 * v_s[0].2 + persp.1 * v_s[1].2 + persp.2 * v_s[2].2)
+							
+							if (buffer.getDepth(x, y) > z){
+								buffer.setDepth(x, y, z)
+								
+								let tex = barycentricInterpolation(coeffs: persp, t1: v_p.v0.t, t2: v_p.v1.t, t3: v_p.v2.t)
+								let nor = barycentricInterpolation(coeffs: bary, t1: v_p.v0.n, t2: v_p.v1.n, t3: v_p.v2.n)
+								let others = barycentricInterpolation(coeffs: bary, t1: v_p.v0.others, t2: v_p.v1.others, t3: v_p.v2.others)
+								
+								let fragmentInput = InputFragment(n: nor, t: tex, others: others)
+								
+								let color : Color
+								if cheat {
+									color = colors[fcount]
+								} else {
+									color = program.fragmentShader(fragmentInput)
+								}
+								buffer.set(x, y, color)
+							}
+						}
+					}
 				} else if mode == .wireframe {
 					triangleWire([(v_s[0].0,v_s[0].1), (v_s[1].0,v_s[1].1), (v_s[2].0,v_s[2].1)], (255,255,255))
 				}
 			}
+			fcount += 1
 		}
 	}
 	
-	func triangle(_ v: [Vertex], _ w: [Scalar], _ n: [Normal], _ uv: [UV], _ program: Program){
-		let (mini, maxi) = boundingBox(v, width, height)
+	
+	private func clipEdge(v0: OutputVertex, v1: OutputVertex, vertices: inout [OutputVertex]){
+		var v0n : OutputVertex
+		var v1n : OutputVertex
+		let v0Inside = v0.v.3 > 0.0 && v0.v.2 > -v0.v.3// && v0.v.2 < v0.v.3
+		let v1Inside = v1.v.3 > 0.0 && v1.v.2 > -v1.v.3// && v0.v.2 < v0.v.3
 		
-		for x in Int(mini.0)...Int(maxi.0) {
-			for y in Int(mini.1)...Int(maxi.1) {
-				let bary = barycentre(Point3(Scalar(x), Scalar(y), 0.0), v[0], v[1], v[2])
-				if (bary.0 < 0.0 || bary.1 < 0.0 || bary.2 < 0.0){ continue }
-				
-				var persp = (bary.0/w[0], bary.1/w[1], bary.2/w[2])
-				persp = persp / (persp.0 + persp.1 + persp.2)
-				//Maybe need to compute the depth with the same interpolation ?
-				let z = v[0].2 * bary.0 + v[1].2 * bary.1 + v[2].2 * bary.2
-				
-				if (buffer.getDepth(x, y) < z){
-					buffer.setDepth(x, y, z)
-					let tex = barycentricInterpolation(coeffs: persp, t1: uv[0], t2: uv[1], t3: uv[2])
-					//let nor = normalized(barycentricInterpolation(coeffs: bary, t1: n[0], t2: n[1], t3: n[2]))
-					//let cosfactor = max(0.0, dot(-1.0*nor, l))
-					let color = program.fragmentShader(tex)
-					buffer.set(x, y, color)
-				}
-			}
+		if v0Inside && v1Inside {
+			// Great, nothing to do
+			v0n = v0
+			v1n = v1
+		} else if v0Inside {
+			v0n = v0
+			let d1 = v1.v.2 + v1.v.3
+			let d0 = v0.v.2 + v0.v.3
+			v1n = clipPoint(vIn: v0, vOut: v1, dIn: d0, dOut: d1)
+
+		} else if v1Inside {
+			let d1 = v1.v.2 + v1.v.3
+			let d0 = v0.v.2 + v0.v.3
+			v0n = clipPoint(vIn: v1, vOut: v0, dIn: d1, dOut: d0)
+			v1n = v1
+		} else {
+			// Both are outside, on the same side. Remove the edge.
+			return
 		}
+		
+		if(vertices.count == 0 || vertices.last! != v0n){
+			vertices.append(v0n)
+		}
+		vertices.append(v1n)
 	}
 	
-	func triangleWire(_ v: [Point2], _ color: Color){
+	func clipPoint(vIn v0: OutputVertex, vOut v1: OutputVertex, dIn d0 : Scalar, dOut d1 : Scalar) -> OutputVertex {
+		let factor = 1.0 / (d1 - d0)
+		var newOthers : [Scalar] = []
+		
+		for i in 0..<v0.others.count {
+			newOthers.append(factor * (d1 * v0.others[i] - d0 * v1.others[i]))
+		}
+		
+		return OutputVertex(v: factor*(d1 * v0.v - d0 * v1.v),
+		                   t: factor*(d1 * v0.t - d0 * v1.t),
+		                   n: factor*(d1 * v0.n - d0 * v1.n),
+		                   others: newOthers)
+	}
+	
+	
+	private func triangleWire(_ v: [Point2], _ color: Color){
 		
 		let csr0 = (v[0].0 < 0 ? 0b1: 0b0) + (v[0].0 >= Scalar(width) ? 0b10: 0b0)
 				 + (v[0].1 < 0 ? 0b100: 0b0) + (v[0].1 >= Scalar(height) ? 0b1000: 0b0)
@@ -144,7 +257,7 @@ final class InternalRenderer {
 		
 	}
 	
-	func clippedLine(_ p0: Point2, _ p1: Point2, _ c0: Int, _ c1: Int, _ color: Color){
+	private func clippedLine(_ p0: Point2, _ p1: Point2, _ c0: Int, _ c1: Int, _ color: Color){
 		if (c0 & c1) > 0 {
 			return
 			
@@ -206,7 +319,7 @@ final class InternalRenderer {
 	}
 
 	
-	func line(_ a_: Point2, _ b_: Point2, _ color: Color){
+	private func line(_ a_: Point2, _ b_: Point2, _ color: Color){
 		var steep = false
 		var a = a_
 		var b = b_
@@ -230,7 +343,7 @@ final class InternalRenderer {
 		
 		//Error
 		let differror = abs(diffy/diffx)
-		var error = 0.0
+		var error : Scalar = 0.0
 		
 		var y = Int(a.1)
 		for x in Int(a.0)...Int(b.0) {

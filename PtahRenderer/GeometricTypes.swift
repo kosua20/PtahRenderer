@@ -134,6 +134,10 @@ func normalized(_ n: Point3) -> Point3 {
 	return n/norm
 }
 
+func reflect(_ lhs: Point3, _ rhs: Point3) -> Point3 {
+	return lhs - 2.0 * dot(rhs, lhs) * rhs
+}
+
 /*--Point4--------*/
 
 func +(lhs: Point4, rhs: Point4) -> Point4 {

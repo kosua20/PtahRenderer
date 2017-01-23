@@ -73,6 +73,15 @@ class Program  {
 }
 
 
+func ==(_ x: OutputVertex, _ y: OutputVertex) -> Bool {
+	// Ignore 'others' attribute.
+	return x.v == y.v && x.n == y.n && x.t == y.t
+	
+}
 
 
-
+func !=(_ x: OutputVertex, _ y: OutputVertex) -> Bool {
+	// Ignore 'others' attribute.
+	return x.v != y.v || x.n != y.n || x.t != y.t
+	
+}

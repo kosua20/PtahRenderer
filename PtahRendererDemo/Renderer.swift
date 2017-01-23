@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import simd
 
 #if os(OSX)
 import Cocoa
@@ -78,19 +79,19 @@ final class Renderer {
 		                 textureNames: ["texture"], texturePaths: [rootDir + "textures/" + baseName + ".png"])
 		
 		// Define initial model matrices.
-		dragon.model =  Matrix4.translationMatrix((-0.25,0.1,-0.25)) * Matrix4.scaleMatrix(0.75)
-		floor.model = Matrix4.translationMatrix((0.0,-0.5,0.0)) * Matrix4.scaleMatrix(2.0)
-		monkey.model =  Matrix4.translationMatrix((0.5,0.0,0.5)) * Matrix4.scaleMatrix(0.5)
+		dragon.model =  Matrix4.translationMatrix(float3(-0.25,0.1,-0.25)) * Matrix4.scaleMatrix(0.75)
+		floor.model = Matrix4.translationMatrix(float3(0.0,-0.5,0.0)) * Matrix4.scaleMatrix(2.0)
+		monkey.model =  Matrix4.translationMatrix(float3(0.5,0.0,0.5)) * Matrix4.scaleMatrix(0.5)
 		cubemap.model = Matrix4.scaleMatrix(5.0)
 		
 		// Projection matrix and camera setting.
 		let proj = Matrix4.perspectiveMatrix(fov:70.0, aspect: Scalar(width)/Scalar(height), near: 0.5, far: 10.0)
-		let initialPos = 2.0*normalized((0.0, 0.5, 1.0))
-		camera = Camera(position: initialPos, center: (0.0, 0.0, 0.0), up: (0.0, 1.0, 0.0), projection: proj)
+		let initialPos = 2.0*normalize(float3(0.0, 0.5, 1.0))
+		camera = Camera(position: initialPos, center: float3(0.0, 0.0, 0.0), up: float3(0.0, 1.0, 0.0), projection: proj)
 		
 		// Light settings: direction and view-projection matrix.
-		lightDir = (-0.57735, -0.57735, -0.57735, 0.0)
-		vpLight = Matrix4.orthographicMatrix(right: 2.0, top: 2.0, near: 0.1, far: 100.0) *  Matrix4.lookAtMatrix(eye: (-lightDir.0, -lightDir.1, -lightDir.2), target: (0.0,0.0,0.0), up: (0.0,1.0,0.0))
+		lightDir = float4(-0.57735, -0.57735, -0.57735, 0.0)
+		vpLight = Matrix4.orthographicMatrix(right: 2.0, top: 2.0, near: 0.1, far: 100.0) *  Matrix4.lookAtMatrix(eye: -float3(lightDir), target: float3(0.0,0.0,0.0), up: float3(0.0,1.0,0.0))
 		
 	}
 	
@@ -99,17 +100,17 @@ final class Renderer {
 		
 		// Update camera position and matrix.
 		let theta : Float = 3.14159*time*0.1
-		camera.position =  2.0*normalized((cos(theta), 0.5, sin(theta)))
+		camera.position =  2.0*normalize(float3(cos(theta), 0.5, sin(theta)))
 		camera.update()
 		
 		// Update light direction in view space.
 		let lightViewDir4 = camera.view * lightDir
-		let lightViewDir = normalized((lightViewDir4.0, lightViewDir4.1, lightViewDir4.2))
+		let lightViewDir = normalize(float3(lightViewDir4))
 		
 		// Dragon matrices.
 		let mvDragon = camera.view*dragon.model
 		let mvpDragon = camera.projection*mvDragon
-		let invMVDragon = inverse(transpose(mvDragon))
+		let invMVDragon = mvDragon.transpose.inverse
 		let mvpLightDragon = vpLight*dragon.model
 		
 		dragon.program.register(name: "mv", value: mvDragon)
@@ -122,7 +123,7 @@ final class Renderer {
 		// Floor matrices.
 		let mvFloor = camera.view*floor.model
 		let mvpFloor = camera.projection*mvFloor
-		let invMVFloor = inverse(transpose(mvFloor))
+		let invMVFloor = mvFloor.transpose.inverse
 		let mvpLightFloor = vpLight*floor.model
 		
 		floor.program.register(name: "mv", value: mvFloor)
@@ -133,10 +134,10 @@ final class Renderer {
 		floor.depthProgram.register(name: "mvp", value: mvpLightFloor)
 		
 		// Monkey matrices (only animated object).
-		monkey.model = Matrix4.translationMatrix((0.5,0.0,0.5)) * Matrix4.scaleMatrix(0.4) * Matrix4.rotationMatrix(angle: time, axis: (0.0,1.0,0.0))
+		monkey.model = Matrix4.translationMatrix(float3(0.5,0.0,0.5)) * Matrix4.scaleMatrix(0.4) * Matrix4.rotationMatrix(angle: time, axis: float3(0.0,1.0,0.0))
 		let mvMonkey = camera.view*monkey.model
 		let mvpMonkey = camera.projection*mvMonkey
-		let invMVMonkey = inverse(transpose(mvMonkey))
+		let invMVMonkey = mvMonkey.transpose.inverse
 		let mvpLightMonkey = vpLight*monkey.model
 		
 		monkey.program.register(name: "mv", value: mvMonkey)

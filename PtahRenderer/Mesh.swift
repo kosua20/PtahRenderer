@@ -8,6 +8,7 @@
 
 import Foundation
 
+import simd
 
 struct Face {
 	let v0: InputVertex
@@ -43,14 +44,14 @@ final class Mesh {
 		for line in lines {
 			if (line.hasPrefix("v ")){//Vertex
 				var components = line.components(separatedBy: CharacterSet.whitespaces).filter({!$0.isEmpty})
-				vertices.append((Scalar(components[1])!, Scalar(components[2])!, Scalar(components[3])!))
+				vertices.append(float3(Scalar(components[1])!, Scalar(components[2])!, Scalar(components[3])!))
 			} else if (line.hasPrefix("vt ")) {//UV coords
 				var components = line.components(separatedBy: CharacterSet.whitespaces).filter({!$0.isEmpty})
-				uvs.append((Scalar(components[1])!, Scalar(components[2])!))
+				uvs.append(float2(Scalar(components[1])!, Scalar(components[2])!))
 				
 			} else if (line.hasPrefix("vn ")) {//Normal coords
 				var components = line.components(separatedBy: CharacterSet.whitespaces).filter({!$0.isEmpty})
-				normals.append((Scalar(components[1])!, Scalar(components[2])!, Scalar(components[3])!))
+				normals.append(float3(Scalar(components[1])!, Scalar(components[2])!, Scalar(components[3])!))
 			} else if (line.hasPrefix("f ")) {//Face with vertices/uv/normals
 				let components = line.components(separatedBy: CharacterSet.whitespaces).filter({!$0.isEmpty})
 				
@@ -82,11 +83,9 @@ final class Mesh {
 	
 	private func center(){
 		
-		var bary = vertices.reduce((0.0, 0.0, 0.0), {($0.0+$1.0, $0.1+$1.1, $0.2+$1.2)})
-		bary.0 /= Scalar(vertices.count)
-		bary.1 /= Scalar(vertices.count)
-		bary.2 /= Scalar(vertices.count)
-		vertices = vertices.map({($0.0 - bary.0, $0.1 - bary.1, $0.2 - bary.2)})
+		var bary = vertices.reduce(float3(0.0, 0.0, 0.0), { $0 + $1 })
+		bary =  (1.0 / Scalar(vertices.count)) * bary
+		vertices = vertices.map({ $0 - bary })
 		
 	}
 	
@@ -96,20 +95,22 @@ final class Mesh {
 		var mini = vertices[0]
 		var maxi = vertices[0]
 		for vert in vertices {
-			mini.0 = min(mini.0, vert.0)
-			mini.1 = min(mini.1, vert.1)
-			mini.2 = min(mini.2, vert.2)
-			maxi.0 = min(maxi.0, vert.0)
-			maxi.1 = min(maxi.1, vert.1)
-			maxi.2 = min(maxi.2, vert.2)
+			mini = min(mini, vert)
+			maxi = max(maxi, vert)
+			/*mini.x = min(mini.x, vert.x)
+			mini.y = min(mini.y, vert.y)
+			mini.z = min(mini.z, vert.z)
+			maxi.x = min(maxi.x, vert.x)
+			maxi.y = min(maxi.y, vert.y)
+			maxi.z = min(maxi.z, vert.z)*/
 		}
-		let maxx = max(abs(maxi.0), abs(mini.0))
-		let maxy = max(abs(maxi.1), abs(mini.1))
-		let maxz = max(abs(maxi.2), abs(mini.2))
+		let maxfinal = max(abs(maxi), abs(mini))
+		/*let maxy = max(abs(maxi.y), abs(mini.y))
+		let maxz = max(abs(maxi.z), abs(mini.z))*/
 		//We have the highest distance from the origin, we want it to be smaller than 1
-		var truemax = max(maxx, maxy, maxz)
-		truemax = truemax == 0 ? 1.0: truemax/scale
-		vertices = vertices.map({($0.0/truemax, $0.1/truemax, $0.2/truemax)})
+		var truemax = max(maxfinal.x, maxfinal.y, maxfinal.z)
+		truemax = truemax == 0 ? 1.0 : truemax/scale
+		vertices = vertices.map({ 1.0/truemax * $0 })
 		
 	}
 	

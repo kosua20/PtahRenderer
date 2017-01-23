@@ -7,7 +7,108 @@
 //
 
 import Foundation
+import simd
 
+typealias Matrix4 = float4x4
+
+
+internal extension float4x4 {
+	
+	static func translationMatrix(_ t: Point3) -> Matrix4 {
+		var matrix = float4x4(1.0)
+		matrix[0][3] = t.x
+		matrix[1][3] = t.y
+		matrix[2][3] = t.z
+		return matrix
+	}
+	
+	static func scaleMatrix(_ x: Scalar) -> Matrix4 {
+		return Matrix4.scaleMatrix(float3(x))
+	}
+	
+	static func scaleMatrix(_ s: Point3) -> Matrix4 {
+		var matrix = float4x4(1.0)
+		matrix[0][0] = s.x
+		matrix[1][1] = s.y
+		matrix[2][2] = s.z
+		return matrix
+	}
+	
+	static func rotationMatrix(angle: Scalar, axis: Point3) -> Matrix4 {
+		var matrix = float4x4(1.0)
+		let u = normalize(axis)
+		let c = cos(angle)
+		let mc = 1.0 - c
+		let s = sin(angle)
+		
+		let xy = u.x * u.y * mc
+		let xz = u.x * u.z * mc
+		let yz = u.y * u.z * mc
+		let xs = u.x * s
+		let ys = u.y * s
+		let zs = u.z * s
+		matrix[0][0] = u.x * u.x * mc + c
+		matrix[0][1] = xy - zs
+		matrix[0][2] = xz + ys
+		
+		matrix[1][0] = xy + zs
+		matrix[1][1] = u.y * u.y * mc + c
+		matrix[1][2] = yz - xs
+		
+		matrix[2][0] = xz - ys
+		matrix[2][1] = yz + xs
+		matrix[2][2] = u.z * u.z * mc + c
+		return matrix
+	}
+	
+	
+	static func lookAtMatrix(eye: Point3, target: Point3, up: Point3) -> Matrix4 {
+		
+		let n = normalize(target - eye)
+		var v = normalize(up)
+		let u = normalize(cross(n, v))
+		v = normalize(cross(u, n))
+		let matrix = float4x4(rows: [float4(u,-dot(u, eye)),float4(v,-dot(v, eye)), float4(-n,dot(n, eye)), float4(0.0,0.0,0.0,1.0)])
+		/*matrix.matrix[0] = u.x
+		matrix.matrix[1] = u.y
+		matrix.matrix[2] = u.z
+		
+		matrix.matrix[4] = v.x
+		matrix.matrix[5] = v.y
+		matrix.matrix[6] = v.z
+		
+		matrix.matrix[8] = -n.x
+		matrix.matrix[9] = -n.y
+		matrix.matrix[10] = -n.z
+		
+		matrix.matrix[3] =
+		matrix.matrix[7] = -dot(v, eye)
+		matrix.matrix[11] = dot(n, eye)*/
+		return matrix
+	}
+	
+	static func perspectiveMatrix(fov: Scalar, aspect: Scalar, near: Scalar, far: Scalar) -> Matrix4 {
+		var matrix = float4x4()
+		let radfov = Scalar(M_PI) * fov / 180.0
+		let f = 1.0 / tan(radfov / 2.0)
+		matrix[0][0] = f / aspect
+		matrix[1][1] = f
+		matrix[2][2] = (far + near) / (near - far)
+		matrix[2][3] = (2.0 * far * near) / (near - far)
+		matrix[3][2] = -1.0
+		matrix[3][3] = 0.0
+		return matrix
+	}
+	
+	static func orthographicMatrix(right: Scalar, top: Scalar, near: Scalar, far: Scalar) -> Matrix4 {
+		var matrix = Matrix4()
+		matrix[0][0] = 1.0 / right
+		matrix[1][1] = 1.0 / top
+		matrix[2][2] = 2.0 / (near - far)
+		matrix[2][3] = (2.0 * far * near) / (near - far)
+		return matrix
+	}
+}
 /*--Matrix4------------*/
 /*
 * Copyright (C) 2015 Josh A. Beam
@@ -30,7 +131,7 @@ import Foundation
 * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-
+/*
 struct Matrix4 {
 	var matrix: [Scalar] = [
 		//0	  1	   2	3
@@ -43,99 +144,7 @@ struct Matrix4 {
 		0.0, 0.0, 0.0, 1.0
 	]
 	
-	static func translationMatrix(_ t: Point3) -> Matrix4 {
-		var matrix = Matrix4()
-		matrix.matrix[3] = t.0
-		matrix.matrix[7] = t.1
-		matrix.matrix[11] = t.2
-		return matrix
-	}
-	
-	static func scaleMatrix(_ x: Scalar) -> Matrix4 {
-		return Matrix4.scaleMatrix((x, x, x))
-	}
-	
-	static func scaleMatrix(_ s: Point3) -> Matrix4 {
-		var matrix = Matrix4()
-		matrix.matrix[0] = s.0
-		matrix.matrix[5] = s.1
-		matrix.matrix[10] = s.2
-		return matrix
-	}
-	
-	static func rotationMatrix(angle: Scalar, axis: Point3) -> Matrix4 {
-		var matrix = Matrix4()
-		let u = normalized(axis)
-		let c = cos(angle)
-		let mc = 1.0 - c
-		let s = sin(angle)
-		
-		let xy = u.0 * u.1 * mc
-		let xz = u.0 * u.2 * mc
-		let yz = u.1 * u.2 * mc
-		let xs = u.0 * s
-		let ys = u.1 * s
-		let zs = u.2 * s
-		matrix.matrix[0] = u.0 * u.0 * mc + c
-		matrix.matrix[1] = xy - zs
-		matrix.matrix[2] = xz + ys
-		
-		matrix.matrix[4] = xy + zs
-		matrix.matrix[5] = u.1 * u.1 * mc + c
-		matrix.matrix[6] = yz - xs
-		
-		matrix.matrix[8] = xz - ys
-		matrix.matrix[9] = yz + xs
-		matrix.matrix[10] = u.2 * u.2 * mc + c
-		return matrix
-	}
-	
-	
-	static func lookAtMatrix(eye: Point3, target: Point3, up: Point3) -> Matrix4 {
-		var matrix = Matrix4()
-		let n = normalized(target - eye)
-		var v = normalized(up)
-		let u = normalized(cross(n, v))
-		v = normalized(cross(u, n))
-		matrix.matrix[0] = u.0
-		matrix.matrix[1] = u.1
-		matrix.matrix[2] = u.2
-		
-		matrix.matrix[4] = v.0
-		matrix.matrix[5] = v.1
-		matrix.matrix[6] = v.2
-		
-		matrix.matrix[8] = -n.0
-		matrix.matrix[9] = -n.1
-		matrix.matrix[10] = -n.2
-		
-		matrix.matrix[3] = -dot(u, eye)
-		matrix.matrix[7] = -dot(v, eye)
-		matrix.matrix[11] = dot(n, eye)
-		return matrix
-	}
-	
-	static func perspectiveMatrix(fov: Scalar, aspect: Scalar, near: Scalar, far: Scalar) -> Matrix4 {
-		var matrix = Matrix4()
-		let radfov = Scalar(M_PI) * fov / 180.0
-		let f = 1.0 / tan(radfov / 2.0)
-		matrix.matrix[0] = f / aspect
-		matrix.matrix[5] = f
-		matrix.matrix[10] = (far + near) / (near - far)
-		matrix.matrix[14] = -1.0
-		matrix.matrix[11] = (2.0 * far * near) / (near - far)
-		matrix.matrix[15] = 0.0
-		return matrix
-	}
-	
-	static func orthographicMatrix(right: Scalar, top: Scalar, near: Scalar, far: Scalar) -> Matrix4 {
-		var matrix = Matrix4()
-		matrix.matrix[0] = 1.0 / right
-		matrix.matrix[5] = 1.0 / top
-		matrix.matrix[10] = 2.0 / (near - far)
-		matrix.matrix[11] = (2.0 * far * near) / (near - far)
-		return matrix
-	}
+
 }
 
 func * (left: Matrix4, right: Matrix4) -> Matrix4 {
@@ -163,11 +172,11 @@ func * (left: Matrix4, right: Matrix4) -> Matrix4 {
 
 func * (left: Matrix4, rhs: Point4) -> Point4 {
 	let m1 = left.matrix
-	var m : Point4 = (0.0, 0.0, 0.0, 0.0)
-	m.0 = m1[ 0]*rhs.0 + m1[ 1]*rhs.1 + m1[ 2]*rhs.2 + m1[ 3]*rhs.3
-	m.1 = m1[ 4]*rhs.0 + m1[ 5]*rhs.1 + m1[ 6]*rhs.2 + m1[ 7]*rhs.3
-	m.2 = m1[ 8]*rhs.0 + m1[ 9]*rhs.1 + m1[10]*rhs.2 + m1[11]*rhs.3
-	m.3 = m1[12]*rhs.0 + m1[13]*rhs.1 + m1[14]*rhs.2 + m1[15]*rhs.3
+	var m : Point4 = float4(0.0)
+	m.x = m1[ 0]*rhs.x + m1[ 1]*rhs.y + m1[ 2]*rhs.z + m1[ 3]*rhs.w
+	m.y = m1[ 4]*rhs.x + m1[ 5]*rhs.y + m1[ 6]*rhs.z + m1[ 7]*rhs.w
+	m.z = m1[ 8]*rhs.x + m1[ 9]*rhs.y + m1[10]*rhs.z + m1[11]*rhs.w
+	m.w = m1[12]*rhs.x + m1[13]*rhs.y + m1[14]*rhs.z + m1[15]*rhs.w
 	return m
 }
 
@@ -309,3 +318,5 @@ func inverse(_ mat: Matrix4) -> Matrix4 {
 	
 	return Matrix4(matrix: inv)
 }
+
+*/

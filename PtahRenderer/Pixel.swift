@@ -9,7 +9,7 @@
 import Foundation
 
 
-typealias Scalar = Float
+
 typealias Color = (UInt8, UInt8, UInt8)
 
 
@@ -116,36 +116,6 @@ func +(lhs: Pixel, rhs: Pixel) -> Pixel {
 }
 
 
-func clamp(_ x: Scalar, _ a: Scalar, _ b: Scalar) -> Scalar {
-
-	return min(b, max(a, x))
-
-}
 
 
-func clamp(_ x: UInt8, _ a: UInt8, _ b: UInt8) -> UInt8 {
 
-	return min(b, max(a, x))
-
-}
-
-
-func clamp(_ x: Int, _ a: Int, _ b: Int) -> Int {
-
-	return min(b, max(a, x))
-
-}
-
-
-func ==(_ x: OutputVertex, _ y: OutputVertex) -> Bool {
-	// Ignore 'others' attribute.
-	return x.v == y.v && x.n == y.n && x.t == y.t
-
-}
-
-
-func !=(_ x: OutputVertex, _ y: OutputVertex) -> Bool {
-	// Ignore 'others' attribute.
-	return x.v != y.v || x.n != y.n || x.t != y.t
-
-}

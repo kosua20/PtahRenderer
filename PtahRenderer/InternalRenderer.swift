@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import simd
+
 #if os(OSX)
 	import Cocoa
 #endif
@@ -97,27 +99,27 @@ final class InternalRenderer {
 			
 
 			// Clip half space if v_proj.3 <= 0
-			if (v_proj.v0.v.3 <= 0.0 && v_proj.v1.v.3 <= 0.0 && v_proj.v2.v.3 <= 0.0) {
+			if (v_proj.v0.v.w <= 0.0 && v_proj.v1.v.w <= 0.0 && v_proj.v2.v.w <= 0.0) {
 				continue
 			}
 			
 			var triangles : [OutputFace] = []
 
-			if	(v_proj.v0.v.3 > 0.0 && v_proj.v1.v.3 > 0.0 && v_proj.v2.v.3 > 0.0) &&
-				(abs(v_proj.v0.v.2) < v_proj.v0.v.3 &&
-				 abs(v_proj.v1.v.2) < v_proj.v1.v.3 &&
-				 abs(v_proj.v2.v.2) < v_proj.v2.v.3) {
+			if	(v_proj.v0.v.w > 0.0 && v_proj.v1.v.w > 0.0 && v_proj.v2.v.w > 0.0) &&
+				(abs(v_proj.v0.v.z) < v_proj.v0.v.w &&
+				 abs(v_proj.v1.v.z) < v_proj.v1.v.w &&
+				 abs(v_proj.v2.v.z) < v_proj.v2.v.w) {
 				
 				
 				let v_ndc = OutputFace(
 					v0: OutputVertex(
-						v: (v_proj.v0.v.0/v_proj.v0.v.3, v_proj.v0.v.1/v_proj.v0.v.3, v_proj.v0.v.2/v_proj.v0.v.3, v_proj.v0.v.3),
+						v: float4((1.0/v_proj.v0.v.w) * float3(v_proj.v0.v), v_proj.v0.v.w),
 						t: v_proj.v0.t, n: v_proj.v0.n, others: v_proj.v0.others),
 					v1: OutputVertex(
-						v: (v_proj.v1.v.0/v_proj.v1.v.3, v_proj.v1.v.1/v_proj.v1.v.3, v_proj.v1.v.2/v_proj.v1.v.3, v_proj.v1.v.3),
+						v: float4((1.0/v_proj.v1.v.w) * float3(v_proj.v1.v), v_proj.v1.v.w),
 						t: v_proj.v1.t, n: v_proj.v1.n, others: v_proj.v1.others),
 					v2: OutputVertex(
-						v: (v_proj.v2.v.0/v_proj.v2.v.3, v_proj.v2.v.1/v_proj.v2.v.3, v_proj.v2.v.2/v_proj.v2.v.3, v_proj.v2.v.3),
+						v: float4((1.0/v_proj.v2.v.w) * float3(v_proj.v2.v), v_proj.v2.v.w),
 						t: v_proj.v2.t, n: v_proj.v2.n, others: v_proj.v2.others)
 				)
 				
@@ -139,7 +141,7 @@ final class InternalRenderer {
 					vertices.remove(at: vertices.count - 1)
 				}
 				for i in 0..<vertices.count {
-					vertices[i].v = (vertices[i].v.0 / vertices[i].v.3, vertices[i].v.1/vertices[i].v.3, vertices[i].v.2/vertices[i].v.3, vertices[i].v.3)
+					vertices[i].v = float4((1.0 / vertices[i].v.w) * float3(vertices[i].v) , vertices[i].v.w)
 				}
 				
 				for i in 1..<vertices.count-1 {
@@ -152,16 +154,24 @@ final class InternalRenderer {
 				
 				//--Backface culling
 				//We compute it manually to avoid using a cross product and extract the 3rd component
-				let orientation =  (culling == .backface) ? (v_p.v1.v.0 - v_p.v0.v.0) * (v_p.v2.v.1 - v_p.v0.v.1) - (v_p.v1.v.1 - v_p.v0.v.1) * (v_p.v2.v.0 - v_p.v0.v.0) : 1.0
+				//
+				let orientation =  (culling == .backface) ? (v_p.v1.v.x - v_p.v0.v.x) * (v_p.v2.v.y - v_p.v0.v.y) - (v_p.v1.v.y - v_p.v0.v.y) * (v_p.v2.v.x - v_p.v0.v.x) : 1.0
 				
 				if orientation < 0.0 {
 					continue
 				}
 				
 				//--Screen space
-				let v_s = [(floor((v_p.v0.v.0 + 1.0) * halfWidth), floor((-1.0 * v_p.v0.v.1 + 1.0) * halfHeight), v_p.v0.v.2),
-						   (floor((v_p.v1.v.0 + 1.0) * halfWidth), floor((-1.0 * v_p.v1.v.1 + 1.0) * halfHeight), v_p.v1.v.2),
-						   (floor((v_p.v2.v.0 + 1.0) * halfWidth), floor((-1.0 * v_p.v2.v.1 + 1.0) * halfHeight), v_p.v2.v.2)]
+				let vs0 = float3(floor((v_p.v0.v.x + 1.0) * halfWidth),
+				                 floor((-1.0 * v_p.v0.v.y + 1.0) * halfHeight),
+				                 v_p.v0.v.z)
+				let vs1 = float3(floor((v_p.v1.v.x + 1.0) * halfWidth),
+				                 floor((-1.0 * v_p.v1.v.y + 1.0) * halfHeight),
+				                 v_p.v1.v.z)
+				let vs2 = float3(floor((v_p.v2.v.x + 1.0) * halfWidth),
+				                 floor((-1.0 * v_p.v2.v.y + 1.0) * halfHeight),
+				                 v_p.v2.v.z)
+				let v_s = [vs0, vs1, vs2]
 				
 				//--- Shading
 				if mode == .shaded {
@@ -169,18 +179,18 @@ final class InternalRenderer {
 					//triangle(v_s, ws, f.n, f.t, program)
 					let (mini, maxi) = boundingBox(v_s, width, height)
 					
-					for x in Int(mini.0)...Int(maxi.0) {
-						for y in Int(mini.1)...Int(maxi.1) {
+					for x in Int(mini.x)...Int(maxi.x) {
+						for y in Int(mini.y)...Int(maxi.y) {
 							
 							let bary = barycentre(Point3(Scalar(x), Scalar(y), 0.0), v_s[0], v_s[1], v_s[2])
 							
-							if (bary.0 < 0.0 || bary.1 < 0.0 || bary.2 < 0.0){ continue }
+							if (bary.x < 0.0 || bary.y < 0.0 || bary.z < 0.0){ continue }
 							
-							var persp = (bary.0/v_p.v0.v.3, bary.1/v_p.v1.v.3, bary.2/v_p.v2.v.3)
-							persp = persp / (persp.0 + persp.1 + persp.2)
+							var persp = float3(bary.x/v_p.v0.v.w, bary.y/v_p.v1.v.w, bary.z/v_p.v2.v.w)
+							persp =  (1.0 / (persp.x + persp.y + persp.z)) * persp
 							
 							
-							let z = (v_s[0].2 * bary.0 + v_s[1].2 * bary.1 + v_s[2].2 * bary.2)
+							let z = v_s[0].z * bary.x + v_s[1].z * bary.y + v_s[2].z * bary.z
 							//Maybe need to compute the depth with the same interpolation ?
 							//let z = (persp.0 * v_s[0].2 + persp.1 * v_s[1].2 + persp.2 * v_s[2].2)
 							
@@ -205,7 +215,7 @@ final class InternalRenderer {
 						}
 					}
 				} else if mode == .wireframe {
-					triangleWire([(v_s[0].0,v_s[0].1), (v_s[1].0,v_s[1].1), (v_s[2].0,v_s[2].1)], (255,255,255))
+					triangleWire([float2(v_s[0].x,v_s[0].y), float2(v_s[1].x,v_s[1].y), float2(v_s[2].x,v_s[2].y)], (255,255,255))
 				}
 			}
 		}
@@ -217,8 +227,8 @@ final class InternalRenderer {
 		
 		var v0n : OutputVertex
 		var v1n : OutputVertex
-		let v0Inside = v0.v.3 > 0.0 && v0.v.2 > -v0.v.3// && v0.v.2 < v0.v.3
-		let v1Inside = v1.v.3 > 0.0 && v1.v.2 > -v1.v.3// && v0.v.2 < v0.v.3
+		let v0Inside = v0.v.w > 0.0 && v0.v.z > -v0.v.w// && v0.v.z < v0.v.w
+		let v1Inside = v1.v.w > 0.0 && v1.v.z > -v1.v.w// && v0.v.z < v0.v.w
 		
 		if v0Inside && v1Inside {
 			// Great, nothing to do
@@ -226,13 +236,13 @@ final class InternalRenderer {
 			v1n = v1
 		} else if v0Inside {
 			v0n = v0
-			let d1 = v1.v.2 + v1.v.3
-			let d0 = v0.v.2 + v0.v.3
+			let d1 = v1.v.z + v1.v.w
+			let d0 = v0.v.z + v0.v.w
 			v1n = clipPoint(vIn: v0, vOut: v1, dIn: d0, dOut: d1)
 
 		} else if v1Inside {
-			let d1 = v1.v.2 + v1.v.3
-			let d0 = v0.v.2 + v0.v.3
+			let d1 = v1.v.z + v1.v.w
+			let d0 = v0.v.z + v0.v.w
 			v0n = clipPoint(vIn: v1, vOut: v0, dIn: d1, dOut: d0)
 			v1n = v1
 		} else {
@@ -267,14 +277,14 @@ final class InternalRenderer {
 	
 	private func triangleWire(_ v: [Point2], _ color: Color){
 		
-		let csr0 = (v[0].0 < 0 ? 0b1: 0b0) + (v[0].0 >= Scalar(width) ? 0b10: 0b0)
-				 + (v[0].1 < 0 ? 0b100: 0b0) + (v[0].1 >= Scalar(height) ? 0b1000: 0b0)
+		let csr0 = (v[0].x < 0 ? 0b1: 0b0) + (v[0].x >= Scalar(width) ? 0b10: 0b0)
+				 + (v[0].y < 0 ? 0b100: 0b0) + (v[0].y >= Scalar(height) ? 0b1000: 0b0)
 		
-		let csr1 = (v[1].0 < 0 ? 0b1: 0b0) + (v[1].0 >= Scalar(width) ? 0b10: 0b0)
-				 + (v[1].1 < 0 ? 0b100: 0b0) + (v[1].1 >= Scalar(height) ? 0b1000: 0b0)
+		let csr1 = (v[1].x < 0 ? 0b1: 0b0) + (v[1].x >= Scalar(width) ? 0b10: 0b0)
+				 + (v[1].y < 0 ? 0b100: 0b0) + (v[1].y >= Scalar(height) ? 0b1000: 0b0)
 		
-		let csr2 = (v[2].0 < 0 ? 0b1: 0b0) + (v[2].0 >= Scalar(width) ? 0b10: 0b0)
-				 + (v[2].1 < 0 ? 0b100: 0b0) + (v[2].1 >= Scalar(height) ? 0b1000: 0b0)
+		let csr2 = (v[2].x < 0 ? 0b1: 0b0) + (v[2].x >= Scalar(width) ? 0b10: 0b0)
+				 + (v[2].y < 0 ? 0b100: 0b0) + (v[2].y >= Scalar(height) ? 0b1000: 0b0)
 
 		clippedLine(v[0], v[1], csr0, csr1, color)
 		clippedLine(v[1], v[2], csr1, csr2, color)
@@ -313,28 +323,28 @@ final class InternalRenderer {
 			// Intersects lp0 with the side.
 			if (lc0 >> 3) == 1 {
 				//bottom
-				let nlp0x = (lp.0 / lp.1) * (h - lp1.1) + lp1.0
-				nlp0 = (floor(nlp0x),h)
+				let nlp0x = (lp.x / lp.y) * (h - lp1.y) + lp1.x
+				nlp0 = float2(floor(nlp0x),h)
 				
 			} else if ((lc0 >> 2) & 0b1) == 1 {
 				//top
-				let nlp0x = (lp.0 / lp.1) * (0 - lp1.1) + lp1.0
-				nlp0 = (floor(nlp0x),0)
+				let nlp0x = (lp.x / lp.y) * (0 - lp1.y) + lp1.x
+				nlp0 = float2(floor(nlp0x),0)
 				
 			} else if ((lc0 >> 1) & 0b1) == 1 {
 				//right
-				let nlp0y = (lp.1 / lp.0) * (w - lp1.0) + lp1.1
-				nlp0 = (w,floor(nlp0y))
+				let nlp0y = (lp.y / lp.x) * (w - lp1.x) + lp1.y
+				nlp0 = float2(w,floor(nlp0y))
 				
 			} else {
 				// left
-				let nlp0y = (lp.1 / lp.0) * (0 - lp1.0) + lp1.1
-				nlp0 = (0,floor(nlp0y))
+				let nlp0y = (lp.y / lp.x) * (0 - lp1.x) + lp1.y
+				nlp0 = float2(0,floor(nlp0y))
 				
 			}
 			// Update c0
-			let xbit = (nlp0.0 < 0 ? 0b1: 0b0) + (nlp0.0 >= Scalar(width) ? 0b10: 0b0)
-			let ybit = (nlp0.1 < 0 ? 0b100: 0b0) + (nlp0.1 >= Scalar(height) ? 0b1000: 0b0)
+			let xbit = (nlp0.x < 0 ? 0b1: 0b0) + (nlp0.x >= Scalar(width) ? 0b10: 0b0)
+			let ybit = (nlp0.y < 0 ? 0b100: 0b0) + (nlp0.y >= Scalar(height) ? 0b1000: 0b0)
 			let nlc0 = xbit + ybit
 			
 			// Draw new line
@@ -351,28 +361,27 @@ final class InternalRenderer {
 		var b = b_
 		
 		//Switch orientation if steep line
-		if(abs(a.0 - b.0) < abs(a.1 - b.1)){
+		if(abs(a.x - b.x) < abs(a.y - b.y)){
 			steep = true
-			swap(&(a.0), &(a.1))
-			swap(&(b.0), &(b.1))
+			swap(&(a.x), &(a.y))
+			swap(&(b.x), &(b.y))
 		}
 		
 		//Order points along x axis
-		if(a.0 > b.0){
+		if(a.x > b.x){
 			swap(&a, &b)
 		}
 		
 		//Precompute
-		let diffx = b.0 - a.0
-		let diffy = b.1 - a.1
-		let shift = b.1 > a.1 ? 1: -1
+		let diff = b - a
+		let shift = b.y > a.y ? 1: -1
 		
 		//Error
-		let differror = abs(diffy/diffx)
+		let differror = abs(diff.y/diff.x)
 		var error : Scalar = 0.0
 		
-		var y = Int(a.1)
-		for x in Int(a.0)...Int(b.0) {
+		var y = Int(a.y)
+		for x in Int(a.x)...Int(b.x) {
 			steep ? buffers[currentBuffer].set(y, x, color): buffers[currentBuffer].set(x, y, color)
 			error += differror
 			if(error > 0.5){

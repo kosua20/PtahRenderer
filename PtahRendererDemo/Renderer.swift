@@ -101,7 +101,7 @@ final class Renderer {
 		
 		let mvDragon = camera.view*dragon.model
 		let mvpDragon = camera.projection*mvDragon
-		let invMVDragon = inverse(transpose(camera.view * dragon.model))
+		let invMVDragon = inverse(transpose(mvDragon))
 		let mvpLightDragon = vpLight*dragon.model
 		
 		dragon.program.register(name: "mv", value: mvDragon)
@@ -114,7 +114,7 @@ final class Renderer {
 		
 		let mvFloor = camera.view*floor.model
 		let mvpFloor = camera.projection*mvFloor
-		let invMVFloor = inverse(transpose(camera.view * floor.model))
+		let invMVFloor = inverse(transpose(mvFloor))
 		let mvpLightFloor = vpLight*floor.model
 		
 		floor.program.register(name: "mv", value: mvFloor)
@@ -128,7 +128,7 @@ final class Renderer {
 		monkey.model = Matrix4.translationMatrix((0.5,0.0,0.5)) * Matrix4.scaleMatrix(0.4) * Matrix4.rotationMatrix(angle: time, axis: (0.0,1.0,0.0))
 		let mvMonkey = camera.view*monkey.model
 		let mvpMonkey = camera.projection*mvMonkey
-		let invMVMonkey = inverse(transpose(camera.view * monkey.model))
+		let invMVMonkey = inverse(transpose(mvMonkey))
 		let mvpLightMonkey = vpLight*monkey.model
 		
 		monkey.program.register(name: "mv", value: mvMonkey)

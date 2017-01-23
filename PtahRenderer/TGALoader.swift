@@ -23,7 +23,9 @@ import Foundation
 
 final class TGALoader {
 	
+	
 	static func writeTGA(pixels: [Pixel], width: Int, height: Int, path: String){
+		
 		let data = NSMutableData()
 		
 		var header = [UInt8](repeating: 0, count: 18)
@@ -43,9 +45,12 @@ final class TGALoader {
 		let pixeldata = pixels.flatMap({[$0.b, $0.g, $0.r]})
 		data.append(pixeldata, length: imageLength)
 		data.write(toFile: path.hasSuffix(".tga") ? path: (path + ".tga") , atomically: true)
+		
 	}
 	
+	
 	static func loadTGA(path: String) -> (Int, Int, [Pixel]){
+		
 		guard let data = try? Data(contentsOf: URL(fileURLWithPath: path)) else {
 			assertionFailure("Couldn't load the tga")
 			return (0, 0, [])
@@ -62,15 +67,9 @@ final class TGALoader {
 		}
 		
 		let IDLength = header[0]
-		
-		//let xOrigin = Int(header[9])*256 + Int(header[8])
-		//let yOrigin = Int(header[11])*256 + Int(header[10])
 		let width = Int(header[13])*256 + Int(header[12])
 		let height = Int(header[15])*256 + Int(header[14])
-		
 		let pixelDepth = header[16]
-		
-		//let imageDescriptor = header[17]
 		
 		let lengthImage = Int(pixelDepth) * width * height / 8
 		let range = NSRange(location:18+Int(IDLength), length:lengthImage)
@@ -94,5 +93,7 @@ final class TGALoader {
 
 		}
 		return (width, height, pixels)
+		
 	}
+	
 }

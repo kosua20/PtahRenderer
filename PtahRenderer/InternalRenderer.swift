@@ -11,16 +11,17 @@ import Foundation
 	import Cocoa
 #endif
 
+
 enum RenderingMode {
 	case wireframe
 	case shaded
 }
 
+
 enum CullingMode {
 	case backface
 	case none
 }
-
 
 
 
@@ -34,20 +35,28 @@ final class InternalRenderer {
 	var mode : RenderingMode
 	var culling : CullingMode
 	
+	
 	init(width _width: Int, height _height: Int){
+		
 		width = _width
 		height = _height
 		buffers = [Framebuffer(width: _width, height: _height)]
 		currentBuffer = 0
 		mode = .shaded
 		culling = .backface
+		
 	}
+	
 	
 	func addFramebuffer(width _width: Int, height _height: Int){
+		
 		buffers.append(Framebuffer(width: _width, height: _height))
+		
 	}
 	
+	
 	func bindFramebuffer(i: Int){
+		
 		if i < buffers.count {
 			currentBuffer = i
 			width = buffers[currentBuffer].width
@@ -55,6 +64,7 @@ final class InternalRenderer {
 		}
 		
 	}
+	
 	
 	func drawMesh(mesh: Mesh, program: Program, depthOnly: Bool = false){
 		
@@ -199,10 +209,12 @@ final class InternalRenderer {
 				}
 			}
 		}
+		
 	}
 	
 	
 	private func clipEdge(v0: OutputVertex, v1: OutputVertex, vertices: inout [OutputVertex]){
+		
 		var v0n : OutputVertex
 		var v1n : OutputVertex
 		let v0Inside = v0.v.3 > 0.0 && v0.v.2 > -v0.v.3// && v0.v.2 < v0.v.3
@@ -232,9 +244,12 @@ final class InternalRenderer {
 			vertices.append(v0n)
 		}
 		vertices.append(v1n)
+		
 	}
 	
+	
 	func clipPoint(vIn v0: OutputVertex, vOut v1: OutputVertex, dIn d0 : Scalar, dOut d1 : Scalar) -> OutputVertex {
+		
 		let factor = 1.0 / (d1 - d0)
 		var newOthers : [Scalar] = []
 		
@@ -246,6 +261,7 @@ final class InternalRenderer {
 		                   t: factor*(d1 * v0.t - d0 * v1.t),
 		                   n: factor*(d1 * v0.n - d0 * v1.n),
 		                   others: newOthers)
+		
 	}
 	
 	
@@ -266,13 +282,13 @@ final class InternalRenderer {
 		
 	}
 	
+	
 	private func clippedLine(_ p0: Point2, _ p1: Point2, _ c0: Int, _ c1: Int, _ color: Color){
+		
 		if (c0 & c1) > 0 {
 			return
-			
 		} else if (c0 | c1) == 0 {
 			line(p0, p1, color)
-			
 		} else {
 			// We want c0 != 0, swap if needed (we know both won't be null).
 			let lc0, lc1 : Int
@@ -323,12 +339,13 @@ final class InternalRenderer {
 			
 			// Draw new line
 			clippedLine(nlp0, lp1, nlc0, lc1, color)
-			
 		}
+		
 	}
 
 	
 	private func line(_ a_: Point2, _ b_: Point2, _ color: Color){
+		
 		var steep = false
 		var a = a_
 		var b = b_
@@ -363,35 +380,45 @@ final class InternalRenderer {
 				error -= 1.0
 			}
 		}
+		
 	}
 	
+	
 	func clear(color: Bool = true, depth: Bool = true){
+		
 		if(color){
 			buffers[currentBuffer].clearColor((0, 0, 0))
 		}
 		if(depth){
 			buffers[currentBuffer].clearDepth()
 		}
+		
 	}
 	
+	
 	func flushBuffer() -> [Pixel] {
+		
 		return buffers[currentBuffer].pixels
+		
 	}
 	
 	
 	func flushDepthBuffer() -> [Scalar] {
+		
 		return buffers[currentBuffer].zbuffer
+		
 	}
+	
 	
 	//MARK: OSX dependant
 	
 #if os(OSX)
 	
 	func flushImage() -> NSImage {
-		//startTime = CFAbsoluteTimeGetCurrent();
+		
 		let image = buffers[currentBuffer].imageFromRGBA32Bitmap()
-		//print("[Backing]: \t" + String(format: "%.4fs", CFAbsoluteTimeGetCurrent() - startTime))
 		return image
+		
 	}
 	
 #endif

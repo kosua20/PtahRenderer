@@ -38,6 +38,7 @@ class Program  {
 	func register(name: String, value: ScalarTexture) { buffers[name] = value }
 	
 	func register(name: String, value: Any) { others[name] = value }
+
 }
 
 

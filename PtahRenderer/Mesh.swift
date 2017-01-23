@@ -9,13 +9,14 @@
 import Foundation
 
 
-
 final class Mesh {
+	
 	var vertices: [Vertex] = []
 	var normals: [Normal] = []
 	var uvs: [UV] = []
 	var indices: [(FaceIndices, FaceIndices, FaceIndices)] = []
 	var faces: [Face] = []
+	
 	
 	init(path: String, shouldNormalize: Bool = false){
 		
@@ -61,17 +62,23 @@ final class Mesh {
 		
 		// Expand indices.
 		expand()
+		
 	}
 	
+	
 	private func center(){
+		
 		var bary = vertices.reduce((0.0, 0.0, 0.0), {($0.0+$1.0, $0.1+$1.1, $0.2+$1.2)})
 		bary.0 /= Scalar(vertices.count)
 		bary.1 /= Scalar(vertices.count)
 		bary.2 /= Scalar(vertices.count)
 		vertices = vertices.map({($0.0 - bary.0, $0.1 - bary.1, $0.2 - bary.2)})
+		
 	}
 	
+	
 	private func normalize(scale: Scalar = 1.0){
+		
 		var mini = vertices[0]
 		var maxi = vertices[0]
 		for vert in vertices {
@@ -89,9 +96,12 @@ final class Mesh {
 		var truemax = max(maxx, maxy, maxz)
 		truemax = truemax == 0 ? 1.0: truemax/scale
 		vertices = vertices.map({($0.0/truemax, $0.1/truemax, $0.2/truemax)})
+		
 	}
 	
+	
 	private func expand(){
+		
 		for (ind1, ind2, ind3) in indices {
 			let f = Face(v0: InputVertex(v: vertices[ind1.v], t: uvs[ind1.t], n: normals[ind1.n]),
 			             v1: InputVertex(v: vertices[ind2.v], t: uvs[ind2.t], n: normals[ind2.n]),
@@ -99,15 +109,6 @@ final class Mesh {
 						)
 			faces.append(f)
 		}
+		
 	}
 }
-
-
-
-
-
-
-
-	
-
-

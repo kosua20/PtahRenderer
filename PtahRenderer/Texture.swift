@@ -8,16 +8,19 @@
 
 import Foundation
 
+
 enum TextureMode {
 	case clamp
 	case wrap
 	case unsafe
 }
 
+
 enum FilteringMode {
 	case nearest
 	case linear
 }
+
 
 final class Texture {
 	
@@ -27,6 +30,7 @@ final class Texture {
 	var pixels: [Pixel]
 	var mode: TextureMode = .clamp
 	var filtering: FilteringMode = .nearest
+	
 	
 	init(path: String){
 		
@@ -109,7 +113,9 @@ final class Texture {
 			return pixels[(nb < 0 ? nb + height : nb) * width + (na < 0 ? na + width : na)]
 		}
 		return pixels[b*width+a]
+		
 	}
+	
 	
 	subscript(u: Scalar, v: Scalar ) -> Pixel {
 		
@@ -142,17 +148,16 @@ final class Texture {
 	
 	
 	private func flipVertically(){
+		
 		let half = height >> 1
 		for y in 0..<half {
 			swap(&(pixels[y*width..<(y+1)*width]), &(pixels[width*(height-y-1)..<width*(height-y)]))
 		}
+		
 	}
-	
-	/*subscript(uv: Point2) -> Pixel {
-		return self[uv.0 as Scalar, uv.1 as Scalar]
-	}*/
 
 }
+
 
 final class ScalarTexture {
 	
@@ -162,10 +167,13 @@ final class ScalarTexture {
 	var mode: TextureMode = .clamp
 	var filtering: FilteringMode = .nearest
 	
+	
 	init(buffer: [Scalar], width _width: Int, height _height: Int){
+		
 		width = _width
 		height = _height
 		values = buffer
+	
 	}
 	
 	
@@ -179,7 +187,9 @@ final class ScalarTexture {
 			return values[(nb < 0 ? nb + height : nb) * width + (na < 0 ? na + width : na)]
 		}
 		return values[b*width+a]
+		
 	}
+	
 	
 	subscript(u: Scalar, v: Scalar ) -> Scalar {
 		
@@ -212,10 +222,12 @@ final class ScalarTexture {
 	
 	
 	private func flipVertically(){
+		
 		let half = height >> 1
 		for y in 0..<half {
 			swap(&(values[y*width..<(y+1)*width]), &(values[width*(height-y-1)..<width*(height-y)]))
 		}
+		
 	}
 	
 	

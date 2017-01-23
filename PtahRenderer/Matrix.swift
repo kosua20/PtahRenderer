@@ -309,22 +309,3 @@ func inverse(_ mat: Matrix4) -> Matrix4 {
 	
 	return Matrix4(matrix: inv)
 }
-
-func inverse1(_ m: Matrix4) -> Matrix4 {
-	var inv = Matrix4()
-	inv.matrix[0] = m.matrix[0]
-	inv.matrix[1] = m.matrix[4]
-	inv.matrix[2] = m.matrix[8]
-	inv.matrix[3] = -(m.matrix[0] * m.matrix[3] + m.matrix[4] * m.matrix[7] + m.matrix[8] * m.matrix[11])
-	inv.matrix[4] = m.matrix[1]
-	inv.matrix[5] = m.matrix[5]
-	inv.matrix[6] = m.matrix[9]
-	inv.matrix[7] = -(m.matrix[1] * m.matrix[3] + m.matrix[5] * m.matrix[7] + m.matrix[9] * m.matrix[11])
-	inv.matrix[8] = m.matrix[2]
-	inv.matrix[9] = m.matrix[6]
-	inv.matrix[10] = m.matrix[10]
-	inv.matrix[11] = -(m.matrix[2] * m.matrix[3] + m.matrix[6] * m.matrix[7] + m.matrix[10] * m.matrix[11])
-	
-	return inv
-}
-

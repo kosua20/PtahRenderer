@@ -47,8 +47,8 @@ final class Renderer {
 	
 	private var time : Scalar = 0.0
 	private var camera: Camera
-	private let ligthDir: Point4 = (-0.57735, -0.57735, -0.57735, 0.0)
-	
+	private let lightDir: Point4 = (-0.57735, -0.57735, -0.57735, 0.0)
+	private let vpLight : Matrix4
 	private let dragon: Object
 	private let floor: Object
 	private let monkey: Object
@@ -61,6 +61,7 @@ final class Renderer {
 		
 		internalRenderer = InternalRenderer(width: width, height: height)
 		//internalRenderer.mode = .wireframe
+		internalRenderer.addFramebuffer(width: 128, height: 128)
 		
 		var baseName = "dragon"
 		dragon = Object(meshPath: rootDir + "models/" + baseName + ".obj", textureNames: ["texture"], texturePaths: [rootDir + "textures/" + baseName + ".png"])
@@ -79,10 +80,11 @@ final class Renderer {
 		monkey.model =  Matrix4.translationMatrix((0.5,0.0,0.5)) * Matrix4.scaleMatrix(0.5)
 		cubemap.model = Matrix4.scaleMatrix(5.0)
 		
-		let proj = Matrix4.perspectiveMatrix(fov:70.0, aspect: Scalar(width)/Scalar(height), near: 0.1, far: 100.0)
+		let proj = Matrix4.perspectiveMatrix(fov:70.0, aspect: Scalar(width)/Scalar(height), near: 0.5, far: 10.0)
 		let initialPos = 2.0*normalized((0.0, 0.5, 1.0))
 		camera = Camera(position: initialPos, center: (0.0, 0.0, 0.0), up: (0.0, 1.0, 0.0), projection: proj)
 		
+		vpLight = Matrix4.orthographicMatrix(right: 2.0, top: 2.0, near: 0.1, far: 100.0) *  Matrix4.lookAtMatrix(eye: (-lightDir.0, -lightDir.1, -lightDir.2), target: (0.0,0.0,0.0), up: (0.0,1.0,0.0))
 		
 	}
 	
@@ -92,27 +94,38 @@ final class Renderer {
 		camera.position =  2.0*normalized((cos(theta), 0.5, sin(theta)))
 		camera.update()
 		let vp = camera.projection*camera.view
-		let lightViewDir4 = camera.view * ligthDir
+		let lightViewDir4 = camera.view * lightDir
 		let lightViewDir = normalized((lightViewDir4.0, lightViewDir4.1, lightViewDir4.2))
+		
 		
 		let mvpDragon = vp*dragon.model
 		let invMVDragon = inverse(transpose(camera.view * dragon.model))
+		let mvpLightDragon = vpLight*dragon.model
 		dragon.program.register(name: "mvp", value: mvpDragon)
 		dragon.program.register(name: "invmv", value: invMVDragon)
 		dragon.program.register(name: "lightDir", value: lightViewDir)
+		dragon.depthProgram.register(name: "mvp", value: mvpLightDragon)
+		dragon.program.register(name: "lightMvp", value: mvpLightDragon)
 		
 		let mvpFloor = vp*floor.model
 		let invMVFloor = inverse(transpose(camera.view * floor.model))
+		let mvpLightFloor = vpLight*floor.model
+		
 		floor.program.register(name: "mvp", value: mvpFloor)
 		floor.program.register(name: "invmv", value: invMVFloor)
 		floor.program.register(name: "lightDir", value: lightViewDir)
+		floor.depthProgram.register(name: "mvp", value: mvpLightFloor)
+		floor.program.register(name: "lightMvp", value: mvpLightFloor)
 		
 		monkey.model = Matrix4.translationMatrix((0.5,0.0,0.5)) * Matrix4.scaleMatrix(0.4) * Matrix4.rotationMatrix(angle: time, axis: (0.0,1.0,0.0))
 		let mvpMonkey = vp*monkey.model
 		let invMVMonkey = inverse(transpose(camera.view * monkey.model))
+		let mvpLightMonkey = vpLight*monkey.model
 		monkey.program.register(name: "mvp", value: mvpMonkey)
 		monkey.program.register(name: "invmv", value: invMVMonkey)
 		monkey.program.register(name: "lightDir", value: lightViewDir)
+		monkey.depthProgram.register(name: "mvp", value: mvpLightMonkey)
+		monkey.program.register(name: "lightMvp", value: mvpLightMonkey)
 		
 		let mvpCubemap = vp*cubemap.model
 		cubemap.program.register(name: "mvp", value: mvpCubemap)
@@ -122,12 +135,37 @@ final class Renderer {
 		time += elapsed
 		update(elapsed:elapsed)
 		
-		internalRenderer.clear(color: true, depth: true)
+		internalRenderer.bindFramebuffer(i: 1)
+		internalRenderer.clear(color: false, depth: true)
+		internalRenderer.drawMesh(mesh: monkey.mesh, program: monkey.depthProgram, depthOnly: true)
+		internalRenderer.drawMesh(mesh: dragon.mesh, program: dragon.depthProgram, depthOnly: true)
+		internalRenderer.drawMesh(mesh: floor.mesh, program: floor.depthProgram, depthOnly: true)
+		
+		let depthMap = ScalarTexture(buffer: internalRenderer.flushDepthBuffer(), width: internalRenderer.width, height: internalRenderer.height)
+		floor.program.register(name: "zbuffer", value: depthMap)
+		monkey.program.register(name: "zbuffer", value: depthMap)
+		dragon.program.register(name: "zbuffer", value: depthMap)
+		
+		internalRenderer.bindFramebuffer(i: 0)
+		internalRenderer.clear(color: false, depth: true)
 		internalRenderer.drawMesh(mesh: monkey.mesh, program: monkey.program)
 		internalRenderer.drawMesh(mesh: dragon.mesh, program: dragon.program)
 		internalRenderer.drawMesh(mesh: floor.mesh, program: floor.program)
-		
 		internalRenderer.drawMesh(mesh: cubemap.mesh, program: cubemap.program)
+		//internalRenderer.bindFramebuffer(i: 1)
+		/*let bb = internalRenderer.flushDepthBuffer()
+		var bbmin = bb[0]
+		var bbmax = bb[0]
+		for b in bb {
+			if b < bbmin {
+				bbmin = b
+			}
+			if b > bbmax {
+				bbmax = b
+			}
+		}
+		print(bbmin, bbmax)*/
+	//	internalRenderer.bindFramebuffer(i: 1)
 		
 	}
 	

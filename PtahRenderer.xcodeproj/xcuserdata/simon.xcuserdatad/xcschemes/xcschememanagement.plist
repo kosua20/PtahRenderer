@@ -4,12 +4,12 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>PtahRendererOffline.xcscheme</key>
+		<key>PtahRendererDemoOffline.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
-		<key>PtahRendererOnline.xcscheme</key>
+		<key>PtahRendererDemoOnline.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>

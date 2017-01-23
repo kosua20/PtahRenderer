@@ -2,42 +2,11 @@
 //  Shaders.swift
 //  PtahRenderer
 //
-//  Created by Simon Rodriguez on 16/02/2016.
-//  Copyright © 2016 Simon Rodriguez. All rights reserved.
+//  Created by Simon Rodriguez on 23/01/2017.
+//  Copyright © 2017 Simon Rodriguez. All rights reserved.
 //
 
 import Foundation
-
-class Program  {
-	
-	fileprivate var others: [String : Any] = [:]
-	fileprivate var textures: [String : Texture] = [:]
-	fileprivate var matrices: [String : Matrix4] = [:]
-	fileprivate var points4: [String : Point4] = [:]
-	fileprivate var points3: [String : Point3] = [:]
-	fileprivate var points2: [String : Point2] = [:]
-	fileprivate var scalars: [String : Scalar] = [:]
-	
-	
-	func vertexShader(_ input: InputVertex) -> OutputVertex { fatalError("Must Override") }
-	
-	func fragmentShader(_ input: InputFragment) -> Color? { fatalError("Must Override") }
-	
-	func register(name: String, value: Texture) { textures[name] = value }
-	
-	func register(name: String, value: Matrix4) { matrices[name] = value }
-	
-	func register(name: String, value: Point4) { points4[name] = value }
-	
-	func register(name: String, value: Point3) { points3[name] = value }
-	
-	func register(name: String, value: Point2) { points2[name] = value }
-	
-	func register(name: String, value: Scalar) { scalars[name] = value }
-	
-	func register(name: String, value: Any) { others[name] = value }
-}
-
 
 class DefaultProgram: Program {
 	
@@ -68,6 +37,20 @@ class SkyboxProgram: Program {
 	
 }
 
+
+class DepthProgram: Program {
+	
+	override func vertexShader(_ input: InputVertex) -> OutputVertex {
+		let position = matrices["mvp"]! * (input.v.0, input.v.1, input.v.2, 1.0)
+		return OutputVertex(v: position, t: input.t, n: input.n, others: [abs(position.2)])
+	}
+	
+	override func fragmentShader(_ input: InputFragment)-> Color! {
+		return (UInt8(255*input.others[0]*2.0),0,0)
+	}
+	
+}
+
 class NormalVisualizationProgram: Program {
 	
 	override func vertexShader(_ input: InputVertex) -> OutputVertex {
@@ -81,5 +64,3 @@ class NormalVisualizationProgram: Program {
 	}
 	
 }
-
-

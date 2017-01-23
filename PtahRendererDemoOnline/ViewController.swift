@@ -19,8 +19,8 @@ class ViewController: NSViewController {
 		self.view.window?.title = "Ptah"
 		
 		// Size of the Cocoa view.
-		let WIDTH = 500
-		let HEIGHT = 300
+		let WIDTH = 400
+		let HEIGHT = 250
 		self.view.setFrameSize(NSSize(width: WIDTH, height: HEIGHT))
 		self.imageView.setFrameSize(NSSize(width: WIDTH, height: HEIGHT))
 		

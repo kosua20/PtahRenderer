@@ -16,6 +16,7 @@ class Program  {
 	private(set) public var points3: [String : Point3] = [:]
 	private(set) public var points2: [String : Point2] = [:]
 	private(set) public var scalars: [String : Scalar] = [:]
+	private(set) public var buffers: [String : ScalarTexture] = [:]
 	private(set) public var others: [String : Any] = [:]
 	
 	func vertexShader(_ input: InputVertex) -> OutputVertex { fatalError("Must Override") }
@@ -33,6 +34,8 @@ class Program  {
 	func register(name: String, value: Point2) { points2[name] = value }
 	
 	func register(name: String, value: Scalar) { scalars[name] = value }
+	
+	func register(name: String, value: ScalarTexture) { buffers[name] = value }
 	
 	func register(name: String, value: Any) { others[name] = value }
 }

@@ -151,5 +151,73 @@ final class Texture {
 	/*subscript(uv: Point2) -> Pixel {
 		return self[uv.0 as Scalar, uv.1 as Scalar]
 	}*/
+
+}
+
+final class ScalarTexture {
+	
+	let width: Int
+	let height: Int
+	var values: [Scalar]
+	var mode: TextureMode = .clamp
+	var filtering: FilteringMode = .nearest
+	
+	init(buffer: [Scalar], width _width: Int, height _height: Int){
+		width = _width
+		height = _height
+		values = buffer
+	}
+	
+	
+	private subscript(a: Int, b: Int) -> Scalar {
+		
+		if mode == .clamp {
+			return values[clamp(b, 0, height-1) * width + clamp(a, 0, width-1)]
+		} else if mode == .wrap {
+			let nb = b%height
+			let na = a%width
+			return values[(nb < 0 ? nb + height : nb) * width + (na < 0 ? na + width : na)]
+		}
+		return values[b*width+a]
+	}
+	
+	subscript(u: Scalar, v: Scalar ) -> Scalar {
+		
+		let a = u*Scalar(width)
+		let b = v*Scalar(height)
+		
+		if filtering == .linear {
+			
+			let a0 = Int(floor(a))
+			let b0 = Int(floor(b))
+			let a1 = a0+1
+			let b1 = b0+1
+			let afrac = a - Scalar(a0)
+			let bfrac = b - Scalar(b0)
+			
+			let c00 = self[a0, b0]
+			let c01 = self[a0, b1]
+			let c10 = self[a1, b0]
+			let c11 = self[a1, b1]
+			
+			let d0 = ((1.0 - bfrac) * c00 + bfrac * c01)
+			let d1 = ((1.0 - bfrac) * c10 + bfrac * c11)
+			
+			return (1.0 - afrac) * d0 + afrac * d1
+		}
+		
+		return self[Int(a), Int(b)]
+		
+	}
+	
+	
+	private func flipVertically(){
+		let half = height >> 1
+		for y in 0..<half {
+			swap(&(values[y*width..<(y+1)*width]), &(values[width*(height-y-1)..<width*(height-y)]))
+		}
+	}
+	
 	
 }
+

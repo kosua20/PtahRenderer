@@ -29,15 +29,15 @@ final class TGALoader {
 		let data = NSMutableData()
 		
 		var header = [UInt8](repeating: 0, count: 18)
-		header[2]=2
-		header[8]  = 0;
-		header[9]  = 0;
-		header[10] = 0;
-		header[11] = 0;
-		header[12] = UInt8(width % 256);
-		header[13] = UInt8(width / 256);
-		header[14] = UInt8(height % 256);
-		header[15] = UInt8(height / 256);
+		header[2]  = 2
+		header[8]  = 0
+		header[9]  = 0
+		header[10] = 0
+		header[11] = 0
+		header[12] = UInt8(width % 256)
+		header[13] = UInt8(width / 256)
+		header[14] = UInt8(height % 256)
+		header[15] = UInt8(height / 256)
 		header[16] = 24; // bits per pixel
 		header[17] = 0; // image descriptor:
 		data.append(header, length: 18)

@@ -7,14 +7,23 @@
 //
 
 import Foundation
+
 print("Starting Ptah Renderer...")
 
-let renderer = Renderer(width: 512, height: 512)
-renderer.clear()
+let WIDTH = 800
+let HEIGHT = 600
 
-let pixels = renderer.renderBuffer()
+let renderer = Renderer(width: WIDTH, height: HEIGHT)
 
-let tim = time(nil)
-TGALoader.writeTGA(pixels, width: 512, height: 512, path: rootDir + "renders/im_\(tim).tga")
+renderer.render(elapsed: 0.0)
+
+var pixels = renderer.flushBuffer()
+
+let half = HEIGHT >> 1
+for y in 0..<half {
+	swap(&(pixels[y*WIDTH..<(y+1)*WIDTH]), &(pixels[WIDTH*(HEIGHT-y-1)..<WIDTH*(HEIGHT-y)]))
+}
+
+TGALoader.writeTGA(pixels: pixels, width: WIDTH, height: HEIGHT, path: rootDir + "renders/im_\(time(nil)).tga")
 
 print("Done!")

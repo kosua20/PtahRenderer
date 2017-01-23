@@ -29,7 +29,17 @@ final class Texture {
 	let components: Int
 	var pixels: [Pixel]
 	var mode: TextureMode = .clamp
-	var filtering: FilteringMode = .nearest
+	var filtering: FilteringMode = .linear
+	
+	
+	init(buffer: [Pixel], width _width: Int, height _height: Int){
+		
+		width = _width
+		height = _height
+		components = 4
+		pixels = buffer
+		
+	}
 	
 	
 	init(path: String){
@@ -217,16 +227,6 @@ final class ScalarTexture {
 		}
 		
 		return self[Int(a), Int(b)]
-		
-	}
-	
-	
-	private func flipVertically(){
-		
-		let half = height >> 1
-		for y in 0..<half {
-			swap(&(values[y*width..<(y+1)*width]), &(values[width*(height-y-1)..<width*(height-y)]))
-		}
 		
 	}
 	

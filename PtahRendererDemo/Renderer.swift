@@ -61,7 +61,7 @@ final class Renderer {
 		internalRenderer = InternalRenderer(width: width, height: height)
 		//internalRenderer.mode = .wireframe
 		// Add framebuffer for shadow mapping.
-		internalRenderer.addFramebuffer(width: 128, height: 128)
+		internalRenderer.addFramebuffer(width: 256, height: 256)
 		
 		// Load models.
 		var baseName = "dragon"
@@ -185,7 +185,16 @@ final class Renderer {
 	
 	
 	func flush() -> NSImage {
+		
 		return internalRenderer.flushImage()
+	
+	}
+	
+	
+	func flushBuffer() -> [Pixel] {
+	
+		return internalRenderer.flushBuffer()
+	
 	}
 	
 	

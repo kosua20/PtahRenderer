@@ -9,6 +9,20 @@
 import Foundation
 
 
+struct Face {
+	let v0: InputVertex
+	let v1: InputVertex
+	let v2: InputVertex
+}
+
+
+struct FaceIndices {
+	let v: Int
+	let t: Int
+	let n: Int
+}
+
+
 final class Mesh {
 	
 	var vertices: [Vertex] = []

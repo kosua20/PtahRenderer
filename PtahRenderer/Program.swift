@@ -8,6 +8,37 @@
 
 import Foundation
 
+
+struct InputVertex {
+	let v: Vertex
+	let t: UV
+	let n: Normal
+}
+
+
+struct OutputVertex {
+	var v: Point4
+	var t: UV
+	var n: Normal
+	var others : [Scalar]
+}
+
+
+struct OutputFace {
+	let v0: OutputVertex
+	let v1: OutputVertex
+	let v2: OutputVertex
+}
+
+
+struct InputFragment {
+	let p: (Int, Int, Float)
+	let n: Normal
+	let t: UV
+	let others: [Scalar]
+}
+
+
 class Program  {
 	
 	private(set) public var textures: [String : Texture] = [:]

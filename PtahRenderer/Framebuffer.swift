@@ -86,10 +86,6 @@ final class Framebuffer {
 	}
 	
 	
-	/*--Utilities----------------------------------------------*/
-	/*Courtesy of Simon Gladman, http://flexmonkey.blogspot.fr */
-	/*---------------------------------------------------------*/
-	
 	#if os(OSX)
 	
 	fileprivate let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
@@ -98,6 +94,7 @@ final class Framebuffer {
 	
 	internal func imageFromRGBA32Bitmap() -> NSImage {
 		
+		/* Utility courtesy of Simon Gladman, http://flexmonkey.blogspot.fr */
 		let bitsPerComponent:Int = 8
 		let bitsPerPixel:Int = 32
 		assert(pixels.count == width * height)

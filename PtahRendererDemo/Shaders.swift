@@ -11,6 +11,7 @@ import Foundation
 
 class ObjectProgram: Program {
 	
+	
 	override func vertexShader(_ input: InputVertex) -> OutputVertex {
 		
 		// Position and normals conversions.
@@ -23,7 +24,9 @@ class ObjectProgram: Program {
 		return OutputVertex(v: position, t: input.t, n: (normal.0, normal.1, normal.2),
 		                    others: [lightSpacePosition.0, lightSpacePosition.1, lightSpacePosition.2, lightSpacePosition.3,
 		                             viewSpacePosition.0, viewSpacePosition.1, viewSpacePosition.2])
+	
 	}
+	
 	
 	override func fragmentShader(_ input: InputFragment)-> Color! {
 		
@@ -59,51 +62,72 @@ class ObjectProgram: Program {
 		
 		// ambient + diffuse + specular, with an ambient color derived from the diffuse color.
 		return (0.25 + shadow * diffuseFactor) * diffuseColor + shadow * specularFactor * specularColor
+	
 	}
+	
 	
 }
 
 
 class SkyboxProgram: Program {
 	
+	
 	override func vertexShader(_ input: InputVertex) -> OutputVertex {
+	
 		let position = matrices["mvp"]! * (input.v.0, input.v.1, input.v.2, 1.0)
 		return OutputVertex(v: position, t: input.t, n: input.n, others: [])
+	
 	}
 	
+	
 	override func fragmentShader(_ input: InputFragment)-> Color {
+		
 		return (textures["texture"]!)[input.t.0, input.t.1].rgb
+	
 	}
+	
 	
 }
 
 
 class DepthProgram: Program {
 	
+	
 	override func vertexShader(_ input: InputVertex) -> OutputVertex {
+	
 		let position = matrices["mvp"]! * (input.v.0, input.v.1, input.v.2, 1.0)
 		return OutputVertex(v: position, t: input.t, n: input.n, others: [])
+	
 	}
 	
-	// Fragment shader won't be called.
+	
 	override func fragmentShader(_ input: InputFragment)-> Color! {
+		// Fragment shader won't be called.
 		return (255,0,0)
+		
 	}
+	
 	
 }
 
 
 class NormalVisualizationProgram: Program {
 	
+	
 	override func vertexShader(_ input: InputVertex) -> OutputVertex {
+	
 		let position = matrices["mvp"]! * (input.v.0, input.v.1, input.v.2, 1.0)
 		return OutputVertex(v: position, t: input.t, n: input.n, others: [])
+	
 	}
+	
 	
 	override func fragmentShader(_ input: InputFragment)-> Color {
 		// Transform the model space normal into a color by scaling/shifting.
 		let col = normalized(input.n)*Scalar(0.5)+(0.5,0.5,0.5)
 		return (UInt8(255.0 * col.0), UInt8(255.0 * col.1), UInt8(255.0 * col.2))
+	
 	}
+	
 	
 }

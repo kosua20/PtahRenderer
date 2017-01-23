@@ -18,6 +18,7 @@ let rootDir = NSFileManager.defaultManager().currentDirectoryPath + "/data/"
 let rootDir = "/Developer/Graphics/PtahRenderer/data/"
 #endif
 
+
 struct Camera {
 	var position: Vertex
 	var center: Vertex
@@ -38,52 +39,57 @@ struct Camera {
 	}
 }
 
+
 final class Renderer {
-	
-	private var width = 256
-	private var height = 256
 	
 	private var internalRenderer: InternalRenderer
 	
-	private var time : Scalar = 0.0
+	private var time: Scalar = 0.0
 	private var camera: Camera
-	private let lightDir: Point4 = (-0.57735, -0.57735, -0.57735, 0.0)
-	private let vpLight : Matrix4
+	
+	private let lightDir: Point4
+	private let vpLight: Matrix4
+	
 	private let dragon: Object
 	private let floor: Object
 	private let monkey: Object
 	private let cubemap: Object
 	
 	
-	init(width _width: Int, height _height: Int){
-		width = _width
-		height = _height
+	init(width: Int, height: Int){
 		
 		internalRenderer = InternalRenderer(width: width, height: height)
 		//internalRenderer.mode = .wireframe
+		// Add framebuffer for shadow mapping.
 		internalRenderer.addFramebuffer(width: 128, height: 128)
 		
+		// Load models.
 		var baseName = "dragon"
-		dragon = Object(meshPath: rootDir + "models/" + baseName + ".obj", textureNames: ["texture"], texturePaths: [rootDir + "textures/" + baseName + ".png"])
+		dragon = Object(meshPath: rootDir + "models/" + baseName + ".obj", program: ObjectProgram(),
+		                textureNames: ["texture"], texturePaths: [rootDir + "textures/" + baseName + ".png"])
 		baseName = "floor"
-		floor = Object(meshPath: rootDir + "models/" + baseName + ".obj"
-			, textureNames: ["texture"], texturePaths: [rootDir + "textures/" + baseName + ".png"])
+		floor = Object(meshPath: rootDir + "models/" + baseName + ".obj", program: ObjectProgram(),
+		               textureNames: ["texture"], texturePaths: [rootDir + "textures/" + baseName + ".png"])
 		baseName = "monkey"
-		monkey = Object(meshPath: rootDir + "models/" + baseName + ".obj"
-			, textureNames: ["texture"], texturePaths: [rootDir + "textures/" + baseName + ".png"])
+		monkey = Object(meshPath: rootDir + "models/" + baseName + ".obj", program: ObjectProgram(),
+		                textureNames: ["texture"], texturePaths: [rootDir + "textures/" + baseName + ".png"])
 		baseName = "cubemap"
-		cubemap = Object(meshPath: rootDir + "models/" + baseName + ".obj", program: SkyboxProgram()
-			, textureNames: ["texture"], texturePaths: [rootDir + "textures/" + baseName + ".png"])
+		cubemap = Object(meshPath: rootDir + "models/" + baseName + ".obj", program: SkyboxProgram(),
+		                 textureNames: ["texture"], texturePaths: [rootDir + "textures/" + baseName + ".png"])
 		
+		// Define initial model matrices.
 		dragon.model =  Matrix4.translationMatrix((-0.25,0.1,-0.25)) * Matrix4.scaleMatrix(0.75)
 		floor.model = Matrix4.translationMatrix((0.0,-0.5,0.0)) * Matrix4.scaleMatrix(2.0)
 		monkey.model =  Matrix4.translationMatrix((0.5,0.0,0.5)) * Matrix4.scaleMatrix(0.5)
 		cubemap.model = Matrix4.scaleMatrix(5.0)
 		
+		// Projection matrix and camera setting.
 		let proj = Matrix4.perspectiveMatrix(fov:70.0, aspect: Scalar(width)/Scalar(height), near: 0.5, far: 10.0)
 		let initialPos = 2.0*normalized((0.0, 0.5, 1.0))
 		camera = Camera(position: initialPos, center: (0.0, 0.0, 0.0), up: (0.0, 1.0, 0.0), projection: proj)
 		
+		// Light settings: direction and view-projection matrix.
+		lightDir = (-0.57735, -0.57735, -0.57735, 0.0)
 		vpLight = Matrix4.orthographicMatrix(right: 2.0, top: 2.0, near: 0.1, far: 100.0) *  Matrix4.lookAtMatrix(eye: (-lightDir.0, -lightDir.1, -lightDir.2), target: (0.0,0.0,0.0), up: (0.0,1.0,0.0))
 		
 	}
@@ -91,14 +97,16 @@ final class Renderer {
 	
 	func update(elapsed: Scalar){
 		
+		// Update camera position and matrix.
 		let theta : Float = 3.14159*time*0.1
 		camera.position =  2.0*normalized((cos(theta), 0.5, sin(theta)))
 		camera.update()
 		
+		// Update light direction in view space.
 		let lightViewDir4 = camera.view * lightDir
 		let lightViewDir = normalized((lightViewDir4.0, lightViewDir4.1, lightViewDir4.2))
 		
-		
+		// Dragon matrices.
 		let mvDragon = camera.view*dragon.model
 		let mvpDragon = camera.projection*mvDragon
 		let invMVDragon = inverse(transpose(mvDragon))
@@ -108,10 +116,10 @@ final class Renderer {
 		dragon.program.register(name: "mvp", value: mvpDragon)
 		dragon.program.register(name: "invmv", value: invMVDragon)
 		dragon.program.register(name: "lightDir", value: lightViewDir)
-		dragon.depthProgram.register(name: "mvp", value: mvpLightDragon)
 		dragon.program.register(name: "lightMvp", value: mvpLightDragon)
+		dragon.depthProgram.register(name: "mvp", value: mvpLightDragon)
 		
-		
+		// Floor matrices.
 		let mvFloor = camera.view*floor.model
 		let mvpFloor = camera.projection*mvFloor
 		let invMVFloor = inverse(transpose(mvFloor))
@@ -121,10 +129,10 @@ final class Renderer {
 		floor.program.register(name: "mvp", value: mvpFloor)
 		floor.program.register(name: "invmv", value: invMVFloor)
 		floor.program.register(name: "lightDir", value: lightViewDir)
-		floor.depthProgram.register(name: "mvp", value: mvpLightFloor)
 		floor.program.register(name: "lightMvp", value: mvpLightFloor)
+		floor.depthProgram.register(name: "mvp", value: mvpLightFloor)
 		
-		
+		// Monkey matrices (only animated object).
 		monkey.model = Matrix4.translationMatrix((0.5,0.0,0.5)) * Matrix4.scaleMatrix(0.4) * Matrix4.rotationMatrix(angle: time, axis: (0.0,1.0,0.0))
 		let mvMonkey = camera.view*monkey.model
 		let mvpMonkey = camera.projection*mvMonkey
@@ -135,54 +143,50 @@ final class Renderer {
 		monkey.program.register(name: "mvp", value: mvpMonkey)
 		monkey.program.register(name: "invmv", value: invMVMonkey)
 		monkey.program.register(name: "lightDir", value: lightViewDir)
-		monkey.depthProgram.register(name: "mvp", value: mvpLightMonkey)
 		monkey.program.register(name: "lightMvp", value: mvpLightMonkey)
+		monkey.depthProgram.register(name: "mvp", value: mvpLightMonkey)
 		
-		
+		// Cubemap matrix.
 		let mvpCubemap = camera.projection*camera.view*cubemap.model
 		cubemap.program.register(name: "mvp", value: mvpCubemap)
+		
 	}
 	
+	
 	func render(elapsed: Scalar){
+		
+		// Animation update.
 		time += elapsed
 		update(elapsed:elapsed)
 		
+		// First pass: draw depth only from light point of view, for shadow mapping.
 		internalRenderer.bindFramebuffer(i: 1)
 		internalRenderer.clear(color: false, depth: true)
 		internalRenderer.drawMesh(mesh: monkey.mesh, program: monkey.depthProgram, depthOnly: true)
 		internalRenderer.drawMesh(mesh: dragon.mesh, program: dragon.depthProgram, depthOnly: true)
 		internalRenderer.drawMesh(mesh: floor.mesh, program: floor.depthProgram, depthOnly: true)
 		
+		// Transfer the resulting depth map to the objects for the second pass.
 		let depthMap = ScalarTexture(buffer: internalRenderer.flushDepthBuffer(), width: internalRenderer.width, height: internalRenderer.height)
 		floor.program.register(name: "zbuffer", value: depthMap)
 		monkey.program.register(name: "zbuffer", value: depthMap)
 		dragon.program.register(name: "zbuffer", value: depthMap)
 		
+		// Second pass: draw objects with lighting and shadows. 
+		// We avoid clearing the color as the skybox will cover the whole screen.
 		internalRenderer.bindFramebuffer(i: 0)
 		internalRenderer.clear(color: false, depth: true)
 		internalRenderer.drawMesh(mesh: monkey.mesh, program: monkey.program)
 		internalRenderer.drawMesh(mesh: dragon.mesh, program: dragon.program)
 		internalRenderer.drawMesh(mesh: floor.mesh, program: floor.program)
 		internalRenderer.drawMesh(mesh: cubemap.mesh, program: cubemap.program)
-		//internalRenderer.bindFramebuffer(i: 1)
-		/*let bb = internalRenderer.flushDepthBuffer()
-		var bbmin = bb[0]
-		var bbmax = bb[0]
-		for b in bb {
-			if b < bbmin {
-				bbmin = b
-			}
-			if b > bbmax {
-				bbmax = b
-			}
-		}
-		print(bbmin, bbmax)*/
-	//	internalRenderer.bindFramebuffer(i: 1)
 		
 	}
+	
 	
 	func flush() -> NSImage {
 		return internalRenderer.flushImage()
 	}
+	
 	
 }

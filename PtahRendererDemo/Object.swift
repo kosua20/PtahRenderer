@@ -15,7 +15,7 @@ class Object {
 	let depthProgram: Program
 	var model: Matrix4 = Matrix4()
 	
-	init(meshPath: String, program: Program = DefaultProgram(), textureNames: [String], texturePaths: [String]) {
+	init(meshPath: String, program: Program, textureNames: [String], texturePaths: [String]) {
 		
 		self.mesh = Mesh(path: meshPath, shouldNormalize: true)
 		self.program = program

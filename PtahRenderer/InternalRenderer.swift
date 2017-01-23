@@ -174,8 +174,7 @@ final class InternalRenderer {
 							//Maybe need to compute the depth with the same interpolation ?
 							//let z = (persp.0 * v_s[0].2 + persp.1 * v_s[1].2 + persp.2 * v_s[2].2)
 							
-							if (buffers[currentBuffer].getDepth(x, y) > z){
-								
+							if (z < buffers[currentBuffer].getDepth(x, y)){
 								
 								let tex = barycentricInterpolation(coeffs: persp, t1: v_p.v0.t, t2: v_p.v1.t, t3: v_p.v2.t)
 								let nor = barycentricInterpolation(coeffs: persp, t1: v_p.v0.n, t2: v_p.v1.n, t3: v_p.v2.n)
@@ -375,6 +374,10 @@ final class InternalRenderer {
 		return buffers[currentBuffer].pixels
 	}
 	
+	
+	func flushDepthBuffer() -> [Scalar] {
+		return buffers[currentBuffer].zbuffer
+	}
 	
 	//MARK: OSX dependant
 	

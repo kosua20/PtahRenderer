@@ -22,7 +22,7 @@ final class Framebuffer {
 		width = _width
 		height = _height
 		pixels = [Pixel](repeating: Pixel(0), count: width*height)
-		zbuffer = [Scalar](repeating: Scalar.infinity, count: width*height)
+		zbuffer = [Scalar](repeating: 1.0, count: width*height)
 	}
 	
 	func set(_ x: Int, _ y: Int, _ color: Color){
@@ -65,7 +65,7 @@ final class Framebuffer {
 	
 	func clearDepth(){
 		for i in 0..<width*height {
-			zbuffer[i] = Scalar.infinity
+			zbuffer[i] = 1.0
 		}
 	}
 	

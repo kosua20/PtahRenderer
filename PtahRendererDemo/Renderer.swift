@@ -62,7 +62,7 @@ final class Renderer {
 		internalRenderer = InternalRenderer(width: width, height: height)
 		//internalRenderer.mode = .wireframe
 		// Add framebuffer for shadow mapping.
-		internalRenderer.addFramebuffer(width: 256, height: 256)
+		internalRenderer.addFramebuffer(width: 128, height: 128)
 		
 		// Load models.
 		var baseName = "dragon"

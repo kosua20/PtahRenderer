@@ -29,7 +29,7 @@ final class Texture {
 	let components: Int
 	var pixels: [Pixel]
 	var mode: TextureMode = .clamp
-	var filtering: FilteringMode = .linear
+	var filtering: FilteringMode = .nearest
 	
 	
 	init(buffer: [Pixel], width _width: Int, height _height: Int){
@@ -190,6 +190,7 @@ final class ScalarTexture {
 	private subscript(a: Int, b: Int) -> Scalar {
 		
 		if mode == .clamp {
+			
 			return values[clamp(b, 0, height-1) * width + clamp(a, 0, width-1)]
 		} else if mode == .wrap {
 			let nb = b%height

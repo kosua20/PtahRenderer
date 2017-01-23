@@ -42,8 +42,8 @@ class ObjectProgram: Program {
 		// Specular: Phong model.
 		let specularFactor : Scalar
 		if diffuseFactor > 0.0 {
-			let r = reflect(d,n)
-			let v = normalize(float3(-input.others[4],-input.others[5],-input.others[6]))
+			let r = reflect(d,n: n)
+			let v = normalize(-float3(input.others[4],input.others[5],input.others[6]))
 			specularFactor = pow(max(0.0, dot(r,v)), 64)
 		} else {
 			specularFactor = 0.0
@@ -52,10 +52,12 @@ class ObjectProgram: Program {
 		let specularColor : Color = (UInt8(255), UInt8(255), UInt8(255))
 		
 		// Shadow. Get coordinates in NDC space, extract depth.
+		
 		let ndcCoords = (1.0 / input.others[3]) * float3(input.others[0], input.others[1], input.others[2])
 		let currentDepth = ndcCoords.z;
 		// Read the corresponding depth in the depth map.
 		// We have to flip the texture vertically.
+		
 		let closestDepth = (buffers["zbuffer"]!)[ndcCoords.x*0.5+0.5, 0.5-ndcCoords.y*0.5]
 		// The fragment is in the shadow if it is further away from the light than the surface in the depth map.
 		// We introduce a bias factor to mitigate acnee.

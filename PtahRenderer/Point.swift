@@ -44,6 +44,7 @@ func !=(lhs: Point4, rhs: Point4) -> Bool {
 	return lhs.x != rhs.x || lhs.y != rhs.y || lhs.z != rhs.z || lhs.w != rhs.w
 }
 
+
 func clamp(_ x: Scalar, _ a: Scalar, _ b: Scalar) -> Scalar {
 	
 	return min(b, max(a, x))
@@ -64,12 +65,6 @@ func clamp(_ x: Int, _ a: Int, _ b: Int) -> Int {
 	
 }
 
-
-func clamp(_ x: float2, _ a: float2, _ b: float2) -> float2 {
-	
-	return min(b, max(a, x))
-	
-}
 
 
 public extension float3 {
@@ -97,9 +92,9 @@ public extension float4 {
 }
 
 
-func reflect(_ lhs: Point3, _ rhs: Point3) -> Point3 {
+/*func reflect(_ lhs: Point3, _ rhs: Point3) -> Point3 {
 	return lhs - 2.0 * dot(rhs, lhs) * rhs
-}
+}*/
 
 /*--Point2--------*/
 /*

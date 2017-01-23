@@ -74,8 +74,8 @@ func boundingBox(_ vs: [Point3], _ width: Int, _ height: Int) -> (Point2, Point2
 	let finalMaxX = clamp(max(mini.0, maxi.0), 0, lim.0)
 	let finalMaxY = clamp(max(mini.1, maxi.1), 0, lim.1)*/
 	
-	let finalMin = clamp(min(mini,maxi), float2(0.0), lim)
-	let finalMax = clamp(max(mini,maxi), float2(0.0), lim)
+	let finalMin = clamp(min(mini,maxi), min: float2(0.0), max: lim)
+	let finalMax = clamp(max(mini,maxi), min: float2(0.0), max: lim)
 	
 	return (finalMin, finalMax)
 	

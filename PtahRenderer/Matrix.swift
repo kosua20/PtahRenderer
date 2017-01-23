@@ -16,9 +16,9 @@ internal extension float4x4 {
 	
 	static func translationMatrix(_ t: Point3) -> Matrix4 {
 		var matrix = float4x4(1.0)
-		matrix[0][3] = t.x
-		matrix[1][3] = t.y
-		matrix[2][3] = t.z
+		matrix[3,0] = t.x
+		matrix[3,1] = t.y
+		matrix[3,2] = t.z
 		return matrix
 	}
 	
@@ -28,9 +28,9 @@ internal extension float4x4 {
 	
 	static func scaleMatrix(_ s: Point3) -> Matrix4 {
 		var matrix = float4x4(1.0)
-		matrix[0][0] = s.x
-		matrix[1][1] = s.y
-		matrix[2][2] = s.z
+		matrix[0,0] = s.x
+		matrix[1,1] = s.y
+		matrix[2,2] = s.z
 		return matrix
 	}
 	
@@ -47,17 +47,17 @@ internal extension float4x4 {
 		let xs = u.x * s
 		let ys = u.y * s
 		let zs = u.z * s
-		matrix[0][0] = u.x * u.x * mc + c
-		matrix[0][1] = xy - zs
-		matrix[0][2] = xz + ys
+		matrix[0,0] = u.x * u.x * mc + c
+		matrix[1,0] = xy - zs
+		matrix[2,0] = xz + ys
 		
-		matrix[1][0] = xy + zs
-		matrix[1][1] = u.y * u.y * mc + c
-		matrix[1][2] = yz - xs
+		matrix[0,1] = xy + zs
+		matrix[1,1] = u.y * u.y * mc + c
+		matrix[2,1] = yz - xs
 		
-		matrix[2][0] = xz - ys
-		matrix[2][1] = yz + xs
-		matrix[2][2] = u.z * u.z * mc + c
+		matrix[0,2] = xz - ys
+		matrix[1,2] = yz + xs
+		matrix[2,2] = u.z * u.z * mc + c
 		return matrix
 	}
 	
@@ -88,24 +88,24 @@ internal extension float4x4 {
 	}
 	
 	static func perspectiveMatrix(fov: Scalar, aspect: Scalar, near: Scalar, far: Scalar) -> Matrix4 {
-		var matrix = float4x4()
+		var matrix = float4x4(0.0)
 		let radfov = Scalar(M_PI) * fov / 180.0
 		let f = 1.0 / tan(radfov / 2.0)
-		matrix[0][0] = f / aspect
-		matrix[1][1] = f
-		matrix[2][2] = (far + near) / (near - far)
-		matrix[2][3] = (2.0 * far * near) / (near - far)
-		matrix[3][2] = -1.0
-		matrix[3][3] = 0.0
+		matrix[0,0] = f / aspect
+		matrix[1,1] = f
+		matrix[2,2] = (far + near) / (near - far)
+		matrix[3,2] = (2.0 * far * near) / (near - far)
+		matrix[2,3] = -1.0
+		matrix[3,3] = 0.0
 		return matrix
 	}
 	
 	static func orthographicMatrix(right: Scalar, top: Scalar, near: Scalar, far: Scalar) -> Matrix4 {
-		var matrix = Matrix4()
-		matrix[0][0] = 1.0 / right
-		matrix[1][1] = 1.0 / top
-		matrix[2][2] = 2.0 / (near - far)
-		matrix[2][3] = (2.0 * far * near) / (near - far)
+		var matrix = float4x4(1.0)
+		matrix[0,0] = 1.0 / right
+		matrix[1,1] = 1.0 / top
+		matrix[2,2] = 2.0 / (near - far)
+		matrix[3,2] = (2.0 * far * near) / (near - far)
 		return matrix
 	}
 }

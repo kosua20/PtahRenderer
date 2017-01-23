@@ -303,6 +303,15 @@ struct Matrix4 {
 		matrix.matrix[15] = 0.0
 		return matrix
 	}
+	
+	static func orthographicMatrix(right: Scalar, top: Scalar, near: Scalar, far: Scalar) -> Matrix4 {
+		var matrix = Matrix4()
+		matrix.matrix[0] = 1.0 / right
+		matrix.matrix[5] = 1.0 / top
+		matrix.matrix[10] = 2.0 / (near - far)
+		matrix.matrix[11] = (2.0 * far * near) / (near - far)
+		return matrix
+	}
 }
 
 func * (left: Matrix4, right: Matrix4) -> Matrix4 {

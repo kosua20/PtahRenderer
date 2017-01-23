@@ -16,7 +16,10 @@ typealias Color = (UInt8, UInt8, UInt8)
 /*-- Color---------*/
 
 func *(lhs: Scalar, rhs: Color) -> Color {
-	return (UInt8(lhs*Scalar(rhs.0)), UInt8(lhs*Scalar(rhs.1)), UInt8(lhs*Scalar(rhs.2)))
+	let r = clamp(lhs*Scalar(rhs.0),0,255)
+	let g = clamp(lhs*Scalar(rhs.1),0,255)
+	let b = clamp(lhs*Scalar(rhs.2),0,255)
+	return (UInt8(r), UInt8(g), UInt8(b))
 }
 
 func *(rhs: Color, lhs: Scalar) -> Color {
@@ -25,6 +28,13 @@ func *(rhs: Color, lhs: Scalar) -> Color {
 
 func /(lhs: Color, rhs: Scalar) -> Color {
 	return (UInt8(Scalar(lhs.0)/rhs), UInt8(Scalar(lhs.1)/rhs), UInt8(Scalar(lhs.2)/rhs))
+}
+
+func +(rhs: Color, lhs: Color) -> Color {
+	let r = clamp(Scalar(rhs.0)+Scalar(lhs.0),0,255)
+	let g = clamp(Scalar(rhs.1)+Scalar(lhs.1),0,255)
+	let b = clamp(Scalar(rhs.2)+Scalar(lhs.2),0,255)
+	return (UInt8(r), UInt8(g), UInt8(b))
 }
 
 

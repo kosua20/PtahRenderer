@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F42368F91C90625500500AE3 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42368F81C90625500500AE3 /* main.swift */; };
 		F42368FE1C90686400500AE3 /* InternalRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C6CF41C6FC76000C5F852 /* InternalRenderer.swift */; };
 		F42368FF1C90686400500AE3 /* TGALoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44A6D961C8F2B5900D12DBD /* TGALoader.swift */; };
 		F42369001C90686400500AE3 /* Program.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C1EF821C73DF6000551FAA /* Program.swift */; };
@@ -17,21 +16,25 @@
 		F42369041C90686400500AE3 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C6CFA1C6FD0A400C5F852 /* Types.swift */; };
 		F42369051C90686400500AE3 /* GeometricTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4998B7F1C7111FD00FEFFD4 /* GeometricTypes.swift */; };
 		F42369061C90686400500AE3 /* GeometricOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4998B811C7113EF00FEFFD4 /* GeometricOperations.swift */; };
-		F42369081C906A0700500AE3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42369071C906A0700500AE3 /* AppDelegate.swift */; };
-		F423690C1C906A1B00500AE3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F423690A1C906A1B00500AE3 /* ViewController.swift */; };
-		F423690E1C906A2E00500AE3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F423690D1C906A2E00500AE3 /* Assets.xcassets */; };
-		F42369111C906A3800500AE3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F423690F1C906A3800500AE3 /* Main.storyboard */; };
-		F4489A111E17D1F9008EDCAB /* Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4489A101E17D1F9008EDCAB /* Object.swift */; };
 		F44A6D971C8F2B5900D12DBD /* TGALoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44A6D961C8F2B5900D12DBD /* TGALoader.swift */; };
 		F4998B801C7111FD00FEFFD4 /* GeometricTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4998B7F1C7111FD00FEFFD4 /* GeometricTypes.swift */; };
 		F4998B821C7113EF00FEFFD4 /* GeometricOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4998B811C7113EF00FEFFD4 /* GeometricOperations.swift */; };
 		F4998B841C71188D00FEFFD4 /* Framebuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4998B831C71188D00FEFFD4 /* Framebuffer.swift */; };
-		F49B60E21E15BF0900973BDB /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49B60E11E15BF0900973BDB /* Renderer.swift */; };
+		F49998DA1E3654C400DC3F35 /* Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49998D71E3654C400DC3F35 /* Object.swift */; };
+		F49998DB1E3654C400DC3F35 /* Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49998D71E3654C400DC3F35 /* Object.swift */; };
+		F49998DC1E3654C400DC3F35 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49998D81E3654C400DC3F35 /* Renderer.swift */; };
+		F49998DD1E3654C400DC3F35 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49998D81E3654C400DC3F35 /* Renderer.swift */; };
+		F49998DE1E3654C400DC3F35 /* Shaders.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49998D91E3654C400DC3F35 /* Shaders.swift */; };
+		F49998DF1E3654C400DC3F35 /* Shaders.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49998D91E3654C400DC3F35 /* Shaders.swift */; };
+		F49998E21E3654D000DC3F35 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49998E11E3654D000DC3F35 /* main.swift */; };
+		F49998EA1E3654D700DC3F35 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49998E41E3654D700DC3F35 /* AppDelegate.swift */; };
+		F49998EB1E3654D700DC3F35 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F49998E51E3654D700DC3F35 /* Assets.xcassets */; };
+		F49998EC1E3654D700DC3F35 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F49998E61E3654D700DC3F35 /* Main.storyboard */; };
+		F49998EE1E3654D700DC3F35 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49998E91E3654D700DC3F35 /* ViewController.swift */; };
 		F49C6CF51C6FC76000C5F852 /* InternalRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C6CF41C6FC76000C5F852 /* InternalRenderer.swift */; };
 		F49C6CF71C6FD01E00C5F852 /* Texture.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C6CF61C6FD01E00C5F852 /* Texture.swift */; };
 		F49C6CF91C6FD02800C5F852 /* Mesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C6CF81C6FD02800C5F852 /* Mesh.swift */; };
 		F49C6CFB1C6FD0A400C5F852 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C6CFA1C6FD0A400C5F852 /* Types.swift */; };
-		F4A8FC4D1E35715A0057A99D /* Shaders.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A8FC4C1E35715A0057A99D /* Shaders.swift */; };
 		F4C1EF831C73DF6000551FAA /* Program.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C1EF821C73DF6000551FAA /* Program.swift */; };
 /* End PBXBuildFile section */
 
@@ -48,25 +51,25 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		F42368F61C90625500500AE3 /* PtahRendererOffline */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PtahRendererOffline; sourceTree = BUILT_PRODUCTS_DIR; };
-		F42368F81C90625500500AE3 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = main.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		F42369071C906A0700500AE3 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = AppDelegate.swift; path = PtahRendererOnline/AppDelegate.swift; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		F42369091C906A1B00500AE3 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = PtahRendererOnline/Info.plist; sourceTree = SOURCE_ROOT; };
-		F423690A1C906A1B00500AE3 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = PtahRendererOnline/ViewController.swift; sourceTree = SOURCE_ROOT; };
-		F423690D1C906A2E00500AE3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = PtahRendererOnline/Assets.xcassets; sourceTree = SOURCE_ROOT; };
-		F42369101C906A3800500AE3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = PtahRendererOnline/Base.lproj/Main.storyboard; sourceTree = SOURCE_ROOT; };
-		F4489A101E17D1F9008EDCAB /* Object.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Object.swift; path = ../PtahRenderer/Object.swift; sourceTree = "<group>"; };
+		F42368F61C90625500500AE3 /* PtahRendererDemoOffline */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PtahRendererDemoOffline; sourceTree = BUILT_PRODUCTS_DIR; };
 		F44A6D961C8F2B5900D12DBD /* TGALoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TGALoader.swift; sourceTree = "<group>"; };
 		F4998B7F1C7111FD00FEFFD4 /* GeometricTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = GeometricTypes.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F4998B811C7113EF00FEFFD4 /* GeometricOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = GeometricOperations.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F4998B831C71188D00FEFFD4 /* Framebuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = Framebuffer.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		F49B60E11E15BF0900973BDB /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Renderer.swift; path = ../PtahRenderer/Renderer.swift; sourceTree = "<group>"; };
-		F49C6CE21C6FC6F200C5F852 /* PtahRendererOnline.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PtahRendererOnline.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F49998D71E3654C400DC3F35 /* Object.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Object.swift; sourceTree = "<group>"; };
+		F49998D81E3654C400DC3F35 /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+		F49998D91E3654C400DC3F35 /* Shaders.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Shaders.swift; sourceTree = "<group>"; };
+		F49998E11E3654D000DC3F35 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		F49998E41E3654D700DC3F35 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		F49998E51E3654D700DC3F35 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F49998E71E3654D700DC3F35 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		F49998E81E3654D700DC3F35 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F49998E91E3654D700DC3F35 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		F49C6CE21C6FC6F200C5F852 /* PtahRendererOnline.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = PtahRendererOnline.app; path = PtahRendererDemoOnline.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F49C6CF41C6FC76000C5F852 /* InternalRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = InternalRenderer.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F49C6CF61C6FD01E00C5F852 /* Texture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Texture.swift; sourceTree = "<group>"; };
 		F49C6CF81C6FD02800C5F852 /* Mesh.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = Mesh.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F49C6CFA1C6FD0A400C5F852 /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
-		F4A8FC4C1E35715A0057A99D /* Shaders.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Shaders.swift; path = PtahRenderer/Shaders.swift; sourceTree = SOURCE_ROOT; };
 		F4C1EF821C73DF6000551FAA /* Program.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Program.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -88,15 +91,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		F42368F71C90625500500AE3 /* PtahRendererDemoOffline */ = {
-			isa = PBXGroup;
-			children = (
-				F42368F81C90625500500AE3 /* main.swift */,
-			);
-			name = PtahRendererDemoOffline;
-			path = PtahRendererOffline;
-			sourceTree = "<group>";
-		};
 		F42368FD1C90626800500AE3 /* PtahRenderer */ = {
 			isa = PBXGroup;
 			children = (
@@ -111,13 +105,43 @@
 			path = PtahRenderer;
 			sourceTree = "<group>";
 		};
+		F49998D61E3654C400DC3F35 /* PtahRendererDemo */ = {
+			isa = PBXGroup;
+			children = (
+				F49998D71E3654C400DC3F35 /* Object.swift */,
+				F49998D81E3654C400DC3F35 /* Renderer.swift */,
+				F49998D91E3654C400DC3F35 /* Shaders.swift */,
+			);
+			path = PtahRendererDemo;
+			sourceTree = "<group>";
+		};
+		F49998E01E3654D000DC3F35 /* PtahRendererDemoOffline */ = {
+			isa = PBXGroup;
+			children = (
+				F49998E11E3654D000DC3F35 /* main.swift */,
+			);
+			path = PtahRendererDemoOffline;
+			sourceTree = "<group>";
+		};
+		F49998E31E3654D700DC3F35 /* PtahRendererDemoOnline */ = {
+			isa = PBXGroup;
+			children = (
+				F49998E41E3654D700DC3F35 /* AppDelegate.swift */,
+				F49998E51E3654D700DC3F35 /* Assets.xcassets */,
+				F49998E61E3654D700DC3F35 /* Main.storyboard */,
+				F49998E81E3654D700DC3F35 /* Info.plist */,
+				F49998E91E3654D700DC3F35 /* ViewController.swift */,
+			);
+			path = PtahRendererDemoOnline;
+			sourceTree = "<group>";
+		};
 		F49C6CD91C6FC6F100C5F852 = {
 			isa = PBXGroup;
 			children = (
 				F42368FD1C90626800500AE3 /* PtahRenderer */,
-				F4A8FC4B1E3570390057A99D /* PtahRendererDemo */,
-				F49C6CE41C6FC6F200C5F852 /* PtahRendererDemoOnline */,
-				F42368F71C90625500500AE3 /* PtahRendererDemoOffline */,
+				F49998D61E3654C400DC3F35 /* PtahRendererDemo */,
+				F49998E31E3654D700DC3F35 /* PtahRendererDemoOnline */,
+				F49998E01E3654D000DC3F35 /* PtahRendererDemoOffline */,
 				F49C6CE31C6FC6F200C5F852 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -126,33 +150,9 @@
 			isa = PBXGroup;
 			children = (
 				F49C6CE21C6FC6F200C5F852 /* PtahRendererOnline.app */,
-				F42368F61C90625500500AE3 /* PtahRendererOffline */,
+				F42368F61C90625500500AE3 /* PtahRendererDemoOffline */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		F49C6CE41C6FC6F200C5F852 /* PtahRendererDemoOnline */ = {
-			isa = PBXGroup;
-			children = (
-				F42369071C906A0700500AE3 /* AppDelegate.swift */,
-				F42369091C906A1B00500AE3 /* Info.plist */,
-				F423690F1C906A3800500AE3 /* Main.storyboard */,
-				F423690A1C906A1B00500AE3 /* ViewController.swift */,
-				F423690D1C906A2E00500AE3 /* Assets.xcassets */,
-			);
-			name = PtahRendererDemoOnline;
-			path = PtahRenderer;
-			sourceTree = "<group>";
-		};
-		F4A8FC4B1E3570390057A99D /* PtahRendererDemo */ = {
-			isa = PBXGroup;
-			children = (
-				F49B60E11E15BF0900973BDB /* Renderer.swift */,
-				F4489A101E17D1F9008EDCAB /* Object.swift */,
-				F4A8FC4C1E35715A0057A99D /* Shaders.swift */,
-			);
-			name = PtahRendererDemo;
-			path = PtahRendererOffline;
 			sourceTree = "<group>";
 		};
 		F4EFB2961DEE1DE8007BFF66 /* Textures */ = {
@@ -176,9 +176,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		F42368F51C90625500500AE3 /* PtahRendererOffline */ = {
+		F42368F51C90625500500AE3 /* PtahRendererDemoOffline */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F42368FC1C90625500500AE3 /* Build configuration list for PBXNativeTarget "PtahRendererOffline" */;
+			buildConfigurationList = F42368FC1C90625500500AE3 /* Build configuration list for PBXNativeTarget "PtahRendererDemoOffline" */;
 			buildPhases = (
 				F42368F21C90625500500AE3 /* Sources */,
 				F42368F31C90625500500AE3 /* Frameworks */,
@@ -188,14 +188,14 @@
 			);
 			dependencies = (
 			);
-			name = PtahRendererOffline;
+			name = PtahRendererDemoOffline;
 			productName = PtahRendererOffline;
-			productReference = F42368F61C90625500500AE3 /* PtahRendererOffline */;
+			productReference = F42368F61C90625500500AE3 /* PtahRendererDemoOffline */;
 			productType = "com.apple.product-type.tool";
 		};
-		F49C6CE11C6FC6F200C5F852 /* PtahRendererOnline */ = {
+		F49C6CE11C6FC6F200C5F852 /* PtahRendererDemoOnline */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F49C6CF11C6FC6F200C5F852 /* Build configuration list for PBXNativeTarget "PtahRendererOnline" */;
+			buildConfigurationList = F49C6CF11C6FC6F200C5F852 /* Build configuration list for PBXNativeTarget "PtahRendererDemoOnline" */;
 			buildPhases = (
 				F49C6CDE1C6FC6F200C5F852 /* Sources */,
 				F49C6CDF1C6FC6F200C5F852 /* Frameworks */,
@@ -205,7 +205,7 @@
 			);
 			dependencies = (
 			);
-			name = PtahRendererOnline;
+			name = PtahRendererDemoOnline;
 			productName = PtahRenderer;
 			productReference = F49C6CE21C6FC6F200C5F852 /* PtahRendererOnline.app */;
 			productType = "com.apple.product-type.application";
@@ -243,8 +243,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				F49C6CE11C6FC6F200C5F852 /* PtahRendererOnline */,
-				F42368F51C90625500500AE3 /* PtahRendererOffline */,
+				F49C6CE11C6FC6F200C5F852 /* PtahRendererDemoOnline */,
+				F42368F51C90625500500AE3 /* PtahRendererDemoOffline */,
 			);
 		};
 /* End PBXProject section */
@@ -254,8 +254,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F42369111C906A3800500AE3 /* Main.storyboard in Resources */,
-				F423690E1C906A2E00500AE3 /* Assets.xcassets in Resources */,
+				F49998EB1E3654D700DC3F35 /* Assets.xcassets in Resources */,
+				F49998EC1E3654D700DC3F35 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,14 +266,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F49998DB1E3654C400DC3F35 /* Object.swift in Sources */,
+				F49998E21E3654D000DC3F35 /* main.swift in Sources */,
 				F42369031C90686400500AE3 /* Mesh.swift in Sources */,
 				F42368FE1C90686400500AE3 /* InternalRenderer.swift in Sources */,
 				F42369021C90686400500AE3 /* Texture.swift in Sources */,
+				F49998DD1E3654C400DC3F35 /* Renderer.swift in Sources */,
 				F42369041C90686400500AE3 /* Types.swift in Sources */,
+				F49998DF1E3654C400DC3F35 /* Shaders.swift in Sources */,
 				F42369051C90686400500AE3 /* GeometricTypes.swift in Sources */,
 				F42368FF1C90686400500AE3 /* TGALoader.swift in Sources */,
 				F42369001C90686400500AE3 /* Program.swift in Sources */,
-				F42368F91C90625500500AE3 /* main.swift in Sources */,
 				F42369011C90686400500AE3 /* Framebuffer.swift in Sources */,
 				F42369061C90686400500AE3 /* GeometricOperations.swift in Sources */,
 			);
@@ -283,18 +286,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F42369081C906A0700500AE3 /* AppDelegate.swift in Sources */,
+				F49998DA1E3654C400DC3F35 /* Object.swift in Sources */,
 				F49C6CF91C6FD02800C5F852 /* Mesh.swift in Sources */,
 				F49C6CF71C6FD01E00C5F852 /* Texture.swift in Sources */,
 				F49C6CFB1C6FD0A400C5F852 /* Types.swift in Sources */,
-				F49B60E21E15BF0900973BDB /* Renderer.swift in Sources */,
-				F423690C1C906A1B00500AE3 /* ViewController.swift in Sources */,
-				F4A8FC4D1E35715A0057A99D /* Shaders.swift in Sources */,
+				F49998EE1E3654D700DC3F35 /* ViewController.swift in Sources */,
+				F49998DC1E3654C400DC3F35 /* Renderer.swift in Sources */,
 				F4998B841C71188D00FEFFD4 /* Framebuffer.swift in Sources */,
+				F49998DE1E3654C400DC3F35 /* Shaders.swift in Sources */,
 				F4998B801C7111FD00FEFFD4 /* GeometricTypes.swift in Sources */,
+				F49998EA1E3654D700DC3F35 /* AppDelegate.swift in Sources */,
 				F4C1EF831C73DF6000551FAA /* Program.swift in Sources */,
 				F49C6CF51C6FC76000C5F852 /* InternalRenderer.swift in Sources */,
-				F4489A111E17D1F9008EDCAB /* Object.swift in Sources */,
 				F44A6D971C8F2B5900D12DBD /* TGALoader.swift in Sources */,
 				F4998B821C7113EF00FEFFD4 /* GeometricOperations.swift in Sources */,
 			);
@@ -303,10 +306,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		F423690F1C906A3800500AE3 /* Main.storyboard */ = {
+		F49998E61E3654D700DC3F35 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				F42369101C906A3800500AE3 /* Base */,
+				F49998E71E3654D700DC3F35 /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -318,6 +321,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
+				LLVM_LTO = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -326,7 +330,9 @@
 		F42368FB1C90625500500AE3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
+				LLVM_LTO = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -422,7 +428,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = PtahRendererOnline/Info.plist;
+				INFOPLIST_FILE = PtahRendererDemoOnline/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LLVM_LTO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.simonrodriguez.PtahRenderer;
@@ -439,7 +445,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_OPTIMIZATION_LEVEL = fast;
-				INFOPLIST_FILE = PtahRendererOnline/Info.plist;
+				INFOPLIST_FILE = PtahRendererDemoOnline/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LLVM_LTO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.simonrodriguez.PtahRenderer;
@@ -452,7 +458,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		F42368FC1C90625500500AE3 /* Build configuration list for PBXNativeTarget "PtahRendererOffline" */ = {
+		F42368FC1C90625500500AE3 /* Build configuration list for PBXNativeTarget "PtahRendererDemoOffline" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F42368FA1C90625500500AE3 /* Debug */,
@@ -470,7 +476,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F49C6CF11C6FC6F200C5F852 /* Build configuration list for PBXNativeTarget "PtahRendererOnline" */ = {
+		F49C6CF11C6FC6F200C5F852 /* Build configuration list for PBXNativeTarget "PtahRendererDemoOnline" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F49C6CF21C6FC6F200C5F852 /* Debug */,

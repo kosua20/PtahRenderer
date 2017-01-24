@@ -29,7 +29,7 @@ final class Texture {
 	let components: Int
 	var pixels: [Pixel]
 	var mode: TextureMode = .clamp
-	var filtering: FilteringMode = .nearest
+	var filtering: FilteringMode = .linear
 	
 	
 	init(buffer: [Pixel], width _width: Int, height _height: Int){
@@ -175,7 +175,7 @@ final class ScalarTexture {
 	let height: Int
 	var values: [Scalar]
 	var mode: TextureMode = .clamp
-	var filtering: FilteringMode = .nearest
+	var filtering: FilteringMode = .linear
 	
 	
 	init(buffer: [Scalar], width _width: Int, height _height: Int){

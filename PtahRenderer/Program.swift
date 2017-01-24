@@ -53,19 +53,19 @@ class Program  {
 	
 	func fragmentShader(_ input: InputFragment) -> Color? { fatalError("Must Override") }
 	
-	func register(name: Int = -1, value: Texture) { if name < 0 { textures.append(value) } else { textures[name] = value } }
+	func register(index: Int = -1, value: Texture) { if index < 0 { textures.append(value) } else { textures[index] = value } }
 	
-	func register(name: Int = -1, value: Matrix4) { if name < 0 { matrices.append(value) } else { matrices[name] = value } }
+	func register(index: Int = -1, value: Matrix4) { if index < 0 { matrices.append(value) } else { matrices[index] = value } }
 	
-	func register(name: Int = -1, value: Point4) { if name < 0 { points4.append(value) } else { points4[name] = value } }
+	func register(index: Int = -1, value: Point4) { if index < 0 { points4.append(value) } else { points4[index] = value } }
 	
-	func register(name: Int = -1, value: Point3) { if name < 0 { points3.append(value) } else { points3[name] = value } }
+	func register(index: Int = -1, value: Point3) { if index < 0 { points3.append(value) } else { points3[index] = value } }
 	
-	func register(name: Int = -1, value: Point2) { if name < 0 { points2.append(value) } else { points2[name] = value } }
+	func register(index: Int = -1, value: Point2) { if index < 0 { points2.append(value) } else { points2[index] = value } }
 	
-	func register(name: Int = -1, value: Scalar) { if name < 0 { scalars.append(value) } else { scalars[name] = value } }
+	func register(index: Int = -1, value: Scalar) { if index < 0 { scalars.append(value) } else { scalars[index] = value } }
 	
-	func register(name: Int = -1, value: ScalarTexture) { if name < 0 { buffers.append(value) } else { buffers[name] = value } }
+	func register(index: Int = -1, value: ScalarTexture) { if index < 0 { buffers.append(value) } else { buffers[index] = value } }
 
 }
 

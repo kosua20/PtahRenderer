@@ -55,10 +55,10 @@ internal extension Matrix4 {
 		let ys = u.y * s
 		let zs = u.z * s
 		
-		let matrix = Matrix4(rows: [float4(u.x * u.x * mc + c, xy - zs, xz + ys, 0.0),
-		                            float4(xy + zs, u.y * u.y * mc + c, yz - xs, 0.0),
-		                            float4(xz - ys, yz + xs, u.z * u.z * mc + c, 0.0),
-		                            float4(0.0,0.0,0.0,1.0)])
+		let matrix = Matrix4(rows: [Point4(u.x * u.x * mc + c, xy - zs, xz + ys, 0.0),
+		                            Point4(xy + zs, u.y * u.y * mc + c, yz - xs, 0.0),
+		                            Point4(xz - ys, yz + xs, u.z * u.z * mc + c, 0.0),
+		                            Point4(0.0,0.0,0.0,1.0)])
 		return matrix
 		
 	}

@@ -23,7 +23,7 @@ class Object {
 		
 		for i in 0..<min(textureNames.count, texturePaths.count) {
 			let texture = Texture(path: texturePaths[i])
-			program.register(name: textureNames[i], value: texture)
+			program.register(value: texture)
 		}
 		
 	}

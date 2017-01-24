@@ -113,12 +113,12 @@ final class Renderer {
 		let invMVDragon = mvDragon.transpose.inverse
 		let mvpLightDragon = vpLight*dragon.model
 		
-		dragon.program.register(name: "mv", value: mvDragon)
-		dragon.program.register(name: "mvp", value: mvpDragon)
-		dragon.program.register(name: "invmv", value: invMVDragon)
-		dragon.program.register(name: "lightDir", value: lightViewDir)
-		dragon.program.register(name: "lightMvp", value: mvpLightDragon)
-		dragon.depthProgram.register(name: "mvp", value: mvpLightDragon)
+		dragon.program.register(name: 0, value: mvDragon)
+		dragon.program.register(name: 1, value: mvpDragon)
+		dragon.program.register(name: 2, value: invMVDragon)
+		dragon.program.register(name: 0, value: lightViewDir)
+		dragon.program.register(name: 3, value: mvpLightDragon)
+		dragon.depthProgram.register(name: 0, value: mvpLightDragon)
 		
 		// Floor matrices.
 		let mvFloor = camera.view*floor.model
@@ -126,12 +126,12 @@ final class Renderer {
 		let invMVFloor = mvFloor.transpose.inverse
 		let mvpLightFloor = vpLight*floor.model
 		
-		floor.program.register(name: "mv", value: mvFloor)
-		floor.program.register(name: "mvp", value: mvpFloor)
-		floor.program.register(name: "invmv", value: invMVFloor)
-		floor.program.register(name: "lightDir", value: lightViewDir)
-		floor.program.register(name: "lightMvp", value: mvpLightFloor)
-		floor.depthProgram.register(name: "mvp", value: mvpLightFloor)
+		floor.program.register(name: 0, value: mvFloor)
+		floor.program.register(name: 1, value: mvpFloor)
+		floor.program.register(name: 2, value: invMVFloor)
+		floor.program.register(name: 0, value: lightViewDir)
+		floor.program.register(name: 3, value: mvpLightFloor)
+		floor.depthProgram.register(name: 0, value: mvpLightFloor)
 		
 		// Monkey matrices (only animated object).
 		monkey.model = Matrix4.translationMatrix(Point3(0.5,0.0,0.5)) * Matrix4.scaleMatrix(0.4) * Matrix4.rotationMatrix(angle: time, axis: Point3(0.0,1.0,0.0))
@@ -140,16 +140,16 @@ final class Renderer {
 		let invMVMonkey = mvMonkey.transpose.inverse
 		let mvpLightMonkey = vpLight*monkey.model
 		
-		monkey.program.register(name: "mv", value: mvMonkey)
-		monkey.program.register(name: "mvp", value: mvpMonkey)
-		monkey.program.register(name: "invmv", value: invMVMonkey)
-		monkey.program.register(name: "lightDir", value: lightViewDir)
-		monkey.program.register(name: "lightMvp", value: mvpLightMonkey)
-		monkey.depthProgram.register(name: "mvp", value: mvpLightMonkey)
+		monkey.program.register(name: 0, value: mvMonkey)
+		monkey.program.register(name: 1, value: mvpMonkey)
+		monkey.program.register(name: 2, value: invMVMonkey)
+		monkey.program.register(name: 0, value: lightViewDir)
+		monkey.program.register(name: 3, value: mvpLightMonkey)
+		monkey.depthProgram.register(name: 0, value: mvpLightMonkey)
 		
 		// Cubemap matrix.
 		let mvpCubemap = camera.projection*camera.view*cubemap.model
-		cubemap.program.register(name: "mvp", value: mvpCubemap)
+		cubemap.program.register(name: 0, value: mvpCubemap)
 		
 	}
 	
@@ -169,9 +169,9 @@ final class Renderer {
 		
 		// Transfer the resulting depth map to the objects for the second pass.
 		let depthMap = ScalarTexture(buffer: internalRenderer.flushDepthBuffer(), width: internalRenderer.width, height: internalRenderer.height)
-		floor.program.register(name: "zbuffer", value: depthMap)
-		monkey.program.register(name: "zbuffer", value: depthMap)
-		dragon.program.register(name: "zbuffer", value: depthMap)
+		floor.program.register(name: 0, value: depthMap)
+		monkey.program.register(name: 0, value: depthMap)
+		dragon.program.register(name: 0, value: depthMap)
 		
 		// Second pass: draw objects with lighting and shadows. 
 		// We avoid clearing the color as the skybox will cover the whole screen.

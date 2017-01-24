@@ -41,34 +41,31 @@ struct InputFragment {
 
 class Program  {
 	
-	private(set) public var textures: [String : Texture] = [:]
-	private(set) public var matrices: [String : Matrix4] = [:]
-	private(set) public var points4: [String : Point4] = [:]
-	private(set) public var points3: [String : Point3] = [:]
-	private(set) public var points2: [String : Point2] = [:]
-	private(set) public var scalars: [String : Scalar] = [:]
-	private(set) public var buffers: [String : ScalarTexture] = [:]
-	private(set) public var others: [String : Any] = [:]
+	internal(set) public var textures: [Texture] = []
+	internal(set) public var matrices: [Matrix4] = []
+	internal(set) public var points4: [Point4] = []
+	internal(set) public var points3: [Point3] = []
+	internal(set) public var points2: [Point2] = []
+	internal(set) public var scalars: [Scalar] = []
+	internal(set) public var buffers: [ScalarTexture] = []
 	
 	func vertexShader(_ input: InputVertex) -> OutputVertex { fatalError("Must Override") }
 	
 	func fragmentShader(_ input: InputFragment) -> Color? { fatalError("Must Override") }
 	
-	func register(name: String, value: Texture) { textures[name] = value }
+	func register(name: Int = -1, value: Texture) { if name < 0 { textures.append(value) } else { textures[name] = value } }
 	
-	func register(name: String, value: Matrix4) { matrices[name] = value }
+	func register(name: Int = -1, value: Matrix4) { if name < 0 { matrices.append(value) } else { matrices[name] = value } }
 	
-	func register(name: String, value: Point4) { points4[name] = value }
+	func register(name: Int = -1, value: Point4) { if name < 0 { points4.append(value) } else { points4[name] = value } }
 	
-	func register(name: String, value: Point3) { points3[name] = value }
+	func register(name: Int = -1, value: Point3) { if name < 0 { points3.append(value) } else { points3[name] = value } }
 	
-	func register(name: String, value: Point2) { points2[name] = value }
+	func register(name: Int = -1, value: Point2) { if name < 0 { points2.append(value) } else { points2[name] = value } }
 	
-	func register(name: String, value: Scalar) { scalars[name] = value }
+	func register(name: Int = -1, value: Scalar) { if name < 0 { scalars.append(value) } else { scalars[name] = value } }
 	
-	func register(name: String, value: ScalarTexture) { buffers[name] = value }
-	
-	func register(name: String, value: Any) { others[name] = value }
+	func register(name: Int = -1, value: ScalarTexture) { if name < 0 { buffers.append(value) } else { buffers[name] = value } }
 
 }
 

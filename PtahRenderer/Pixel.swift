@@ -11,43 +11,8 @@ import Foundation
 import simd
 
 
-typealias Color = (UInt8, UInt8, UInt8)
+typealias Color = Point3
 
-
-/*-- Color---------*/
-
-func *(lhs: Scalar, rhs: Color) -> Color {
-
-	let r = clamp(lhs*Scalar(rhs.0),0,255)
-	let g = clamp(lhs*Scalar(rhs.1),0,255)
-	let b = clamp(lhs*Scalar(rhs.2),0,255)
-	return (UInt8(r), UInt8(g), UInt8(b))
-
-}
-
-
-func *(rhs: Color, lhs: Scalar) -> Color {
-
-	return lhs*rhs
-
-}
-
-
-func /(lhs: Color, rhs: Scalar) -> Color {
-
-	return (UInt8(Scalar(lhs.0)/rhs), UInt8(Scalar(lhs.1)/rhs), UInt8(Scalar(lhs.2)/rhs))
-
-}
-
-
-func +(rhs: Color, lhs: Color) -> Color {
-	
-	let r = clamp(Scalar(rhs.0)+Scalar(lhs.0),0,255)
-	let g = clamp(Scalar(rhs.1)+Scalar(lhs.1),0,255)
-	let b = clamp(Scalar(rhs.2)+Scalar(lhs.2),0,255)
-	return (UInt8(r), UInt8(g), UInt8(b))
-	
-}
 
 
 /*--Pixel-----------*/
@@ -62,12 +27,12 @@ struct Pixel {
 	
 	var rgb: Color {
 		get {
-			return (r, g, b)
+			return Color(Scalar(r)/255.0, Scalar(g)/255.0, Scalar(b)/255.0)
 		}
-		set(newRgb) {
-			r = newRgb.0
-			g = newRgb.1
-			b = newRgb.2
+		set(newColor) {
+			r = UInt8(clamp(newColor.x*255, 0, 255))
+			g = UInt8(clamp(newColor.y*255, 0, 255))
+			b = UInt8(clamp(newColor.z*255, 0, 255))
 		}
 	}
 	

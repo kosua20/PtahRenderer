@@ -176,7 +176,6 @@ final class InternalRenderer {
 				//--- Shading
 				if mode == .shaded {
 					
-					//triangle(v_s, ws, f.n, f.t, program)
 					let (mini, maxi) = boundingBox(v_s, width, height)
 					
 					for x in Int(mini.x)...Int(maxi.x) {
@@ -189,10 +188,7 @@ final class InternalRenderer {
 							var persp = Point3(bary.x/v_p.v0.v.w, bary.y/v_p.v1.v.w, bary.z/v_p.v2.v.w)
 							persp =  (1.0 / (persp.x + persp.y + persp.z)) * persp
 							
-							
 							let z = v_s[0].z * bary.x + v_s[1].z * bary.y + v_s[2].z * bary.z
-							//Maybe need to compute the depth with the same interpolation ?
-							//let z = (persp.0 * v_s[0].2 + persp.1 * v_s[1].2 + persp.2 * v_s[2].2)
 							
 							if (z < buffers[currentBuffer].getDepth(x, y)){
 								if depthOnly {
@@ -215,7 +211,7 @@ final class InternalRenderer {
 						}
 					}
 				} else if mode == .wireframe {
-					triangleWire([Point2(v_s[0].x,v_s[0].y), Point2(v_s[1].x,v_s[1].y), Point2(v_s[2].x,v_s[2].y)], (255,255,255))
+					triangleWire([Point2(v_s[0].x,v_s[0].y), Point2(v_s[1].x,v_s[1].y), Point2(v_s[2].x,v_s[2].y)], Color(1.0))
 				}
 			}
 		}
@@ -396,7 +392,7 @@ final class InternalRenderer {
 	func clear(color: Bool = true, depth: Bool = true){
 		
 		if(color){
-			buffers[currentBuffer].clearColor((0, 0, 0))
+			buffers[currentBuffer].clearColor(Color(0.0))
 		}
 		if(depth){
 			buffers[currentBuffer].clearDepth()

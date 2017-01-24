@@ -93,8 +93,8 @@ internal extension Matrix4 {
 	
 	
 	static func orthographicMatrix(right: Scalar, top: Scalar, near: Scalar, far: Scalar) -> Matrix4 {
-		var matrix = Matrix4(1.0)
 		
+		var matrix = Matrix4(1.0)
 		matrix[0,0] = 1.0 / right
 		matrix[1,1] = 1.0 / top
 		matrix[2,2] = 2.0 / (near - far)

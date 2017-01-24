@@ -49,7 +49,7 @@ class ObjectProgram: Program {
 			specularFactor = 0.0
 		}
 		// White light.
-		let specularColor : Color = (UInt8(255), UInt8(255), UInt8(255))
+		let specularColor = Color(1.0)
 		
 		// Shadow. Get coordinates in NDC space, extract depth.
 		
@@ -106,7 +106,7 @@ class DepthProgram: Program {
 	
 	override func fragmentShader(_ input: InputFragment)-> Color! {
 		// Fragment shader won't be called.
-		return (255,0,0)
+		return Color(1.0,0.0,0.0)
 		
 	}
 	
@@ -128,7 +128,7 @@ class NormalVisualizationProgram: Program {
 	override func fragmentShader(_ input: InputFragment)-> Color {
 		// Transform the model space normal into a color by scaling/shifting.
 		let col = normalize(input.n)*0.5+Point3(0.5)
-		return (UInt8(255.0 * col.x), UInt8(255.0 * col.y), UInt8(255.0 * col.z))
+		return col
 	
 	}
 	

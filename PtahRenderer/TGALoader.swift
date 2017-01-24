@@ -82,11 +82,15 @@ final class TGALoader {
 			pixels = [Pixel](repeating: Pixel(0), count: width * height)
 			if pixelDepth == 24 {
 				for i in 0..<(width * height){
-					pixels[i].rgb = (content[3*i+2], content[3*i+1], content[3*i])
+					pixels[i].r = content[3*i+2]
+					pixels[i].g = content[3*i+1]
+					pixels[i].b = content[3*i]
 				}
 			} else if pixelDepth == 32 {
 				for i in 0..<(width * height){
-					pixels[i].rgb = (content[4*i+2], content[4*i+1], content[4*i])
+					pixels[i].r = content[4*i+2]
+					pixels[i].g = content[4*i+1]
+					pixels[i].b = content[4*i]
 					pixels[i].a = content[4*i+3]
 				}
 			}

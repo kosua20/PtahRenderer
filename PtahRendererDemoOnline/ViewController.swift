@@ -24,7 +24,7 @@ class ViewController: NSViewController {
 		
 		// Size of the Cocoa view.
 		let WIDTH = 400
-		let HEIGHT = 250
+		let HEIGHT = 300
 		self.view.setFrameSize(NSSize(width: WIDTH, height: HEIGHT))
 		self.imageView.setFrameSize(NSSize(width: WIDTH, height: HEIGHT))
 		
@@ -60,6 +60,25 @@ class ViewController: NSViewController {
 	
 	}
 
+	
+	
+	override func mouseDragged(with event: NSEvent) {
+		
+		super.mouseDragged(with: event)
+		renderer.horizontalAngle += Scalar(event.deltaX)*0.01
+		renderer.verticalAngle += Scalar(event.deltaY)*0.01
+		renderer.verticalAngle = clamp(renderer.verticalAngle, -1.57, 1.57)
+		
+	}
+	
+	
+	override func scrollWheel(with event: NSEvent) {
+		
+		super.scrollWheel(with: event)
+		renderer.distance += Scalar(event.deltaY)*0.01
+		
+	}
 
+	
 }
 

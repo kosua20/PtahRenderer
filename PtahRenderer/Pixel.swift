@@ -8,6 +8,7 @@
 
 import Foundation
 
+import simd
 
 
 typealias Color = (UInt8, UInt8, UInt8)

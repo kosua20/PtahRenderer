@@ -15,14 +15,14 @@ class ObjectProgram: Program {
 	override func vertexShader(_ input: InputVertex) -> OutputVertex {
 		
 		// Position and normals conversions.
-		let input4 = float4(input.v, 1.0)
+		let input4 = Point4(input.v, 1.0)
 		let position = matrices["mvp"]! * input4
-		let normal = matrices["invmv"]! * float4(input.n, 0.0)
+		let normal = matrices["invmv"]! * Point4(input.n, 0.0)
 		let lightSpacePosition = matrices["lightMvp"]! * input4
 		let viewSpacePosition = matrices["mv"]! * input4
 		
 		// Output. 'others' contains a 4-components light space position and a 3-components view space position.
-		return OutputVertex(v: position, t: input.t, n: float3(normal),
+		return OutputVertex(v: position, t: input.t, n: Point3(normal),
 		                    others: [lightSpacePosition.x, lightSpacePosition.y, lightSpacePosition.z, lightSpacePosition.w,
 		                             viewSpacePosition.x, viewSpacePosition.y, viewSpacePosition.z])
 	
@@ -43,7 +43,7 @@ class ObjectProgram: Program {
 		let specularFactor : Scalar
 		if diffuseFactor > 0.0 {
 			let r = reflect(d,n: n)
-			let v = normalize(-float3(input.others[4],input.others[5],input.others[6]))
+			let v = normalize(-Point3(input.others[4],input.others[5],input.others[6]))
 			specularFactor = pow(max(0.0, dot(r,v)), 64)
 		} else {
 			specularFactor = 0.0
@@ -53,7 +53,7 @@ class ObjectProgram: Program {
 		
 		// Shadow. Get coordinates in NDC space, extract depth.
 		
-		let ndcCoords = (1.0 / input.others[3]) * float3(input.others[0], input.others[1], input.others[2])
+		let ndcCoords = (1.0 / input.others[3]) * Point3(input.others[0], input.others[1], input.others[2])
 		let currentDepth = ndcCoords.z;
 		// Read the corresponding depth in the depth map.
 		// We have to flip the texture vertically.
@@ -77,7 +77,7 @@ class SkyboxProgram: Program {
 	
 	override func vertexShader(_ input: InputVertex) -> OutputVertex {
 	
-		let position = matrices["mvp"]! * float4(input.v, 1.0)
+		let position = matrices["mvp"]! * Point4(input.v, 1.0)
 		return OutputVertex(v: position, t: input.t, n: input.n, others: [])
 	
 	}
@@ -98,7 +98,7 @@ class DepthProgram: Program {
 	
 	override func vertexShader(_ input: InputVertex) -> OutputVertex {
 	
-		let position = matrices["mvp"]! * float4(input.v, 1.0)
+		let position = matrices["mvp"]! * Point4(input.v, 1.0)
 		return OutputVertex(v: position, t: input.t, n: input.n, others: [])
 	
 	}
@@ -119,7 +119,7 @@ class NormalVisualizationProgram: Program {
 	
 	override func vertexShader(_ input: InputVertex) -> OutputVertex {
 	
-		let position = matrices["mvp"]! * float4(input.v, 1.0)
+		let position = matrices["mvp"]! * Point4(input.v, 1.0)
 		return OutputVertex(v: position, t: input.t, n: input.n, others: [])
 	
 	}
@@ -127,7 +127,7 @@ class NormalVisualizationProgram: Program {
 	
 	override func fragmentShader(_ input: InputFragment)-> Color {
 		// Transform the model space normal into a color by scaling/shifting.
-		let col = normalize(input.n)*0.5+float3(0.5)
+		let col = normalize(input.n)*0.5+Point3(0.5)
 		return (UInt8(255.0 * col.x), UInt8(255.0 * col.y), UInt8(255.0 * col.z))
 	
 	}

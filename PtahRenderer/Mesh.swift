@@ -44,14 +44,14 @@ final class Mesh {
 		for line in lines {
 			if (line.hasPrefix("v ")){//Vertex
 				var components = line.components(separatedBy: CharacterSet.whitespaces).filter({!$0.isEmpty})
-				vertices.append(float3(Scalar(components[1])!, Scalar(components[2])!, Scalar(components[3])!))
+				vertices.append(Point3(Scalar(components[1])!, Scalar(components[2])!, Scalar(components[3])!))
 			} else if (line.hasPrefix("vt ")) {//UV coords
 				var components = line.components(separatedBy: CharacterSet.whitespaces).filter({!$0.isEmpty})
-				uvs.append(float2(Scalar(components[1])!, Scalar(components[2])!))
+				uvs.append(Point2(Scalar(components[1])!, Scalar(components[2])!))
 				
 			} else if (line.hasPrefix("vn ")) {//Normal coords
 				var components = line.components(separatedBy: CharacterSet.whitespaces).filter({!$0.isEmpty})
-				normals.append(float3(Scalar(components[1])!, Scalar(components[2])!, Scalar(components[3])!))
+				normals.append(Point3(Scalar(components[1])!, Scalar(components[2])!, Scalar(components[3])!))
 			} else if (line.hasPrefix("f ")) {//Face with vertices/uv/normals
 				let components = line.components(separatedBy: CharacterSet.whitespaces).filter({!$0.isEmpty})
 				
@@ -83,7 +83,7 @@ final class Mesh {
 	
 	private func center(){
 		
-		var bary = vertices.reduce(float3(0.0, 0.0, 0.0), { $0 + $1 })
+		var bary = vertices.reduce(Point3(0.0, 0.0, 0.0), { $0 + $1 })
 		bary =  (1.0 / Scalar(vertices.count)) * bary
 		vertices = vertices.map({ $0 - bary })
 		

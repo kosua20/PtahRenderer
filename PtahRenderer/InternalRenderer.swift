@@ -113,13 +113,13 @@ final class InternalRenderer {
 				
 				let v_ndc = OutputFace(
 					v0: OutputVertex(
-						v: float4((1.0/v_proj.v0.v.w) * float3(v_proj.v0.v), v_proj.v0.v.w),
+						v: Point4((1.0/v_proj.v0.v.w) * Point3(v_proj.v0.v), v_proj.v0.v.w),
 						t: v_proj.v0.t, n: v_proj.v0.n, others: v_proj.v0.others),
 					v1: OutputVertex(
-						v: float4((1.0/v_proj.v1.v.w) * float3(v_proj.v1.v), v_proj.v1.v.w),
+						v: Point4((1.0/v_proj.v1.v.w) * Point3(v_proj.v1.v), v_proj.v1.v.w),
 						t: v_proj.v1.t, n: v_proj.v1.n, others: v_proj.v1.others),
 					v2: OutputVertex(
-						v: float4((1.0/v_proj.v2.v.w) * float3(v_proj.v2.v), v_proj.v2.v.w),
+						v: Point4((1.0/v_proj.v2.v.w) * Point3(v_proj.v2.v), v_proj.v2.v.w),
 						t: v_proj.v2.t, n: v_proj.v2.n, others: v_proj.v2.others)
 				)
 				
@@ -141,7 +141,7 @@ final class InternalRenderer {
 					vertices.remove(at: vertices.count - 1)
 				}
 				for i in 0..<vertices.count {
-					vertices[i].v = float4((1.0 / vertices[i].v.w) * float3(vertices[i].v) , vertices[i].v.w)
+					vertices[i].v = Point4((1.0 / vertices[i].v.w) * Point3(vertices[i].v) , vertices[i].v.w)
 				}
 				
 				for i in 1..<vertices.count-1 {
@@ -162,13 +162,13 @@ final class InternalRenderer {
 				}
 				
 				//--Screen space
-				let vs0 = float3(floor((v_p.v0.v.x + 1.0) * halfWidth),
+				let vs0 = Point3(floor((v_p.v0.v.x + 1.0) * halfWidth),
 				                 floor((-1.0 * v_p.v0.v.y + 1.0) * halfHeight),
 				                 v_p.v0.v.z)
-				let vs1 = float3(floor((v_p.v1.v.x + 1.0) * halfWidth),
+				let vs1 = Point3(floor((v_p.v1.v.x + 1.0) * halfWidth),
 				                 floor((-1.0 * v_p.v1.v.y + 1.0) * halfHeight),
 				                 v_p.v1.v.z)
-				let vs2 = float3(floor((v_p.v2.v.x + 1.0) * halfWidth),
+				let vs2 = Point3(floor((v_p.v2.v.x + 1.0) * halfWidth),
 				                 floor((-1.0 * v_p.v2.v.y + 1.0) * halfHeight),
 				                 v_p.v2.v.z)
 				let v_s = [vs0, vs1, vs2]
@@ -186,7 +186,7 @@ final class InternalRenderer {
 							
 							if (bary.x < 0.0 || bary.y < 0.0 || bary.z < 0.0){ continue }
 							
-							var persp = float3(bary.x/v_p.v0.v.w, bary.y/v_p.v1.v.w, bary.z/v_p.v2.v.w)
+							var persp = Point3(bary.x/v_p.v0.v.w, bary.y/v_p.v1.v.w, bary.z/v_p.v2.v.w)
 							persp =  (1.0 / (persp.x + persp.y + persp.z)) * persp
 							
 							
@@ -215,7 +215,7 @@ final class InternalRenderer {
 						}
 					}
 				} else if mode == .wireframe {
-					triangleWire([float2(v_s[0].x,v_s[0].y), float2(v_s[1].x,v_s[1].y), float2(v_s[2].x,v_s[2].y)], (255,255,255))
+					triangleWire([Point2(v_s[0].x,v_s[0].y), Point2(v_s[1].x,v_s[1].y), Point2(v_s[2].x,v_s[2].y)], (255,255,255))
 				}
 			}
 		}
@@ -324,22 +324,22 @@ final class InternalRenderer {
 			if (lc0 >> 3) == 1 {
 				//bottom
 				let nlp0x = (lp.x / lp.y) * (h - lp1.y) + lp1.x
-				nlp0 = float2(floor(nlp0x),h)
+				nlp0 = Point2(floor(nlp0x),h)
 				
 			} else if ((lc0 >> 2) & 0b1) == 1 {
 				//top
 				let nlp0x = (lp.x / lp.y) * (0 - lp1.y) + lp1.x
-				nlp0 = float2(floor(nlp0x),0)
+				nlp0 = Point2(floor(nlp0x),0)
 				
 			} else if ((lc0 >> 1) & 0b1) == 1 {
 				//right
 				let nlp0y = (lp.y / lp.x) * (w - lp1.x) + lp1.y
-				nlp0 = float2(w,floor(nlp0y))
+				nlp0 = Point2(w,floor(nlp0y))
 				
 			} else {
 				// left
 				let nlp0y = (lp.y / lp.x) * (0 - lp1.x) + lp1.y
-				nlp0 = float2(0,floor(nlp0y))
+				nlp0 = Point2(0,floor(nlp0y))
 				
 			}
 			// Update c0

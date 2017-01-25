@@ -10,7 +10,6 @@ import Cocoa
 
 class ViewController: NSViewController {
 
-	@IBOutlet weak var imageView: NSImageView!
 	fileprivate var renderer: Renderer!
 	fileprivate var timer: Timer!
 	fileprivate var lastTime = CFAbsoluteTimeGetCurrent()
@@ -23,14 +22,14 @@ class ViewController: NSViewController {
 		self.view.window?.title = "Ptah"
 		
 		// Size of the Cocoa view.
-		let WIDTH = 400
-		let HEIGHT = 300
+		let WIDTH = 256
+		let HEIGHT = 192
 		self.view.setFrameSize(NSSize(width: WIDTH, height: HEIGHT))
-		self.imageView.setFrameSize(NSSize(width: WIDTH, height: HEIGHT))
+		//self.imageView.setFrameSize(NSSize(width: WIDTH, height: HEIGHT))
 		
 		// Initialize renderer.
 		renderer = Renderer(width: WIDTH, height: HEIGHT)
-		
+		self.view.layer?.magnificationFilter = kCAFilterNearest
 		// Create timer with callback.
 		timer = Timer(timeInterval: 1.0 / 60.0, target: self, selector: #selector(ViewController.timerFired(_:)), userInfo: nil, repeats: true)
 		// Launch timer.s
@@ -46,9 +45,9 @@ class ViewController: NSViewController {
 		
 		// Render.
 		renderer.render(elapsed: Scalar(startTime - lastTime))
-		// Flush.
-		imageView.image = renderer.flush()
 		
+		// Flush.
+		self.view.layer?.contents = renderer.flush()
 		lastTime = startTime
 	
 		// Framerate display.

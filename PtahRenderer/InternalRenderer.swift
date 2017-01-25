@@ -419,10 +419,9 @@ final class InternalRenderer {
 	
 #if os(OSX)
 	
-	func flushImage() -> NSImage {
+	func flushImage() -> CGImage? {
 		
-		let image = buffers[currentBuffer].imageFromRGBA32Bitmap()
-		return image
+		return buffers[currentBuffer].imageFromRGBA32Bitmap()
 		
 	}
 	

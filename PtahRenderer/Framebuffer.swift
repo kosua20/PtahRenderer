@@ -92,7 +92,7 @@ final class Framebuffer {
 	fileprivate let bitmapInfo:CGBitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
 	
 	
-	internal func imageFromRGBA32Bitmap() -> NSImage {
+	internal func imageFromRGBA32Bitmap() -> CGImage? {
 		
 		/* Utility courtesy of Simon Gladman, http://flexmonkey.blogspot.fr */
 		let bitsPerComponent:Int = 8
@@ -104,14 +104,14 @@ final class Framebuffer {
 			return
 		}
 		guard let providerRef = CGDataProvider(dataInfo: nil, data: data , size: data.count * MemoryLayout<Pixel>.size, releaseData: callback) else {
-				return NSImage()
+				return nil
 		}
 		
-		let cgim = CGImage(width: width, height: height, bitsPerComponent: bitsPerComponent, bitsPerPixel: bitsPerPixel, bytesPerRow: width * Int(MemoryLayout<Pixel>.size), space: rgbColorSpace, bitmapInfo: bitmapInfo, provider: providerRef, decode: nil, shouldInterpolate: false, intent: .defaultIntent)
-		return NSImage(cgImage: cgim!, size: NSSize(width: width, height: height))
+		return CGImage(width: width, height: height, bitsPerComponent: bitsPerComponent, bitsPerPixel: bitsPerPixel, bytesPerRow: width * Int(MemoryLayout<Pixel>.size), space: rgbColorSpace, bitmapInfo: bitmapInfo, provider: providerRef, decode: nil, shouldInterpolate: false, intent: .defaultIntent)
 	
 	}
 	
+
 	#endif
 	
 }

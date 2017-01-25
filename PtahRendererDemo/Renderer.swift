@@ -71,13 +71,13 @@ final class Renderer {
 		
 		// Load models.
 		var baseName = "dragon"
-		dragon = Object(meshPath: rootDir + "models/" + baseName + ".obj", program: ObjectProgram(),
+		dragon = Object(meshPath: rootDir + "models/" + baseName + "4k.obj", program: ObjectProgram(),
 		                textureNames: ["texture"], texturePaths: [rootDir + "textures/" + baseName + ".png"])
 		baseName = "floor"
 		floor = Object(meshPath: rootDir + "models/" + baseName + ".obj", program: ObjectProgram(),
 		               textureNames: ["texture"], texturePaths: [rootDir + "textures/" + baseName + ".png"])
 		baseName = "monkey"
-		monkey = Object(meshPath: rootDir + "models/" + baseName + ".obj", program: ObjectProgram(),
+		monkey = Object(meshPath: rootDir + "models/" + baseName + "2k.obj", program: ObjectProgram(),
 		                textureNames: ["texture"], texturePaths: [rootDir + "textures/" + baseName + ".png"])
 		baseName = "cubemap"
 		cubemap = Object(meshPath: rootDir + "models/" + baseName + ".obj", program: SkyboxProgram(),
@@ -138,7 +138,7 @@ final class Renderer {
 		floor.program.register(index: 0, value: lightViewDir)
 		floor.program.register(index: 3, value: mvpLightFloor)
 		floor.depthProgram.register(index: 0, value: mvpLightFloor)
-		
+
 		// Monkey matrices (only animated object).
 		monkey.model = Matrix4.translationMatrix(Point3(0.5,0.0,0.5)) * Matrix4.scaleMatrix(0.4) * Matrix4.rotationMatrix(angle: time, axis: Point3(0.0,1.0,0.0))
 		let mvMonkey = camera.view*monkey.model
@@ -152,7 +152,7 @@ final class Renderer {
 		monkey.program.register(index: 0, value: lightViewDir)
 		monkey.program.register(index: 3, value: mvpLightMonkey)
 		monkey.depthProgram.register(index: 0, value: mvpLightMonkey)
-		
+
 		// Cubemap matrix.
 		let mvpCubemap = camera.projection*camera.view*cubemap.model
 		cubemap.program.register(index: 0, value: mvpCubemap)
@@ -191,9 +191,9 @@ final class Renderer {
 	}
 	
 	
-	func flush() -> NSImage {
+	func flush() -> CGImage {
 		
-		return internalRenderer.flushImage()
+		return internalRenderer.flushImage()!
 	
 	}
 	

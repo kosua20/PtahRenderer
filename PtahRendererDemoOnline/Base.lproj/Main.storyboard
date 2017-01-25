@@ -670,25 +670,10 @@
         <scene sceneID="hIz-AP-VOD">
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="PtahRendererDemoOnline" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" id="m2S-Jp-Qdl">
+                    <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl">
                         <rect key="frame" x="0.0" y="0.0" width="480" height="467"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <subviews>
-                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="4Zj-ee-18L">
-                                <rect key="frame" x="0.0" y="0.0" width="480" height="467"/>
-                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" id="470-xe-0o4"/>
-                            </imageView>
-                        </subviews>
-                        <constraints>
-                            <constraint firstItem="4Zj-ee-18L" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="7Gp-Th-v8L"/>
-                            <constraint firstAttribute="bottom" secondItem="4Zj-ee-18L" secondAttribute="bottom" id="MgF-hP-fZJ"/>
-                            <constraint firstItem="4Zj-ee-18L" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="iUy-pw-HVD"/>
-                            <constraint firstAttribute="trailing" secondItem="4Zj-ee-18L" secondAttribute="trailing" id="kL4-PB-XLn"/>
-                        </constraints>
                     </view>
-                    <connections>
-                        <outlet property="imageView" destination="4Zj-ee-18L" id="n8E-85-GgT"/>
-                    </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>

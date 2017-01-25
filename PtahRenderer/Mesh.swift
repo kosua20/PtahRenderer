@@ -97,16 +97,8 @@ final class Mesh {
 		for vert in vertices {
 			mini = min(mini, vert)
 			maxi = max(maxi, vert)
-			/*mini.x = min(mini.x, vert.x)
-			mini.y = min(mini.y, vert.y)
-			mini.z = min(mini.z, vert.z)
-			maxi.x = min(maxi.x, vert.x)
-			maxi.y = min(maxi.y, vert.y)
-			maxi.z = min(maxi.z, vert.z)*/
 		}
 		let maxfinal = max(abs(maxi), abs(mini))
-		/*let maxy = max(abs(maxi.y), abs(mini.y))
-		let maxz = max(abs(maxi.z), abs(mini.z))*/
 		//We have the highest distance from the origin, we want it to be smaller than 1
 		var truemax = max(maxfinal.x, maxfinal.y, maxfinal.z)
 		truemax = truemax == 0 ? 1.0 : truemax/scale

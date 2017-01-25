@@ -1,13 +1,12 @@
-![](images/icon.png)
+
 
 # PtahRenderer
 
 A small software graphics renderer.
 
-![Image produced with the software renderer](images/header.png)
+![](images/icon.png)
 
-
-Written using (among other things) :
+Written with the help of (among other things) :
 
 - *Interactive Computer Graphics - A Top-Down Approach*, 2012, E. Angel & D.Shreiner
 - *Introduction to Computer Graphics* course, M. Pauly, EPFL 2015
@@ -15,6 +14,9 @@ Written using (among other things) :
 - *Triangle rasterization in practice* and the following posts, F. Giesen, available [here](https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/)
 - *Rasterization: a Practical Implementation*, , available at [scratchapixel.com](https://www.scratchapixel.com/lessons/3d-basic-rendering/rasterization-practical-implementation/overview-rasterization-algorithm)
 - *How to write a (software) 3d polygon pipeline*, C. Bloom, available [here](http://www.cbloom.com/3d/techdocs/pipeline.txt)
+
+
+![Image produced with the software renderer](images/header.png)
 
 ###Done
 * General setup

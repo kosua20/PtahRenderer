@@ -1,11 +1,20 @@
-# PtahRenderer
-A small software graphics renderer
+![](images/icon.png)
 
-Work in progress, using (among other things) :
+# PtahRenderer
+
+A small software graphics renderer.
+
+![Image produced with the software renderer](images/header.png)
+
+
+Written using (among other things) :
 
 - *Interactive Computer Graphics - A Top-Down Approach*, 2012, E. Angel & D.Shreiner
 - *Introduction to Computer Graphics* course, M. Pauly, EPFL 2015
 - *How OpenGL works*, D. V. Sokolov, available at [github.com/ssloy/tinyrenderer](https://github.com/ssloy/tinyrenderer/wiki)
+- *Triangle rasterization in practice* and the following posts, F. Giesen, available [here](https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/)
+- *Rasterization: a Practical Implementation*, , available at [scratchapixel.com](https://www.scratchapixel.com/lessons/3d-basic-rendering/rasterization-practical-implementation/overview-rasterization-algorithm)
+- *How to write a (software) 3d polygon pipeline*, C. Bloom, available [here](http://www.cbloom.com/3d/techdocs/pipeline.txt)
 
 ###Done
 * General setup
@@ -18,9 +27,12 @@ Work in progress, using (among other things) :
 * View and world matrices
 * Back faces culling
 * Projection matrix
-
-###To do
 * Primitives clipping
 * Shaders (vertex, fragment)
 * Multi pass (for AO (SSAO or pre-computation), shadow maps, deferred shading)
-* ...
+* Off-line demo
+* Real-time demo
+
+###To do
+* Test on Linux, handle both builds in the master branch.
+* Optimizations...

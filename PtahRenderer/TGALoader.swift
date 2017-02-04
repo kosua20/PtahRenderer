@@ -21,10 +21,10 @@ import Foundation
 		- 3: B&W
 */
 
-final class TGALoader {
+public final class TGALoader {
 	
 	
-	static func writeTGA(pixels: [Pixel], width: Int, height: Int, path: String){
+	public static func writeTGA(pixels: [Pixel], width: Int, height: Int, path: String){
 		
 		let data = NSMutableData()
 		
@@ -44,19 +44,19 @@ final class TGALoader {
 		let imageLength = width*height*3
 		let pixeldata = pixels.flatMap({[$0.b, $0.g, $0.r]})
 		data.append(pixeldata, length: imageLength)
-		data.write(toFile: path.hasSuffix(".tga") ? path: (path + ".tga") , atomically: true)
+		let _ = data.write(toFile: path.hasSuffix(".tga") ? path: (path + ".tga") , atomically: true)
 		
 	}
 	
 	
-	static func loadTGA(path: String) -> (Int, Int, [Pixel]){
+	public static func loadTGA(path: String) -> (Int, Int, [Pixel]){
 		
 		guard let data = try? Data(contentsOf: URL(fileURLWithPath: path)) else {
 			assertionFailure("Couldn't load the tga")
 			return (0, 0, [])
 		}
 		var header: [UInt8] = [UInt8](repeating: 0, count: 18)
-		(data as NSData).getBytes(&header, range:NSRange(location:0, length:18))
+		data.copyBytes(to: &header, from:Range(uncheckedBounds: (lower: 0, upper: 18)))
 		
 		let useColorMap = header[1] != 0
 		
@@ -72,9 +72,9 @@ final class TGALoader {
 		let pixelDepth = header[16]
 		
 		let lengthImage = Int(pixelDepth) * width * height / 8
-		let range = NSRange(location:18+Int(IDLength), length:lengthImage)
+		let range =  Range(uncheckedBounds: (lower: 18+Int(IDLength), upper: 18+Int(IDLength)+lengthImage))
 		var content: [UInt8] = [UInt8](repeating: 0, count: lengthImage)
-		(data as NSData).getBytes(&content, range: range)
+		data.copyBytes(to: &content, from: range)
 		var pixels: [Pixel]
 		if pixelDepth == 8 {
 			pixels = content.map({Pixel($0, $0, $0)})

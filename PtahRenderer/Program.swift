@@ -9,64 +9,99 @@
 import Foundation
 
 
-struct InputVertex {
-	let v: Vertex
-	let t: UV
-	let n: Normal
+public struct InputVertex {
+	public let v: Vertex
+	public let t: UV
+	public let n: Normal
+	
+	public init(v iv: Vertex, t it: UV, n ni: Normal){
+		v = iv
+		t = it
+		n = ni
+	}
+	
 }
 
 
-struct OutputVertex {
-	var v: Point4
-	var t: UV
-	var n: Normal
-	var others : [Scalar]
+public struct OutputVertex {
+	public var v: Point4
+	public var t: UV
+	public var n: Normal
+	public var others : [Scalar]
+	
+	public init(v iv: Point4, t it: UV, n ni: Normal, others oi: [Scalar]){
+		v = iv
+		t = it
+		n = ni
+		others = oi
+	}
+	
 }
 
 
-struct OutputFace {
-	let v0: OutputVertex
-	let v1: OutputVertex
-	let v2: OutputVertex
+public struct OutputFace {
+	public let v0: OutputVertex
+	public let v1: OutputVertex
+	public let v2: OutputVertex
+	
+	public init(v0 iv0: OutputVertex, v1 iv1: OutputVertex, v2 iv2: OutputVertex){
+		v0 = iv0
+		v1 = iv1
+		v2 = iv2
+	}
+	
 }
 
 
-struct InputFragment {
-	let p: (Int, Int, Float)
-	let n: Normal
-	let t: UV
-	let others: [Scalar]
+public struct InputFragment {
+	public let p: (Int, Int, Float)
+	public let n: Normal
+	public let t: UV
+	public let others: [Scalar]
+	
+	public init(p ip:(Int, Int, Float), n ni: Normal, t it: UV, others oi: [Scalar]){
+		p = ip
+		n = ni
+		t = it
+		others = oi
+	}
+	
 }
 
 
-class Program  {
-	
-	internal(set) public var textures: [Texture] = []
-	internal(set) public var matrices: [Matrix4] = []
-	internal(set) public var points4: [Point4] = []
-	internal(set) public var points3: [Point3] = []
-	internal(set) public var points2: [Point2] = []
-	internal(set) public var scalars: [Scalar] = []
-	internal(set) public var buffers: [ScalarTexture] = []
-	
-	func vertexShader(_ input: InputVertex) -> OutputVertex { fatalError("Must Override") }
-	
-	func fragmentShader(_ input: InputFragment) -> Color? { fatalError("Must Override") }
-	
-	func register(index: Int = -1, value: Texture) { if index < 0 { textures.append(value) } else { textures[index] = value } }
-	
-	func register(index: Int = -1, value: Matrix4) { if index < 0 { matrices.append(value) } else { matrices[index] = value } }
-	
-	func register(index: Int = -1, value: Point4) { if index < 0 { points4.append(value) } else { points4[index] = value } }
-	
-	func register(index: Int = -1, value: Point3) { if index < 0 { points3.append(value) } else { points3[index] = value } }
-	
-	func register(index: Int = -1, value: Point2) { if index < 0 { points2.append(value) } else { points2[index] = value } }
-	
-	func register(index: Int = -1, value: Scalar) { if index < 0 { scalars.append(value) } else { scalars[index] = value } }
-	
-	func register(index: Int = -1, value: ScalarTexture) { if index < 0 { buffers.append(value) } else { buffers[index] = value } }
 
+open class Program  {
+	
+	public var textures: [Texture] = []
+	public var matrices: [Matrix4] = []
+	public var points4: [Point4] = []
+	public var points3: [Point3] = []
+	public var points2: [Point2] = []
+	public var scalars: [Scalar] = []
+	public var buffers: [ScalarTexture] = []
+	
+	public init(){
+		
+	}
+	
+	open func vertexShader(_ input: InputVertex) -> OutputVertex { fatalError("Must Override") }
+	
+	open func fragmentShader(_ input: InputFragment) -> Color? { fatalError("Must Override") }
+	
+	public func register(index: Int = -1, value: Texture) { if index < 0 { textures.append(value) } else { textures[index] = value } }
+	
+	public func register(index: Int = -1, value: Matrix4) { if index < 0 { matrices.append(value) } else { matrices[index] = value } }
+	
+	public func register(index: Int = -1, value: Point4) { if index < 0 { points4.append(value) } else { points4[index] = value } }
+	
+	public func register(index: Int = -1, value: Point3) { if index < 0 { points3.append(value) } else { points3[index] = value } }
+	
+	public func register(index: Int = -1, value: Point2) { if index < 0 { points2.append(value) } else { points2[index] = value } }
+	
+	public func register(index: Int = -1, value: Scalar) { if index < 0 { scalars.append(value) } else { scalars[index] = value } }
+	
+	public func register(index: Int = -1, value: ScalarTexture) { if index < 0 { buffers.append(value) } else { buffers[index] = value } }
+	
 }
 
 

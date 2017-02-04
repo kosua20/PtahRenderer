@@ -7,7 +7,11 @@
 //
 
 import Foundation
+
+#if os(macOS)
 import simd
+#endif
+
 
 /*--Barycentre-------*/
 

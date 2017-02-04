@@ -9,20 +9,20 @@
 import Foundation
 
 
-enum TextureMode {
+public enum TextureMode {
 	case clamp
 	case wrap
 	case unsafe
 }
 
 
-enum FilteringMode {
+public enum FilteringMode {
 	case nearest
 	case linear
 }
 
 
-final class Texture {
+public final class Texture {
 	
 	let width: Int
 	let height: Int
@@ -42,7 +42,7 @@ final class Texture {
 	}
 	
 	
-	init(path: String){
+	public init(path: String){
 		
 		if path.hasSuffix(".png"){
 			
@@ -87,6 +87,7 @@ final class Texture {
 					
 				}
 				
+				//PNG lines are reversed when loaded this way, flip the picture.
 				flipVertically()
 				return
 			}
@@ -99,7 +100,6 @@ final class Texture {
 			height = h
 			components = 3
 			pixels = p
-			flipVertically()
 			return
 		} else {
 			assert(false, "Only .png and .tga can currently be loaded.")
@@ -127,7 +127,7 @@ final class Texture {
 	}
 	
 	
-	subscript(u: Scalar, v: Scalar ) -> Pixel {
+	public subscript(u: Scalar, v: Scalar ) -> Pixel {
 		
 		let a = u*Scalar(width)
 		let b = v*Scalar(height)
@@ -169,7 +169,7 @@ final class Texture {
 }
 
 
-final class ScalarTexture {
+public final class ScalarTexture {
 	
 	let width: Int
 	let height: Int
@@ -178,7 +178,7 @@ final class ScalarTexture {
 	var filtering: FilteringMode = .linear
 	
 	
-	init(buffer: [Scalar], width _width: Int, height _height: Int){
+	public init(buffer: [Scalar], width _width: Int, height _height: Int){
 		
 		width = _width
 		height = _height
@@ -202,7 +202,7 @@ final class ScalarTexture {
 	}
 	
 	
-	subscript(u: Scalar, v: Scalar ) -> Scalar {
+	public subscript(u: Scalar, v: Scalar ) -> Scalar {
 		
 		let a = u*Scalar(width)
 		let b = v*Scalar(height)

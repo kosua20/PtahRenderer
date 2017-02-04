@@ -7,7 +7,8 @@
 //
 
 import Foundation
-#if os(OSX)
+
+#if os(macOS)
 import Cocoa
 #endif
 
@@ -86,7 +87,7 @@ final class Framebuffer {
 	}
 	
 	
-	#if os(OSX)
+#if os(macOS)
 	
 	fileprivate let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
 	fileprivate let bitmapInfo:CGBitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
@@ -112,6 +113,6 @@ final class Framebuffer {
 	}
 	
 
-	#endif
+#endif
 	
 }

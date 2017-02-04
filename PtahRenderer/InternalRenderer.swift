@@ -7,27 +7,27 @@
 //
 
 import Foundation
-import simd
 
-#if os(OSX)
-	import Cocoa
+#if os(macOS)
+import Cocoa
+import simd
 #endif
 
 
-enum RenderingMode {
+public enum RenderingMode {
 	case wireframe
 	case shaded
 }
 
 
-enum CullingMode {
+public enum CullingMode {
 	case backface
 	case none
 }
 
 
 
-final class InternalRenderer {
+public final class InternalRenderer {
 	
 	private(set) public var width = 256
 	private(set) public var height = 256
@@ -38,7 +38,7 @@ final class InternalRenderer {
 	var culling : CullingMode
 	
 	
-	init(width _width: Int, height _height: Int){
+	public init(width _width: Int, height _height: Int){
 		
 		width = _width
 		height = _height
@@ -50,14 +50,14 @@ final class InternalRenderer {
 	}
 	
 	
-	func addFramebuffer(width _width: Int, height _height: Int){
+	public func addFramebuffer(width _width: Int, height _height: Int){
 		
 		buffers.append(Framebuffer(width: _width, height: _height))
 		
 	}
 	
 	
-	func bindFramebuffer(i: Int){
+	public func bindFramebuffer(i: Int){
 		
 		if i < buffers.count {
 			currentBuffer = i
@@ -68,7 +68,7 @@ final class InternalRenderer {
 	}
 	
 	
-	func drawMesh(mesh: Mesh, program: Program, depthOnly: Bool = false){
+	public func drawMesh(mesh: Mesh, program: Program, depthOnly: Bool = false){
 		
 		let halfWidth = Scalar(width)*0.5
 		let halfHeight = Scalar(height)*0.5
@@ -254,7 +254,7 @@ final class InternalRenderer {
 	}
 	
 	
-	func clipPoint(vIn v0: OutputVertex, vOut v1: OutputVertex, dIn d0 : Scalar, dOut d1 : Scalar) -> OutputVertex {
+	private func clipPoint(vIn v0: OutputVertex, vOut v1: OutputVertex, dIn d0 : Scalar, dOut d1 : Scalar) -> OutputVertex {
 		
 		let factor = 1.0 / (d1 - d0)
 		var newOthers : [Scalar] = []
@@ -389,7 +389,7 @@ final class InternalRenderer {
 	}
 	
 	
-	func clear(color: Bool = true, depth: Bool = true){
+	public func clear(color: Bool = true, depth: Bool = true){
 		
 		if(color){
 			buffers[currentBuffer].clearColor(Color(0.0))
@@ -401,14 +401,14 @@ final class InternalRenderer {
 	}
 	
 	
-	func flushBuffer() -> [Pixel] {
+	public func flushBuffer() -> [Pixel] {
 		
 		return buffers[currentBuffer].pixels
 		
 	}
 	
 	
-	func flushDepthBuffer() -> [Scalar] {
+	public func flushDepthBuffer() -> [Scalar] {
 		
 		return buffers[currentBuffer].zbuffer
 		
@@ -417,9 +417,9 @@ final class InternalRenderer {
 	
 	//MARK: OSX dependant
 	
-#if os(OSX)
+#if os(macOS)
 	
-	func flushImage() -> CGImage? {
+	public func flushImage() -> CGImage? {
 		
 		return buffers[currentBuffer].imageFromRGBA32Bitmap()
 		

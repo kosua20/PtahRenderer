@@ -8,7 +8,9 @@
 
 import Foundation
 
+#if os(macOS)
 import simd
+#endif
 
 struct Face {
 	let v0: InputVertex
@@ -24,7 +26,7 @@ struct FaceIndices {
 }
 
 
-final class Mesh {
+public final class Mesh {
 	
 	var vertices: [Vertex] = []
 	var normals: [Normal] = []
@@ -33,7 +35,7 @@ final class Mesh {
 	var faces: [Face] = []
 	
 	
-	init(path: String, shouldNormalize: Bool = false){
+	public init(path: String, shouldNormalize: Bool = false){
 		
 		let stringContent = try? String(contentsOfFile: path, encoding: String.Encoding.utf8)
 		guard let lines = stringContent?.components(separatedBy: CharacterSet.newlines) else {

@@ -8,24 +8,24 @@
 
 import Foundation
 
+#if os(macOS)
 import simd
+#endif
 
-
-typealias Color = Point3
-
+public typealias Color = Point3
 
 
 /*--Pixel-----------*/
 
-struct Pixel {
+public struct Pixel {
 	
-	var r:UInt8
-	var g:UInt8
-	var b:UInt8
-	var a:UInt8 = 255
+	public var r:UInt8
+	public var g:UInt8
+	public var b:UInt8
+	public var a:UInt8 = 255
 	
 	
-	var rgb: Color {
+	public var rgb: Color {
 		get {
 			return Color(Scalar(r)/255.0, Scalar(g)/255.0, Scalar(b)/255.0)
 		}
@@ -37,14 +37,14 @@ struct Pixel {
 	}
 	
 	
-	init(_ _r: UInt8, _ _g: UInt8, _ _b: UInt8){
+	public init(_ _r: UInt8, _ _g: UInt8, _ _b: UInt8){
 		r = _r
 		g = _g
 		b = _b
 	}
 	
 	
-	init(_ _r: UInt8, _ _g: UInt8, _ _b: UInt8, _ _a: UInt8){
+	public init(_ _r: UInt8, _ _g: UInt8, _ _b: UInt8, _ _a: UInt8){
 		r = _r
 		g = _g
 		b = _b
@@ -52,7 +52,7 @@ struct Pixel {
 	}
 	
 	
-	init(_ val: UInt8){
+	public init(_ val: UInt8){
 		r = val
 		g = val
 		b = val
@@ -61,7 +61,7 @@ struct Pixel {
 }
 
 
-func *(lhs: Scalar, rhs: Pixel) -> Pixel {
+public func *(lhs: Scalar, rhs: Pixel) -> Pixel {
 	
 	let r = clamp(lhs * Scalar(rhs.r), 0, 255)
 	let g = clamp(lhs * Scalar(rhs.g), 0, 255)
@@ -71,7 +71,7 @@ func *(lhs: Scalar, rhs: Pixel) -> Pixel {
 	
 }
 
-func +(lhs: Pixel, rhs: Pixel) -> Pixel {
+public func +(lhs: Pixel, rhs: Pixel) -> Pixel {
 	
 	let r = clamp(lhs.r + rhs.r, 0, 255)
 	let g = clamp(lhs.g + rhs.g, 0, 255)

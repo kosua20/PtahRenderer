@@ -7,6 +7,12 @@
 //
 
 import Cocoa
+import PtahRenderer
+import PtahRendererDemo
+
+let WIDTH = 256
+let HEIGHT = 192
+let ROOTDIR = FileManager.default.currentDirectoryPath + "/data/"
 
 class ViewController: NSViewController {
 
@@ -22,13 +28,10 @@ class ViewController: NSViewController {
 		self.view.window?.title = "Ptah"
 		
 		// Size of the Cocoa view.
-		let WIDTH = 256
-		let HEIGHT = 192
 		self.view.setFrameSize(NSSize(width: WIDTH, height: HEIGHT))
-		//self.imageView.setFrameSize(NSSize(width: WIDTH, height: HEIGHT))
 		
 		// Initialize renderer.
-		renderer = Renderer(width: WIDTH, height: HEIGHT)
+		renderer = Renderer(width: WIDTH, height: HEIGHT, rootDir: ROOTDIR)
 		self.view.layer?.magnificationFilter = kCAFilterNearest
 		// Create timer with callback.
 		timer = Timer(timeInterval: 1.0 / 60.0, target: self, selector: #selector(ViewController.timerFired(_:)), userInfo: nil, repeats: true)

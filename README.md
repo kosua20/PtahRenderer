@@ -1,8 +1,7 @@
-
-
 # PtahRenderer
 
-A small software graphics renderer.
+A small software graphics renderer. Offline demo available on macOS and Linux (tested on Ubuntu), real-time demo on macOS only.
+Project can be built with the Swift Package Manager (`swift build`) on all platforms, or with Xcode (`PtahRenderer.xcodeproj`) on macOS.
 
 ![](images/icon.png)
 
@@ -32,9 +31,10 @@ Written with the help of (among other things) :
 * Primitives clipping
 * Shaders (vertex, fragment)
 * Multi pass (for AO (SSAO or pre-computation), shadow maps, deferred shading)
-* Off-line demo
+* Offline demo
 * Real-time demo
 
+
+
 ###To do
-* Test on Linux, handle both builds in the master branch.
 * Optimizations...

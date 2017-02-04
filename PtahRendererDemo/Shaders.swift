@@ -7,7 +7,11 @@
 //
 
 import Foundation
+import PtahRenderer
+
+#if os(macOS)
 import simd
+#endif
 
 class ObjectProgram: Program {
 	

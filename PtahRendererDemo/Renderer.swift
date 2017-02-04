@@ -7,17 +7,19 @@
 //
 
 import Foundation
-import simd
+import PtahRenderer
 
-#if os(OSX)
+#if os(macOS)
 import Cocoa
+import simd
 #endif
 
-#if os (Linux)
-let rootDir = NSFileManager.defaultManager().currentDirectoryPath + "/data/"
+#if os(macOS)
+let imageExt = ".png"
 #else
-let rootDir = "/Developer/Graphics/PtahRenderer/data/"
+let imageExt = ".tga"
 #endif
+
 
 
 struct Camera {
@@ -41,7 +43,7 @@ struct Camera {
 }
 
 
-final class Renderer {
+public final class Renderer {
 	
 	private var internalRenderer: InternalRenderer
 	
@@ -62,7 +64,7 @@ final class Renderer {
 	
 	
 	
-	init(width: Int, height: Int){
+	public init(width: Int, height: Int, rootDir: String){
 		
 		internalRenderer = InternalRenderer(width: width, height: height)
 		//internalRenderer.mode = .wireframe
@@ -72,16 +74,16 @@ final class Renderer {
 		// Load models.
 		var baseName = "dragon"
 		dragon = Object(meshPath: rootDir + "models/" + baseName + "4k.obj", program: ObjectProgram(),
-		                textureNames: ["texture"], texturePaths: [rootDir + "textures/" + baseName + ".png"])
+		                textureNames: ["texture"], texturePaths: [rootDir + "textures/" + baseName + imageExt])
 		baseName = "floor"
 		floor = Object(meshPath: rootDir + "models/" + baseName + ".obj", program: ObjectProgram(),
-		               textureNames: ["texture"], texturePaths: [rootDir + "textures/" + baseName + ".png"])
+		               textureNames: ["texture"], texturePaths: [rootDir + "textures/" + baseName + imageExt])
 		baseName = "monkey"
 		monkey = Object(meshPath: rootDir + "models/" + baseName + "2k.obj", program: ObjectProgram(),
-		                textureNames: ["texture"], texturePaths: [rootDir + "textures/" + baseName + ".png"])
+		                textureNames: ["texture"], texturePaths: [rootDir + "textures/" + baseName + imageExt])
 		baseName = "cubemap"
 		cubemap = Object(meshPath: rootDir + "models/" + baseName + ".obj", program: SkyboxProgram(),
-		                 textureNames: ["texture"], texturePaths: [rootDir + "textures/" + baseName + ".png"])
+		                 textureNames: ["texture"], texturePaths: [rootDir + "textures/" + baseName + imageExt])
 		
 		// Define initial model matrices.
 		dragon.model =  Matrix4.translationMatrix(Point3(-0.25,0.0,-0.25)) * Matrix4.scaleMatrix(0.75)
@@ -160,7 +162,7 @@ final class Renderer {
 	}
 	
 	
-	func render(elapsed: Scalar){
+	public func render(elapsed: Scalar){
 		
 		// Animation update.
 		time += elapsed
@@ -190,15 +192,23 @@ final class Renderer {
 		
 	}
 	
+#if os(macOS)
 	
-	func flush() -> CGImage {
+	public func flush() -> CGImage {
 		
 		return internalRenderer.flushImage()!
 	
 	}
+
+#else
 	
+	public func flush() -> [Pixel] {
+		return flushBuffer()
+	}
 	
-	func flushBuffer() -> [Pixel] {
+#endif
+	
+	public func flushBuffer() -> [Pixel] {
 	
 		return internalRenderer.flushBuffer()
 	

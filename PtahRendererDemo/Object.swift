@@ -7,8 +7,9 @@
 //
 
 import Foundation
+import PtahRenderer
 
-class Object {
+final class Object {
 	
 	let mesh: Mesh
 	let program: Program

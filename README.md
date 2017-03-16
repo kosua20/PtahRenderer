@@ -17,7 +17,7 @@ Written with the help of (among other things) :
 
 ![Image produced with the software renderer](images/header.png)
 
-###Done
+### Done
 * General setup
 * Mesh loading (OBJ with vertices, normals, texture coordinates, faces)
 * Texture loading (PNG, 1-3-4 channels, supports wrapping and clamping)
@@ -36,5 +36,5 @@ Written with the help of (among other things) :
 
 
 
-###To do
+### To do
 * Optimizations...

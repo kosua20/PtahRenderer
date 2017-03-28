@@ -88,7 +88,7 @@ public extension Matrix4 {
 	static func perspectiveMatrix(fov: Scalar, aspect: Scalar, near: Scalar, far: Scalar) -> Matrix4 {
 		
 		var matrix = Matrix4(0.0)
-		let radfov = Scalar(M_PI) * fov / 180.0
+		let radfov = .pi * fov / 180.0
 		let f = 1.0 / tan(radfov / 2.0)
 		matrix[0,0] = f / aspect
 		matrix[1,1] = f

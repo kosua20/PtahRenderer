@@ -7,5 +7,5 @@ let package = Package(
                Target(name: "PtahRendererDemoOffline", dependencies: ["PtahRendererDemo","PtahRenderer"])
             // ,  Target(name: "PtahRendererDemoOnline", dependencies: ["PtahRendererDemo","PtahRenderer"])
 	],
-	exclude: ["data", "ext", "images", "PtahRendererDemoOnline"]
+	exclude: ["data", "ext", "images", "renders", "PtahRendererDemoOnline"]
 )

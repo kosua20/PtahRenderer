@@ -15,6 +15,7 @@ print("Starting Ptah Renderer...")
 let WIDTH = 800
 let HEIGHT = 600
 let ROOTDIR = FileManager.default.currentDirectoryPath + "/data/"
+let IMAGEDIR = ROOTDIR + "../renders/"
 
 let renderer = Renderer(width: WIDTH, height: HEIGHT, rootDir: ROOTDIR)
 
@@ -27,6 +28,8 @@ for y in 0..<half {
 	swap(&(pixels[y*WIDTH..<(y+1)*WIDTH]), &(pixels[WIDTH*(HEIGHT-y-1)..<WIDTH*(HEIGHT-y)]))
 }
 
-TGALoader.writeTGA(pixels: pixels, width: WIDTH, height: HEIGHT, path: ROOTDIR + "renders/im_\(time(nil)).tga")
+print("Writing image in directory \(IMAGEDIR)")
+
+TGALoader.writeTGA(pixels: pixels, width: WIDTH, height: HEIGHT, path: IMAGEDIR + "im_\(time(nil)).tga")
 
 print("Done!")

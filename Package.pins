@@ -1,0 +1,18 @@
+{
+  "autoPin": true,
+  "pins": [
+    {
+      "package": "CGLFW3.git",
+      "reason": null,
+      "repositoryURL": "https://github.com/kosua20/CGLFW3.git",
+      "version": "1.4.0"
+    },
+    {
+      "package": "COpenGL.git",
+      "reason": null,
+      "repositoryURL": "https://github.com/kosua20/COpenGL.git",
+      "version": "1.0.0"
+    }
+  ],
+  "version": 1
+}

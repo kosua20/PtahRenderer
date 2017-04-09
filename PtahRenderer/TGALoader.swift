@@ -44,7 +44,10 @@ public final class TGALoader {
 		let imageLength = width*height*3
 		let pixeldata = pixels.flatMap({[$0.b, $0.g, $0.r]})
 		data.append(pixeldata, length: imageLength)
-		let _ = data.write(toFile: path.hasSuffix(".tga") ? path: (path + ".tga") , atomically: true)
+		let result = data.write(toFile: path.hasSuffix(".tga") ? path: (path + ".tga") , atomically: true)
+		if(!result){
+			print("Failed to write to path \(path)")
+		}
 		
 	}
 	

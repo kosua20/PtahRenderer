@@ -1,57 +1,43 @@
 import Foundation
+import PtahRenderer
+import PtahRendererDemo
 
 
-#if os(macOS)
-import Cocoa
-import OpenGL.GL3
-#else
-import COpenGL
-#endif
-
-import CGLFW3
+let WIDTH = 350
+let HEIGHT = 220
+let ROOTDIR = FileManager.default.currentDirectoryPath + "/data/"
 
 
-func main(){
+let window = GLWindow(width: WIDTH, height: HEIGHT)
 	
-	glfwInit()
-	defer { glfwTerminate() }
+let renderer = Renderer(width: WIDTH, height: HEIGHT, rootDir: ROOTDIR)
 	
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3)
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2)
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
-	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE)
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE)
-	
-	let window = glfwCreateWindow(800, 600, "Simulator", nil, nil)
-	glfwMakeContextCurrent(window)
-	guard window != nil else {
-		print("Error at GLFW3 window creation.")
-		return
-	}
-	
-	// On HiDPI screens, we might have to initially resize the framebuffers size.
-	var width : GLsizei = 0, height : GLsizei = 0
-	glfwGetFramebufferSize(window, &width, &height)
-	
-	glViewport(0,0,width, height)
-	glDisable(GLenum(GL_DEPTH_TEST))
-	glClearColor(1.0,0.0,0.0, 1.0)
-	
-	// Callbacks
-	//glfwSetFramebufferSizeCallback(window, resizeCallback)
-	//glfwSetScrollCallback(window, scrollCallback)
-	//glfwSetMouseButtonCallback(window, mouseButtonCallback)
-	//glfwSetCursorPosCallback (window, cursorPosCallback)
-	//glfwSetKeyCallback(window, keyCallback)
-	
-	// Main loop
-	while glfwWindowShouldClose(window) == GLFW_FALSE {
-		
-		glfwPollEvents()
-		glClear(GLenum(GL_COLOR_BUFFER_BIT))
-		glfwSwapBuffers(window)
-		
-	}
+var lastTime = CFAbsoluteTimeGetCurrent()
+
+// Callbacks for camera movements.
+
+func scrollCallback(yoffset: Double) {
+	renderer.distance += Scalar(yoffset)*0.01
 }
 
-main()
+func dragCallback(deltaX: Double, deltaY: Double){
+	renderer.horizontalAngle += Scalar(deltaX)*0.01
+	renderer.verticalAngle += Scalar(deltaY)*0.01
+	renderer.verticalAngle = clamp(renderer.verticalAngle, -1.57, 1.57)
+}
+
+// Main loop
+
+while !window.shouldClose() {
+	
+	let startTime = CFAbsoluteTimeGetCurrent()
+	renderer.render(elapsed: Scalar(startTime - lastTime))
+	lastTime = startTime
+	
+	let pixels = renderer.flushBuffer().flatMap({[$0.r, $0.g, $0.b]})
+	window.draw(pixels:pixels)
+	
+}
+
+
+

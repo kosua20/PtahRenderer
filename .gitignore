@@ -2,3 +2,4 @@ Data/renders
 ext/
 *.xcuserstate
 .build
+Package.pins

@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F4EFAC231E46960700126BAE"
+               BlueprintIdentifier = "F4F3D65B1E9E78AA009F43CC"
                BuildableName = "PtahRendererDemoOnline.app"
                BlueprintName = "PtahRendererDemoOnline"
                ReferencedContainer = "container:PtahRenderer.xcodeproj">
@@ -32,7 +32,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F4EFAC231E46960700126BAE"
+            BlueprintIdentifier = "F4F3D65B1E9E78AA009F43CC"
             BuildableName = "PtahRendererDemoOnline.app"
             BlueprintName = "PtahRendererDemoOnline"
             ReferencedContainer = "container:PtahRenderer.xcodeproj">
@@ -56,7 +56,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F4EFAC231E46960700126BAE"
+            BlueprintIdentifier = "F4F3D65B1E9E78AA009F43CC"
             BuildableName = "PtahRendererDemoOnline.app"
             BlueprintName = "PtahRendererDemoOnline"
             ReferencedContainer = "container:PtahRenderer.xcodeproj">
@@ -75,7 +75,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F4EFAC231E46960700126BAE"
+            BlueprintIdentifier = "F4F3D65B1E9E78AA009F43CC"
             BuildableName = "PtahRendererDemoOnline.app"
             BlueprintName = "PtahRendererDemoOnline"
             ReferencedContainer = "container:PtahRenderer.xcodeproj">

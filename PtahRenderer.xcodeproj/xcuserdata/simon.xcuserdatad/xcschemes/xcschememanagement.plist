@@ -19,10 +19,20 @@
 			<key>orderHint</key>
 			<integer>2</integer>
 		</dict>
+		<key>PtahRendererDemoOpenGL.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>F49A5BDF1E46956B00CC4E0E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F4B3F3111E9E779C00A9E39C</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -37,7 +47,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>F4F3D65B1E9E78AA009F43CC</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>OBJ_37</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>OBJ_52</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -47,7 +67,27 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>OBJ_63</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>OBJ_64</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>OBJ_75</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>OBJ_77</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>OBJ_90</key>
 		<dict>
 			<key>primary</key>
 			<true/>

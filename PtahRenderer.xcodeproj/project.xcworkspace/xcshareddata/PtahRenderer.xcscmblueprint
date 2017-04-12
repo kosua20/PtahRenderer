@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "AA8C7C685F6D77530EB08F8C627AC8CA9C4B1C83",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "AA8C7C685F6D77530EB08F8C627AC8CA9C4B1C83" : 9223372036854775807,
+    "609906054A5713C42BD379809D427EC3E3DD7E10" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "5A1D68B2-064E-4EE3-BB01-ECD55AE38678",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "AA8C7C685F6D77530EB08F8C627AC8CA9C4B1C83" : "PtahRenderer\/",
+    "609906054A5713C42BD379809D427EC3E3DD7E10" : "PtahRenderer\/.build\/checkouts\/JFOpenGL.swift.git-7909189663087013763\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "PtahRenderer",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "PtahRenderer.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "\/Developer\/graphics\/PtahRenderer\/.build\/repositories\/JFOpenGL.swift.git-7909189663087013763",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "609906054A5713C42BD379809D427EC3E3DD7E10"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/kosua20\/PtahRenderer.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "AA8C7C685F6D77530EB08F8C627AC8CA9C4B1C83"
+    }
+  ]
+}

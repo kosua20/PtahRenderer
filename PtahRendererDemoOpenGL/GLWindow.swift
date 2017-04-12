@@ -1,11 +1,12 @@
 import Foundation
-import CGLFW3
 
 #if os(macOS)
 import Cocoa
 import OpenGL.GL3
+import CGLFW3
 #else
-import COpenGL
+import JFOpenGL
+import CGLFW3Linux
 #endif
 
 
@@ -35,8 +36,8 @@ class GLWindow {
 		glfwGetFramebufferSize(window, &widthDPI, &heightDPI)
 		
 		glViewport(0,0,widthDPI, heightDPI)
-		glDisable(GLenum(GL_DEPTH_TEST))
-		glEnable(GLenum(GL_CULL_FACE))
+		glDisable(GL_DEPTH_TEST)
+		glEnable(GL_CULL_FACE)
 		glClearColor(1.0,0.0,0.0, 1.0)
 		
 		view = GLView(width: width, height : height)

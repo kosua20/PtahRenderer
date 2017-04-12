@@ -1,11 +1,12 @@
 import Foundation
-import PtahRenderer
 
 #if os(macOS)
 import Cocoa
 import OpenGL.GL3
+import CGLFW3
 #else
-import COpenGL
+import JFOpenGL
+import CGLFW3Linux
 #endif
 
 
@@ -44,17 +45,17 @@ class GLView {
 		_vertexArray = 0
 		
 		glGenTextures(1, &_texture)
-		glBindTexture(GLenum(GL_TEXTURE_2D), _texture)
-		glPixelStorei(GLenum(GL_UNPACK_ALIGNMENT), 1)
-		glTexParameteri(GLenum(GL_TEXTURE_2D), GLenum(GL_TEXTURE_WRAP_S), GL_REPEAT)
-		glTexParameteri(GLenum(GL_TEXTURE_2D), GLenum(GL_TEXTURE_WRAP_T), GL_REPEAT)
-		glTexParameteri(GLenum(GL_TEXTURE_2D), GLenum(GL_TEXTURE_MAG_FILTER), GL_NEAREST)
-		glTexParameteri(GLenum(GL_TEXTURE_2D), GLenum(GL_TEXTURE_MIN_FILTER), GL_NEAREST)
+		glBindTexture(GL_TEXTURE_2D, _texture)
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
 		// Allocate texture memory.
-		glTexImage2D(GLenum(GL_TEXTURE_2D), 0, GL_RGB, _width, _height, 0, GLenum(GL_RGB), GLenum(GL_UNSIGNED_BYTE), nil)
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, _width, _height, 0, GL_RGB, GL_UNSIGNED_BYTE, nil)
 
-		if let vshader = loadShader(content: vertexString, type: GLenum(GL_VERTEX_SHADER)),
-			let fshader = loadShader(content: fragmentString, type: GLenum(GL_FRAGMENT_SHADER)){
+		if let vshader = loadShader(content: vertexString, type: GL_VERTEX_SHADER),
+			let fshader = loadShader(content: fragmentString, type: GL_FRAGMENT_SHADER){
 			glAttachShader(_program, vshader)
 			glDeleteShader(vshader)
 			glAttachShader(_program, fshader)
@@ -63,7 +64,7 @@ class GLView {
 		
 		glLinkProgram(_program)
 		var flag : GLint = 0
-		glGetProgramiv(_program, GLenum(GL_LINK_STATUS), &flag)
+		glGetProgramiv(_program, GL_LINK_STATUS, &flag)
 		if flag == GL_FALSE { print("_program \(_program) failed to link") }
 		
 		glUseProgram(_program)
@@ -75,19 +76,19 @@ class GLView {
     }
 	
 	func draw(pixels : [UInt8]){
-		glTexImage2D(GLenum(GL_TEXTURE_2D), 0, GL_RGB, _width, _height, 0, GLenum(GL_RGB), GLenum(GL_UNSIGNED_BYTE), pixels)
-		glDrawElements(GLenum(GL_TRIANGLES), 6, GLenum(GL_UNSIGNED_INT), nil)
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, _width, _height, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels)
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nil)
 	}
 	
 	func bind(){
 		glUseProgram(_program)
 		glActiveTexture(0)
-		glBindTexture(GLenum(GL_TEXTURE_2D), _texture)
+		glBindTexture(GL_TEXTURE_2D, _texture)
 		glBindVertexArray(_vertexArray)
 	}
 	
 	func unbind(){
-		glBindTexture(GLenum(GL_TEXTURE_2D), 0)
+		glBindTexture(GL_TEXTURE_2D, 0)
 		glBindVertexArray(0)
 		glUseProgram(0)
 	}
@@ -99,17 +100,17 @@ class GLView {
 	}
 	
 	private func loadShader(content : String, type : GLenum) -> GLuint? {
-		var glContent = UnsafePointer<GLchar>?(content.cString(using: String.Encoding.utf8)!)
+		var glContent = UnsafePointer<GLchar>(content.cString(using: String.Encoding.utf8)!) 
 		let shader = glCreateShader(type)
 		var size = GLint(content.characters.count)
 		glShaderSource(shader, 1, &glContent, &size)
 		glCompileShader(shader)
 		
 		var flag : GLint = 0
-		glGetShaderiv(shader, GLenum(GL_COMPILE_STATUS), &flag)
+		glGetShaderiv(shader, GL_COMPILE_STATUS, &flag)
 		if(flag == GL_FALSE){
 			var length: GLint = 0
-			glGetShaderiv(shader, GLenum(GL_INFO_LOG_LENGTH), &length)
+			glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &length)
 			// Retrieve the info log.
 			var str : [GLchar] = Array(repeating: GLchar(0), count: Int(length) + 1)
 			var size: GLsizei = 0
@@ -130,8 +131,8 @@ class GLView {
 		let pos : [Float] = [-1.0, -1.0,   1.0, -1.0,   1.0, 1.0,   -1.0, 1.0]
 		var vertexBuffer : GLuint = 0
 		glGenBuffers(1, &vertexBuffer)
-		glBindBuffer(GLenum(GL_ARRAY_BUFFER), vertexBuffer)
-		glBufferData(GLenum(GL_ARRAY_BUFFER), MemoryLayout<Float>.size * 2 * pos.count, pos, GLenum(GL_STATIC_DRAW))
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer)
+		glBufferData(GL_ARRAY_BUFFER, MemoryLayout<Float>.size * 2 * pos.count, pos, GL_STATIC_DRAW)
 		
 		// Attribute location setup.
 		let id = glGetAttribLocation(_program, "position".cString(using: String.Encoding.utf8))
@@ -142,16 +143,16 @@ class GLView {
 		// Vertex attribute setup.
 		let vertexPositionLocation = GLuint(id)
 		glEnableVertexAttribArray(vertexPositionLocation)
-		glVertexAttribPointer(vertexPositionLocation, 2, GLenum(GL_FLOAT), GLboolean(GL_FALSE), 0, nil)
+		glVertexAttribPointer(vertexPositionLocation, 2, GL_FLOAT, false, 0, nil)
 		glVertexAttribDivisor(vertexPositionLocation, 0)
-		glBindBuffer(GLenum(GL_ARRAY_BUFFER), 0)
+		glBindBuffer(GL_ARRAY_BUFFER, 0)
 		
 		// Index buffer setup.
 		let index = [GLuint]([0, 1, 2,   0, 2, 3])
 		var indexBuffer : GLuint = 0
 		glGenBuffers(1, &indexBuffer);
-		glBindBuffer(GLenum(GL_ELEMENT_ARRAY_BUFFER), indexBuffer);
-		glBufferData(GLenum(GL_ELEMENT_ARRAY_BUFFER), MemoryLayout<GLuint>.size * index.count, index,GLenum(GL_STATIC_DRAW))
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, MemoryLayout<GLuint>.size * index.count, index,GL_STATIC_DRAW)
 		glBindVertexArray(0);
 	}
 

@@ -67,7 +67,8 @@ class GLView {
 		
 		glUseProgram(_program)
 		loadGeometry()
-		let id = glGetUniformLocation(_program, "tex".cString(using: String.Encoding.utf8))
+		let tex = "tex".cString(using: String.Encoding.utf8);
+		let id = glGetUniformLocation(_program, tex)
 		glUniform1i(id, 0);
 		glUseProgram(0)
 		
@@ -98,10 +99,8 @@ class GLView {
 	}
 	
 	private func loadShader(content : String, type : GLenum) -> GLuint? {
-		var glContent = UnsafePointer<GLchar>(content.cString(using: String.Encoding.utf8)!) 
 		let shader = glCreateShader(type)
-		var size = GLint(content.characters.count)
-		glShaderSource(shader, 1, &glContent, &size)
+		glShaderSource(shader, content)
 		glCompileShader(shader)
 		
 		var flag : GLint = 0
@@ -133,7 +132,9 @@ class GLView {
 		glBufferData(GL_ARRAY_BUFFER, MemoryLayout<Float>.size * 2 * pos.count, pos, GL_STATIC_DRAW)
 		
 		// Attribute location setup.
-		let id = glGetAttribLocation(_program, "position".cString(using: String.Encoding.utf8))
+		let position = "position".cString(using: String.Encoding.utf8)
+		let id = glGetAttribLocation(_program, position)
+
 		if id < 0 {
 			print("Error setting attribute")
 			return

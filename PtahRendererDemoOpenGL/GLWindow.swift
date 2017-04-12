@@ -25,6 +25,7 @@ class GLWindow {
 		
 		glfwMakeContextCurrent(window)
 		
+		glfwSetFramebufferSizeCallback(window, resizeCallback)
 		glfwSetScrollCallback(window, scrollCallback)
 		glfwSetMouseButtonCallback(window, mouseButtonCallback)
 		glfwSetCursorPosCallback (window, cursorPosCallback)
@@ -92,4 +93,8 @@ fileprivate func cursorPosCallback(window: OpaquePointer?, x: Double, y: Double)
 
 fileprivate func scrollCallback(window: OpaquePointer?, xoffset : Double, yoffset: Double) {
 	scrollCallback(yoffset: yoffset)
+}
+
+fileprivate func resizeCallback(window: OpaquePointer?, width: Int32, height: Int32) {
+	glViewport(0,0,GLsizei(width), GLsizei(height))
 }

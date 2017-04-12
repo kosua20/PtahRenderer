@@ -1,11 +1,9 @@
 import Foundation
+import JFOpenGL
 
 #if os(macOS)
-import Cocoa
-import OpenGL.GL3
 import CGLFW3
 #else
-import JFOpenGL
 import CGLFW3Linux
 #endif
 

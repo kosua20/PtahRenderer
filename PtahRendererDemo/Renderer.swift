@@ -92,7 +92,7 @@ public final class Renderer {
 		cubemap.model = Matrix4.scaleMatrix(5.0)
 		
 		// Projection matrix and camera setting.
-		let proj = Matrix4.perspectiveMatrix(fov:70.0, aspect: Scalar(width)/Scalar(height), near: 0.1, far: 10.0)
+		let proj = Matrix4.perspectiveMatrix(fov:70.0, aspect: Scalar(width)/Scalar(height), near: 0.1, far: 15.0)
 		let initialPos = distance*normalize(Point3(1.0, 0.5, 0.0))
 		camera = Camera(position: initialPos, center: Point3(0.0, 0.0, 0.0), up: Point3(0.0, 1.0, 0.0), projection: proj)
 		

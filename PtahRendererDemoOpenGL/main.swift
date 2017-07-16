@@ -4,8 +4,8 @@ import PtahRenderer
 import PtahRendererDemo
 
 
-let WIDTH = 350
-let HEIGHT = 220
+let WIDTH = 400
+let HEIGHT = 300
 let ROOTDIR = FileManager.default.currentDirectoryPath + "/data/"
 
 

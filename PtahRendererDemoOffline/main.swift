@@ -25,7 +25,9 @@ var pixels = renderer.flushBuffer()
 
 let half = HEIGHT >> 1
 for y in 0..<half {
-	swap(&(pixels[y*WIDTH..<(y+1)*WIDTH]), &(pixels[WIDTH*(HEIGHT-y-1)..<WIDTH*(HEIGHT-y)]))
+	let temp = pixels[y*WIDTH..<(y+1)*WIDTH]
+	pixels[y*WIDTH..<(y+1)*WIDTH] = pixels[WIDTH*(HEIGHT-y-1)..<WIDTH*(HEIGHT-y)]
+	pixels[WIDTH*(HEIGHT-y-1)..<WIDTH*(HEIGHT-y)] = temp
 }
 
 print("Writing image in directory \(IMAGEDIR)")

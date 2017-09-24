@@ -42,7 +42,7 @@ class ViewController: NSViewController {
 	}
 	
 	
-	func timerFired(_ sender: Timer!) {
+	@objc func timerFired(_ sender: Timer!) {
 		
 		let startTime = CFAbsoluteTimeGetCurrent()
 		
@@ -58,8 +58,9 @@ class ViewController: NSViewController {
 		times[current] = toc
 		current = (current + 1) % 60
 		let avgFPS = 60.0 / times.reduce(0, +)
-		print("⏲ \(Int(1/toc)) fps - Avg \(avgFPS) fps")
-	
+		if(current == 0){
+			print("⏲ \(Int(1/toc)) fps - Avg \(avgFPS) fps")
+		}
 	}
 
 	

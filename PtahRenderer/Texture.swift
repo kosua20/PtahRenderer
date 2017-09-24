@@ -161,7 +161,9 @@ public final class Texture {
 		
 		let half = height >> 1
 		for y in 0..<half {
-			swap(&(pixels[y*width..<(y+1)*width]), &(pixels[width*(height-y-1)..<width*(height-y)]))
+			let temp = pixels[y*width..<(y+1)*width]
+			pixels[y*width..<(y+1)*width] = pixels[width*(height-y-1)..<width*(height-y)]
+			pixels[width*(height-y-1)..<width*(height-y)] = temp
 		}
 		
 	}

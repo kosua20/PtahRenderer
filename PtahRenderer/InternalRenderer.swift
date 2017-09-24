@@ -359,8 +359,12 @@ public final class InternalRenderer {
 		//Switch orientation if steep line
 		if(abs(a.x - b.x) < abs(a.y - b.y)){
 			steep = true
-			swap(&(a.x), &(a.y))
-			swap(&(b.x), &(b.y))
+			let ta = a.x
+			a.x = a.y
+			a.y = ta
+			let tb = b.x
+			b.x = b.y
+			b.y = tb
 		}
 		
 		//Order points along x axis

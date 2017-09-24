@@ -1,5 +1,5 @@
 import Foundation
-import JFOpenGL
+import SGLOpenGL
 
 #if os(macOS)
 import CGLFW3

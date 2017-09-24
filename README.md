@@ -30,7 +30,7 @@ Apart from PtahRendererDemoOnline, everything can be compiled using the Swift Pa
 
 	swift build -c release -Xlinker -L/usr/local/lib
 	 
-For PtahRendererDemoOpenGL, GLFW 3 needs to be installed in `/usr/local` and is accessed through a thin wrapper ([macOS](https://github.com/kosua20/CGLFW3) and [Linux](https://github.com/kosua20/CGLFW3Linux) versions). OpenGL is also used through a wrapper, [JFOpenGL](https://github.com/jaz303/JFOpenGL.swift), that mainly provides platform independance and types simplification (because of Swift handling of GLenum among other things).
+For PtahRendererDemoOpenGL, GLFW 3 needs to be installed in `/usr/local` and is accessed through a thin wrapper ([macOS](https://github.com/kosua20/CGLFW3) and [Linux](https://github.com/kosua20/CGLFW3Linux) versions). OpenGL is also used through a wrapper, [SGLOpenGL](https://github.com/SwiftGL/OpenGL), that mainly provides platform independance and types simplification (because of Swift handling of GLenum among other things). If you want to compile the OpenGL demo in Xcode, do a first compilation with the Package Manager so the dependencies are downloaded and setup.
 
 ### Done
 * General setup

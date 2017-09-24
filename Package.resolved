@@ -1,0 +1,25 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "CGLFW3.git",
+        "repositoryURL": "https://github.com/kosua20/CGLFW3.git",
+        "state": {
+          "branch": null,
+          "revision": "3f2e668606a1a249cbbeb5e8f84444d442b0ba7c",
+          "version": "1.4.2"
+        }
+      },
+      {
+        "package": "SGLOpenGL",
+        "repositoryURL": "https://github.com/SwiftGL/OpenGL.git",
+        "state": {
+          "branch": null,
+          "revision": "550ad49bef969d33d9b82c0ea55be96268cbc14f",
+          "version": "3.0.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

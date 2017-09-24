@@ -1,12 +1,11 @@
 import Foundation
-import JFOpenGL
+import SGLOpenGL
 
 #if os(macOS)
 import CGLFW3
 #else
 import CGLFW3Linux
 #endif
-
 
 let vertexString = ["#version 330",
                     "in vec2 position;",
@@ -24,6 +23,8 @@ let fragmentString = ["#version 330",
                     "fragColor = texture(tex, uv).rgb;",
                     "//fragColor = vec3(0.0,1.0,0.5);",
                     "}" ].joined(separator:"\n")
+
+
 
 // TODO: clean and comment this mess.
 
@@ -100,7 +101,11 @@ class GLView {
 	
 	private func loadShader(content : String, type : GLenum) -> GLuint? {
 		let shader = glCreateShader(type)
-		glShaderSource(shader, content)
+		
+		content.withCString({ (data) in
+			glShaderSource(shader, 1, [UnsafePointer(data)], nil)
+		})
+		
 		glCompileShader(shader)
 		
 		var flag : GLint = 0

@@ -9,9 +9,8 @@ let package = Package(
                Target(name: "PtahRendererDemoOffline", dependencies: ["PtahRendererDemo","PtahRenderer"]),
                Target(name: "PtahRendererDemoOpenGL", dependencies: ["PtahRendererDemo","PtahRenderer"])
 	],
-    dependencies: [ .Package(url: "https://github.com/jaz303/JFOpenGL.swift.git", majorVersion: 3)
-	],
-	exclude: ["data", "ext", "images", "renders", "PtahRendererDemoOnline"]
+    dependencies: [ .Package(url: "https://github.com/SwiftGL/OpenGL.git", majorVersion: 3)],
+	exclude: ["data", "ext", "dependencies", "images", "renders", "PtahRendererDemoOnline"]
 )
 
 #if os(macOS)

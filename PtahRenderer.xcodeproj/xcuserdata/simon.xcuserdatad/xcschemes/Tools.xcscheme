@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "PtahRenderer::PtahRendererDemoOpenGL"
-               BuildableName = "PtahRendererDemoOpenGL"
-               BlueprintName = "PtahRendererDemoOpenGL"
+               BlueprintIdentifier = "SGLOpenGL::Tools"
+               BuildableName = "Tools"
+               BlueprintName = "Tools"
                ReferencedContainer = "container:PtahRenderer.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -33,9 +33,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "PtahRenderer::PtahRendererDemoOpenGL"
-            BuildableName = "PtahRendererDemoOpenGL"
-            BlueprintName = "PtahRendererDemoOpenGL"
+            BlueprintIdentifier = "SGLOpenGL::Tools"
+            BuildableName = "Tools"
+            BlueprintName = "Tools"
             ReferencedContainer = "container:PtahRenderer.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -43,13 +43,12 @@
       </AdditionalOptions>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Release"
-      selectedDebuggerIdentifier = ""
-      selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       language = ""
       launchStyle = "0"
-      useCustomWorkingDirectory = "YES"
-      customWorkingDirectory = "$PROJECT_DIR"
+      useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
@@ -58,9 +57,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "PtahRenderer::PtahRendererDemoOpenGL"
-            BuildableName = "PtahRendererDemoOpenGL"
-            BlueprintName = "PtahRendererDemoOpenGL"
+            BlueprintIdentifier = "SGLOpenGL::Tools"
+            BuildableName = "Tools"
+            BlueprintName = "Tools"
             ReferencedContainer = "container:PtahRenderer.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -77,9 +76,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "PtahRenderer::PtahRendererDemoOpenGL"
-            BuildableName = "PtahRendererDemoOpenGL"
-            BlueprintName = "PtahRendererDemoOpenGL"
+            BlueprintIdentifier = "SGLOpenGL::Tools"
+            BuildableName = "Tools"
+            BlueprintName = "Tools"
             ReferencedContainer = "container:PtahRenderer.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

@@ -9,85 +9,100 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
-		<key>PtahRendererDemoOffline.xcscheme</key>
+		<key>PtahRendererDemoAll.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
+		<key>PtahRendererDemoOffline.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>5</integer>
+		</dict>
 		<key>PtahRendererDemoOnline.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>2</integer>
+			<integer>9</integer>
 		</dict>
 		<key>PtahRendererDemoOpenGL.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+		<key>PtahRendererPackageDescription.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
 			<integer>3</integer>
+		</dict>
+		<key>SGLOpenGL.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>8</integer>
+		</dict>
+		<key>SGLOpenGLPackageDescription.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>4</integer>
+		</dict>
+		<key>Tools.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>7</integer>
+		</dict>
+		<key>glgen.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>6</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>F49A5BDF1E46956B00CC4E0E</key>
+		<key>F408FFDB1F77A94C00C8A216</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>F4B3F3111E9E779C00A9E39C</key>
+		<key>PtahRenderer::PtahRendererDemoOffline</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>F4EFAC231E46960700126BAE</key>
+		<key>PtahRenderer::PtahRendererDemoOpenGL</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>F4F0D7BB1E46930F0089807D</key>
+		<key>PtahRenderer::SwiftPMPackageDescription</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>F4F3D65B1E9E78AA009F43CC</key>
+		<key>SGLOpenGL::SGLOpenGL</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>OBJ_37</key>
+		<key>SGLOpenGL::SwiftPMPackageDescription</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>OBJ_52</key>
+		<key>SGLOpenGL::Tools</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>OBJ_53</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>OBJ_63</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>OBJ_64</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>OBJ_75</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>OBJ_77</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>OBJ_90</key>
+		<key>SGLOpenGL::glgen::ProductTarget</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -34,6 +34,48 @@
                ReferencedContainer = "container:PtahRenderer.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "PtahRenderer::PtahRendererDemoOffline"
+               BuildableName = "PtahRendererDemoOffline"
+               BlueprintName = "PtahRendererDemoOffline"
+               ReferencedContainer = "container:PtahRenderer.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "F408FFDB1F77A94C00C8A216"
+               BuildableName = "PtahRendererDemoOnline.app"
+               BlueprintName = "PtahRendererDemoOnline"
+               ReferencedContainer = "container:PtahRenderer.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "PtahRenderer::PtahRendererDemoOpenGL"
+               BuildableName = "PtahRendererDemoOpenGL"
+               BlueprintName = "PtahRendererDemoOpenGL"
+               ReferencedContainer = "container:PtahRenderer.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -58,24 +100,26 @@
    </TestAction>
    <LaunchAction
       buildConfiguration = "Release"
-      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
-      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      selectedDebuggerIdentifier = ""
+      selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
       language = ""
       launchStyle = "0"
-      useCustomWorkingDirectory = "NO"
+      useCustomWorkingDirectory = "YES"
+      customWorkingDirectory = "$PROJECT_DIR"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "PtahRenderer::PtahRendererDemo"
-            BuildableName = "PtahRendererDemo.framework"
-            BlueprintName = "PtahRendererDemo"
+            BlueprintIdentifier = "F408FFDB1F77A94C00C8A216"
+            BuildableName = "PtahRendererDemoOnline.app"
+            BlueprintName = "PtahRendererDemoOnline"
             ReferencedContainer = "container:PtahRenderer.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

@@ -1,6 +1,6 @@
 # PtahRenderer
 
-A small software graphics renderer. Offline and online demos available on macOS and Linux (tested on Ubuntu). See [Programs](#Programs) for requirements and build instructions.
+A small software graphics renderer. Offline and online demos available on macOS and Linux (tested on Ubuntu). See [Programs](#Programs) for requirements and build instructions. Associated blog post [here](http://blog.simonrodriguez.fr/articles/18-02-2017_writing_a_small_software_renderer.html).
 
 ![](images/icon.png)
 
